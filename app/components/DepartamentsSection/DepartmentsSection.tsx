@@ -19,13 +19,13 @@ export const DepartmentsSection: FC<DepartmentsSectionProps> = ({ departments })
   const getDepartmentColor = (title: string): string => {
     switch (title) {
       case "Clínica Geral":
-        return colors.primary
+        return '#2196F3'
       case "Pediatria":
         return "#FF4081" // Pink color for Pediatria
       case "Cardiologia":
-        return colors.primary
+        return '#2196F3'
       default:
-        return colors.primary
+        return '#2196F3'
     }
   }
 
@@ -36,7 +36,7 @@ export const DepartmentsSection: FC<DepartmentsSectionProps> = ({ departments })
           Departamentos
         </Text>
         <TouchableOpacity>
-          <Text className="text-primary text-sm font-medium">Ver todos</Text>
+          <Text className="text-[#2196F3] text-sm font-medium">Ver todos</Text>
         </TouchableOpacity>
       </View>
       <ScrollView 

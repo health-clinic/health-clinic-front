@@ -9,7 +9,6 @@ import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
 
 export type AppStackParamList = {
-  Welcome: undefined
   Login: undefined
   Register: undefined
   Home: undefined

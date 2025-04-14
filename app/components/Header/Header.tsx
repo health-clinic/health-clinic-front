@@ -11,7 +11,7 @@ export interface HeaderProps {
 
 export const Header: FC<HeaderProps> = ({ searchQuery, onSearchChange }) => {
   return (
-    <View className="bg-primary pt-5 h-[280px] rounded-b-[20px]">
+    <View className="bg-[#2196F3] pt-5 h-[280px] rounded-b-[20px]">
       <SafeAreaView>
         <View className="px-4 pt-2 pb-5">
           <View className="flex-row justify-between items-center">

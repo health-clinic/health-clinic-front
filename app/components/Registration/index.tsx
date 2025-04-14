@@ -1,0 +1,6 @@
+export { default as GeneralInfo } from "./GeneralInfo"
+export { default as UserType } from "./UserType"
+export { default as PatientInfo } from "./PatientInfo"
+export { default as DoctorInfo } from "./DoctorInfo"
+export { default as Address } from "./Address"
+export { default as Review } from "./Review"

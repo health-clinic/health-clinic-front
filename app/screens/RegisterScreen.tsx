@@ -1,796 +1,242 @@
-import React, { FC, useRef, useState, useEffect } from "react"
+import React, { FC, useState } from "react"
+import { View, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native"
 import { observer } from "mobx-react-lite"
-import { 
-  View, 
-  TextInput, 
-  TouchableOpacity, 
-  Alert,
-  ActivityIndicator,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Switch,
-  Animated
-} from "react-native"
-import { AppStackScreenProps } from "../navigators"
 import { Screen, Text } from "../components"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { spacing } from "../theme"
+import { AppStackScreenProps } from "../navigators"
+import {
+  GeneralInfo,
+  UserType,
+  PatientInfo,
+  DoctorInfo,
+  Address,
+  Review,
+} from "../components/Registration"
 import { useAppTheme } from "../utils/useAppTheme"
-import { registerUser } from "../services/registerUser"
-
-// Font styles using Inter font with specified weights
-const fontStyles = {
-  regular: {
-    fontFamily: "interRegular",
-  },
-  medium: {
-    fontFamily: "interMedium",
-    fontWeight: "500",
-  },
-  semiBold: {
-    fontFamily: "interSemiBold",
-    fontWeight: "600",
-  },
-  bold: {
-    fontFamily: "interBold",
-    fontWeight: "700",
-  },
-}
-
-// Font sizes following hierarchy
-const fontSize = {
-  title: 32,     // Increased logo size
-  subtitle: 20,  // Increased subtitle size
-  button: 18,    // Increased button text size for better readability
-  input: 16,     // Input text size
-  label: 16,     // Label text size
-  link: 16,      // Increased link text size for better visibility
-  small: 14,     // Small text size
-  tagline: 18,   // Increased tagline text size
-}
 
 interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 
 export const RegisterScreen: FC<RegisterScreenProps> = observer(function RegisterScreen(_props) {
   const { navigation } = _props
-  const emailInput = useRef<TextInput>(null)
-  const phoneInput = useRef<TextInput>(null)
-  const birthdateInput = useRef<TextInput>(null)  
-  const documentInput = useRef<TextInput>(null)
-  const passwordInput = useRef<TextInput>(null)
-  const confirmPasswordInput = useRef<TextInput>(null)
-  const zipInput = useRef<TextInput>(null)
-  const districtInput = useRef<TextInput>(null)
-  const streetInput = useRef<TextInput>(null)
-  const numberInput = useRef<TextInput>(null)
-  const complementInput = useRef<TextInput>(null)
-  
-  // Form state
-  const [isLoading, setIsLoading] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [userType, setUserType] = useState<"administrator" | "patient" | "doctor" | null>(null)
   const { theme } = useAppTheme()
-  const fadeAnim = useRef(new Animated.Value(0)).current
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [birthdate, setBirthdate] = useState<Date | null>(null)
-  const [showDatePicker, setShowDatePicker] = useState(false)
-  const [document, setDocument] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [isPasswordHidden, setIsPasswordHidden] = useState(true)
-  const [isConfirmPasswordHidden, setIsConfirmPasswordHidden] = useState(true)
-  const [zipCode, setZipCode] = useState("")
-  const [district, setDistrict] = useState("")
-  const [street, setStreet] = useState("")
-  const [number, setNumber] = useState("")
-  const [complement, setComplement] = useState("")
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  
-  // Input focus states
-  const [nameFocused, setNameFocused] = useState(false)
-  const [emailFocused, setEmailFocused] = useState(false)
-  const [passwordFocused, setPasswordFocused] = useState(false)
-  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false)
-  const [buttonPressed, setButtonPressed] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
 
-  // Fade in animation on mount
-  useEffect(() => {
-    // Usando setTimeout para garantir que a animação ocorra após a renderização inicial
-    setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }).start()
-    }, 100)
-  }, [])
+    document: "",
+    phone: "",
+    birthdate: "",
+    address: {
+      zipCode: "",
+      street: "",
+      number: "",
+      district: "",
+      city: "",
+      state: "",
+    },
 
-  function handleRegister() {
-    setIsSubmitted(true)
+    crm: "",
+    specialty: "",
+  })
 
-    setIsLoading(true)
-    
-    if (true) {
-      setIsLoading(true)
-      
-      registerUser.register({
-        name, email, document, phone, birthdate: "31/07/2000", address: { zip_code: zipCode, district, street, number, complement }, password 
-    })
-      .then(error => {
-        setIsLoading(false)
-        navigation.navigate("Home")
-      })
-      .catch(error => {
-        setIsLoading(false)
-        
-        const errorMessage = error.errors?.[0]?.message || 'Erro ao fazer cadastrar usuário'
-        Alert.alert('Erro de registro', errorMessage)
-      })
+  const updateFormData = (data: Partial<typeof formData>) => {
+    setFormData({ ...formData, ...data })
+  }
+
+  const validateCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return formData.name && formData.email && formData.password && formData.password === formData.confirmPassword
+      case 2:
+        return userType !== null
+      case 3:
+        if (userType === "patient") {
+          return formData.document && formData.phone && formData.birthdate
+        } else {
+          return formData.crm && formData.specialty
+        }
+      case 4:
+        if (userType === "patient") {
+          const { address } = formData
+          return address.zipCode && address.street && address.number && address.district && address.city && address.state
+        }
+        return true
+      default:
+        return true
+    }
+  }
+
+  const goToNextStep = () => {
+    if (validateCurrentStep()) setCurrentStep(currentStep + 1)
+  }
+
+  const goToPreviousStep = () => {
+    setCurrentStep(currentStep - 1)
+  }
+
+  const handleRegister = () => {
+    console.log("Registration data:", formData)
+    navigation.navigate("Home")
+  }
+
+  const renderProgressIndicator = () => {
+    const totalSteps = userType === "patient" ? 5 : (userType === "administrator" ? 3 : 4)
+
+    return (
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 24 }}>
+        {Array.from({ length: totalSteps }).map((_, index) => {
+          const step = index + 1
+          const isActive = step === currentStep
+          const isPast = step < currentStep
+
+          return (
+            <React.Fragment key={step}>
+              {index > 0 && (
+                <View style={{ height: 1, width: 32, backgroundColor: isPast ? theme.colors.palette.primary500 : theme.colors.palette.neutral400 }} />
+              )}
+              <View
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 12,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: isActive || isPast ? theme.colors.palette.primary500 : theme.colors.palette.neutral400,
+                }}
+              >
+                {isPast ? (
+                  <MaterialCommunityIcons name="check" size={16} color={theme.colors.palette.neutral100} />
+                ) : (
+                  <Text style={{ color: theme.colors.palette.neutral100, fontSize: 12, fontWeight: "bold" }}>{step}</Text>
+                )}
+              </View>
+            </React.Fragment>
+          )
+        })}
+      </View>
+    )
+  }
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return <GeneralInfo formData={formData} updateFormData={updateFormData} />
+      case 2:
+        return <UserType userType={userType} setUserType={setUserType} />
+      case 3:
+        return userType === "patient"
+          ? <PatientInfo formData={formData} updateFormData={updateFormData} />
+          : userType === "administrator" ? <Review formData={formData} userType={userType} /> : <DoctorInfo formData={formData} updateFormData={updateFormData} />
+      case 4:
+        return userType === "patient"
+          ? <Address formData={formData} updateFormData={updateFormData} />
+          : <Review formData={formData} userType={userType} />
+      case 5:
+        return <Review formData={formData} userType={userType} />
+      default:
+        return null
     }
   }
 
   return (
     <Screen
       preset="fixed"
-      contentContainerStyle={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}
       statusBarStyle="light"
+      contentContainerStyle={{ flex: 1, backgroundColor: theme.colors.background }}
     >
-      <View style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-        >
-          <View style={{paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.xxxs, alignItems: 'center'}}>
-            {/* Logo and App Name */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <MaterialCommunityIcons 
-                name="stethoscope" 
-                size={64} 
-                color={theme.colors.palette.primary500} 
-                style={{ marginRight: spacing.sm }}
-              />
-              <View>
-                <Text style={[fontStyles.bold, { fontSize: fontSize.title, color: theme.colors.palette.neutral900, textAlign: 'left' }]}>
-                  MediCare
-                </Text>
-                <Text style={[fontStyles.medium, { fontSize: fontSize.tagline, color: theme.colors.palette.neutral700, textAlign: 'left' }]}>
-                  Cuidando da sua saúde
-                </Text>
-              </View>
-            </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingTop: 40, paddingBottom: 64 }}>
+          {/* Logo & App Name */}
+          <View style={{ alignItems: "center", marginBottom: 32 }}>
+            <MaterialCommunityIcons
+              name="stethoscope"
+              size={56}
+              color={theme.colors.palette.primary500}
+            />
 
-            {/* Form Title */}
-            <Text style={[fontStyles.semiBold, { fontSize: fontSize.title, color: 'white', marginTop: spacing.xl, marginBottom: spacing.xl }]}>
-              Criar uma conta
+            <Text style={{ fontSize: 24, fontWeight: "bold", color: theme.colors.palette.neutral900, marginTop: 8 }}>
+              Postinho de Saúde
+            </Text>
+
+            <Text style={{ fontSize: 14, color: theme.colors.palette.neutral700, fontWeight: "500", marginTop: 4 }}>
+              Cuidando da sua saúde
             </Text>
           </View>
 
-          <ScrollView 
-            style={{ flex: 1 }}
-            contentContainerStyle={{ 
-              paddingHorizontal: spacing.lg,
-              paddingBottom: spacing.xxl,
-              alignItems: 'center',
-            }}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Name Input */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View 
-                style={{ 
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: nameFocused ? theme.colors.palette.primary300 : theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm, // Increased padding for better touch comfort
-                  height: 60, // Slightly increased height
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons 
-                  name="account-outline" 
-                  size={24} 
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }} 
-                />
+          {/* Title */}
+          <Text style={{ fontSize: 20, color: theme.colors.palette.neutral900, fontWeight: "600", textAlign: "center", marginBottom: 16 }}>
+            Crie sua conta
+          </Text>
 
-                <TextInput
-                  style={{ 
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs, // Added vertical padding
-                  }}
-                  placeholder="Nome completo"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={name}
-                  onChangeText={setName}
-                  onFocus={() => setNameFocused(true)}
-                  onBlur={() => setNameFocused(false)}
-                  returnKeyType="next"
-                  onSubmitEditing={() => emailInput.current?.focus()}
-                  autoCapitalize="words"
-                />
-              </View>
-            </View>
+          {/* Progress */}
+          {renderProgressIndicator()}
 
-            {/* Email Input */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View 
-                style={{ 
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: emailFocused ? theme.colors.palette.primary300 : theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm, // Increased padding for better touch comfort
-                  height: 60, // Slightly increased height
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons 
-                  name="email-outline" 
-                  size={24} 
-                  color={theme.colors.palette.primary300} 
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  style={{ 
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs, // Added vertical padding
-                  }}
-                  placeholder="E-mail"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={email}
-                  onChangeText={setEmail}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  returnKeyType="next"
-                  onSubmitEditing={() => passwordInput.current?.focus()}
-                  accessibilityLabel="Campo de email"
-                />
-              </View>
-            </View>
+          {/* Form content */}
+          <View style={{ marginTop: 16 }}>{renderStepContent()}</View>
 
-            {/* Phone */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="phone"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={phoneInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="Telefone"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={phone}
-                  onChangeText={setPhone}
-                  returnKeyType="next"
-                  onSubmitEditing={() => birthdateInput.current?.focus()}
-                />
-              </View>
-            </View>
-
-            {/* Birthdate
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
+          {/* Navigation buttons */}
+          <View style={{ flexWrap: "wrap", flexDirection: "row", justifyContent: "space-between", marginTop: 32 }}>
+            {currentStep > 1 && (
               <TouchableOpacity
-                onPress={() => setShowDatePicker(true)}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  backgroundColor: theme.colors.palette.neutral700,
+                  borderRadius: 16,
+                  paddingHorizontal: 20,
+                  paddingVertical: 12,
+                  flex: 1,
+                  marginRight: 8,
                 }}
+                onPress={goToPreviousStep}
               >
-                <MaterialCommunityIcons
-                  name="calendar"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                
-                <TextInput
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: "interRegular",
-                  }}
-                  placeholder="Data de nascimento"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  keyboardType="default"
-                  value={birthdate ? format(birthdate, "yyyy-MM-dd") : ""}
-                  onChangeText={(text) => {
-                    const date = new Date(text)
-                    if (!isNaN(date.getTime())) {
-                      setBirthdate(date)
-                    }
-                  }}
-                  accessibilityLabel="Campo de data de nascimento"
-                  type="date" // Web browsers understand this
-                />
+                <Text style={{ color: theme.colors.palette.neutral100, fontSize: 16, fontWeight: "500" }}>Voltar</Text>
               </TouchableOpacity>
+            )}
 
-              {showDatePicker && (
-                <DateTimePicker
-                  value={birthdate || new Date(2000, 0, 1)}
-                  mode="date"
-                  display={Platform.OS === "ios" ? "spinner" : "default"}
-                  onChange={(event, selectedDate) => {
-                    setShowDatePicker(false)
-                    if (selectedDate) setBirthdate(selectedDate)
-                  }}
-                  maximumDate={new Date()}
-                />
-              )}
-            </View> */}
-
-            {/* Document */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="card-account-details-outline"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={documentInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="Documento (CPF)"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={document}
-                  onChangeText={setDocument}
-                  returnKeyType="next"
-                  onSubmitEditing={() => phoneInput.current?.focus()}
-                />
-              </View>
-            </View>
-
-            {/* Password Input */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View 
-                style={{ 
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: passwordFocused ? theme.colors.palette.primary300 : theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm, // Increased padding for better touch comfort
-                  height: 60, // Slightly increased height
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons 
-                  name="lock-outline" 
-                  size={24} 
-                  color={theme.colors.palette.primary300} 
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={passwordInput}
-                  style={{ 
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs, // Added vertical padding
-                  }}
-                  placeholder="Senha"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  secureTextEntry={isPasswordHidden}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={password}
-                  onChangeText={setPassword}
-                  onFocus={() => setPasswordFocused(true)}
-                  onBlur={() => setPasswordFocused(false)}
-                  returnKeyType="done"
-                  accessibilityLabel="Campo de senha"
-                />
-                <TouchableOpacity
-                  onPress={() => setIsPasswordHidden(!isPasswordHidden)}
-                  style={{ padding: spacing.sm }} // Increased touch area
-                  accessibilityLabel={isPasswordHidden ? "Mostrar senha" : "Esconder senha"}
-                >
-                  <MaterialCommunityIcons 
-                    name={isPasswordHidden ? "eye-outline" : "eye-off-outline"} 
-                    size={24} 
-                    color={theme.colors.palette.primary300} 
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Confirm Password Input */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View 
-                style={{ 
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: confirmPasswordFocused ? theme.colors.palette.primary300 : theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm, // Increased padding for better touch comfort
-                  height: 60, // Slightly increased height
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons 
-                  name="lock-outline" 
-                  size={24} 
-                  color={theme.colors.palette.primary300} 
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={confirmPasswordInput}
-                  style={{ 
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs, // Added vertical padding
-                  }}
-                  placeholder="Confirme a senha"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  secureTextEntry={isConfirmPasswordHidden}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  onFocus={() => setConfirmPasswordFocused(true)}
-                  onBlur={() => setConfirmPasswordFocused(false)}
-                  returnKeyType="done"
-                  accessibilityLabel="Campo de confirmação de senha"
-                />
-                <TouchableOpacity
-                  onPress={() => setIsConfirmPasswordHidden(!isConfirmPasswordHidden)}
-                  style={{ padding: spacing.sm }} // Increased touch area
-                  accessibilityLabel={isConfirmPasswordHidden ? "Mostrar senha" : "Esconder senha"}
-                >
-                  <MaterialCommunityIcons 
-                    name={isConfirmPasswordHidden ? "eye-outline" : "eye-off-outline"} 
-                    size={24} 
-                    color={theme.colors.palette.primary300} 
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* ZIP Code */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="map-marker"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={zipInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="CEP"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={zipCode}
-                  onChangeText={setZipCode}
-                  returnKeyType="next"
-                  onSubmitEditing={() => districtInput.current?.focus()}
-                />
-              </View>
-            </View>
-
-            {/* District */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="city"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={districtInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="Bairro"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={district}
-                  onChangeText={setDistrict}
-                  returnKeyType="next"
-                  onSubmitEditing={() => streetInput.current?.focus()}
-                />
-              </View>
-            </View>
-
-            {/* Street */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="road"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={streetInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="Rua"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={street}
-                  onChangeText={setStreet}
-                  returnKeyType="next"
-                  onSubmitEditing={() => numberInput.current?.focus()}
-                />
-              </View>
-            </View>
-
-            {/* Number */}
-            <View style={{ marginBottom: spacing.md, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="numeric"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={numberInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="Número"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={number}
-                  onChangeText={setNumber}
-                  returnKeyType="next"
-                  onSubmitEditing={() => complementInput.current?.focus()}
-                />
-              </View>
-            </View>
-
-            {/* Complement */}
-            <View style={{ marginBottom: spacing.lg, width: '100%', maxWidth: 350 }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(80, 90, 110, 0.95)',
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: theme.colors.palette.primary500,
-                  paddingHorizontal: spacing.md,
-                  paddingVertical: spacing.sm,
-                  height: 60,
-                  ...theme.shadows.input,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="note-outline"
-                  size={24}
-                  color={theme.colors.palette.primary300}
-                  style={{ marginRight: spacing.sm }}
-                />
-                <TextInput
-                  ref={complementInput}
-                  style={{
-                    flex: 1,
-                    color: theme.colors.palette.neutral900,
-                    fontSize: fontSize.input,
-                    fontFamily: 'interRegular',
-                    paddingVertical: spacing.xs,
-                  }}
-                  placeholder="Complemento (opcional)"
-                  placeholderTextColor={theme.colors.palette.neutral600}
-                  value={complement}
-                  onChangeText={setComplement}
-                  returnKeyType="done"
-                />
-              </View>
-            </View>
-          </ScrollView>
-
-          <View style={{paddingHorizontal: spacing.lg, paddingTop: spacing.xl, paddingBottom: spacing.xxl, alignItems: 'center'}}>
-            {/* Register Button */}
-            <TouchableOpacity 
-              style={{ 
-                backgroundColor: isLoading ? theme.colors.palette.primary400 : theme.colors.palette.primary500,
-                borderRadius: 50,
-                paddingVertical: spacing.md,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: spacing.xl,
-                transform: [{ scale: buttonPressed ? 0.98 : 1 }],
-                ...theme.shadows.button,
-                opacity: 1,
-                width: '100%',
-                maxWidth: 350
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: theme.colors.palette.primary500,
+                borderRadius: 16,
+                paddingHorizontal: 20,
+                paddingVertical: 12,
+                flex: 1, 
               }}
-              onPress={handleRegister}
-              disabled={isLoading}
-              onPressIn={() => setButtonPressed(true)}
-              onPressOut={() => setButtonPressed(false)}
-              activeOpacity={0.8}
-              accessibilityLabel="Registrar"
-              accessibilityRole="button"
+              onPress={currentStep < (userType === "patient" ? 5 : (userType === "administrator") ? 3 : 4) ? goToNextStep : handleRegister}
             >
-              {isLoading ? (
-                <ActivityIndicator color={theme.colors.palette.neutral900} size="small" />
-              ) : (
-                <Text style={[fontStyles.bold, { fontSize: fontSize.button, color: theme.colors.palette.neutral900 }]}>
-                  Registrar
-                </Text>
-              )}
+              <Text style={{ color: theme.colors.palette.neutral100, fontSize: 16, fontWeight: "500" }}>
+                {currentStep < (userType === "patient" ? 5 : (userType === "administrator") ? 3 : 4) ? "Próximo" : "Registrar"}
+              </Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-      </View>
-      
-      {/* Login Link - Posicionado no final da tela */}
-      <View style={{ 
-        flexDirection: 'row', 
-        justifyContent: 'center', 
-        paddingBottom: spacing.xl,
-        paddingTop: spacing.md,
-        backgroundColor: theme.colors.background,
-      }}>
-        <Text style={[fontStyles.medium, { fontSize: fontSize.small, color: theme.colors.palette.neutral600, alignSelf: 'center' }]}>
-          Já tem uma conta?{" "}
-        </Text>
-        <TouchableOpacity 
-          onPress={() => navigation.navigate("Login")}
-          accessibilityLabel="Entrar"
-          accessibilityRole="link"
-        >
-          <Text style={[fontStyles.medium, { 
-            fontSize: fontSize.link, 
-            color: theme.colors.palette.primary500,
-            textDecorationLine: 'underline',
-          }]}>
-            Entrar
-          </Text>
-        </TouchableOpacity>
-      </View>
+
+          {/* Bottom link */}
+          <View style={{ flexDirection: "row", justifyContent: "center", position: "absolute", bottom: 40, left: 0, right: 0 }}>
+            <Text style={{ fontSize: 14, color: theme.colors.palette.neutral800, fontWeight: "500", alignSelf: "center" }}>
+              Já tem uma conta?{" "}
+            </Text>
+            <TouchableOpacity 
+              onPress={() => navigation.navigate("Login")} 
+              accessibilityLabel="Entrar" 
+              accessibilityRole="link"
+            >
+              <Text style={{ fontSize: 14, color: theme.colors.palette.primary300, textDecorationLine: "underline", fontWeight: "500" }}>
+                Entrar
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   )
 })

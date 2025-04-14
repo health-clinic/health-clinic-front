@@ -36,19 +36,19 @@ export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_pro
       icon: "doctor" as keyof typeof MaterialCommunityIcons.glyphMap,
       title: "Clínica Geral",
       sessions: "123 Sessões",
-      color: "primary" as keyof typeof colors,
+      color: "#2196F3",
     },
     {
       icon: "heart-pulse" as keyof typeof MaterialCommunityIcons.glyphMap,
       title: "Pediatria",
       sessions: "150 Sessões",
-      color: "accent" as keyof typeof colors,
+      color: "#FF4081",
     },
     {
       icon: "heart" as keyof typeof MaterialCommunityIcons.glyphMap,
       title: "Cardiologia",
       sessions: "98 Sessões",
-      color: "primary" as keyof typeof colors,
+      color: "#2196F3",
     },
   ]
 

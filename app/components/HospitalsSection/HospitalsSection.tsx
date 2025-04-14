@@ -22,7 +22,7 @@ export const HospitalsSection: FC<HospitalsSectionProps> = ({ hospitals }) => {
           Hospitais Próximos
         </Text>
         <TouchableOpacity>
-          <Text className="text-primary text-sm font-medium">Ver todos</Text>
+          <Text className="text-[#2196F3] text-sm font-medium">Ver todos</Text>
         </TouchableOpacity>
       </View>
       {hospitals.map((hospital, index) => (

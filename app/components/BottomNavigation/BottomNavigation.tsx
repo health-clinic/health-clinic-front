@@ -10,7 +10,7 @@ export const BottomNavigation: FC = () => {
   return (
     <View className="flex-row justify-around items-center bg-white py-3 border-t border-t-[#E0E0E0]">
       <TouchableOpacity className="items-center">
-        <MaterialCommunityIcons name="home" size={24} color={colors.primary} />
+        <MaterialCommunityIcons name="home" size={24} color={'#2196F3'} />
       </TouchableOpacity>
       <TouchableOpacity className="items-center">
         <MaterialCommunityIcons name="calendar" size={24} color="#757575" />

@@ -114,10 +114,12 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             color={theme.colors.palette.primary500} 
             style={{ marginRight: spacing.sm }}
           />
+
           <View>
             <Text style={[fontStyles.bold, { fontSize: fontSize.title, color: theme.colors.palette.neutral900, textAlign: 'left' }]}>
-              MediCare
+              Postinho de Saúde
             </Text>
+
             <Text style={[fontStyles.medium, { fontSize: fontSize.tagline, color: theme.colors.palette.neutral700, textAlign: 'left' }]}>
               Cuidando da sua saúde
             </Text>
