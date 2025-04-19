@@ -6,6 +6,9 @@ import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
+import { Unit } from "@/models/Unit"
+import { Specialty } from "@/models/Specialty"
+import { Doctor } from "@/models/Doctor"
 
 export type AppStackParamList = {
   Login: undefined
@@ -14,6 +17,11 @@ export type AppStackParamList = {
   CodeConfirmation: { email: string }
   ResetPassword: { email: string }
   Home: undefined
+  SelectUnit: undefined
+  SelectSpecialty: { unit: Unit }
+  SelectDoctor: { specialty: Specialty; unit: Unit }
+  SelectDateTime: { doctor: Doctor }
+  ConfirmAppointment: { doctor: Doctor; date: string; time: string }
 }
 
 const exitRoutes = Config.exitRoutes

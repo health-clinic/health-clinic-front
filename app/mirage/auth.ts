@@ -9,7 +9,7 @@ export function authRouter(this: Server): void {
   this.post("/auth/login", (_schema, request) => {
     const { email, password } = JSON.parse(request.requestBody)
 
-    if (email !== "demo@demo.com" || password !== "123456") {
+    if (email === "demo@demo.com" && password === "123456") {
       return new Response(401, {}, { error: "Invalid credentials" })
     }
 

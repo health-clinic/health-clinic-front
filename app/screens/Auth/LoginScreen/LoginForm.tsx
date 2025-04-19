@@ -47,7 +47,7 @@ export const LoginForm = ({ onSubmit, isLoading }: LoginFormProps) => {
         </TextInput.Action>
       </TextInput.Root>
 
-      <Button isLoading={isLoading} onPress={onSubmit}>
+      <Button isLoading={isLoading} onPress={() => onSubmit(email, password)}>
         <Text className="text-base font-bold text-neutral-900">Entrar</Text>
       </Button>
     </View>
