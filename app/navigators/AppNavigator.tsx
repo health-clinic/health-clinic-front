@@ -1,9 +1,8 @@
-import { NavigationContainer, NavigatorScreenParams } from "@react-navigation/native"
+import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import * as Screens from "@/screens"
 import Config from "../config"
-import { useStores } from "../models"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
@@ -42,7 +41,7 @@ const AppStack = observer(function AppStack() {
       }}
       initialRouteName="Login"
     >
-      <Stack.Screen name="Login" component={Screens.LoginScreen} />
+      <Stack.Screen name="Login" component={Screens.Login.Screen} />
       <Stack.Screen name="Register" component={Screens.RegisterUserScreen} />
       <Stack.Screen name="ForgotPassword" component={Screens.ForgotPasswordScreen} />
       <Stack.Screen name="CodeConfirmation" component={Screens.CodeConfirmationScreen} />
