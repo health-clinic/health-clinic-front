@@ -1,5 +1,3 @@
-const { colors } = require('./app/theme/colorsDark')
-
 module.exports = {
   content: [
     './app/**/*.{ts,tsx,js,jsx}',
@@ -40,6 +38,11 @@ module.exports = {
           100: "#F2D6CD",
           500: "#C03403",
         },
+      },
+      fontFamily: {
+        interRegular: ["Inter-Regular"],
+        interMedium: ["Inter-Medium"],
+        interBold: ["Inter-Bold"],
       },
     },
   },

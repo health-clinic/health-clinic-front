@@ -8,7 +8,6 @@ import { ServicesGrid } from "../components/ServicesGrid"
 import { DepartmentsSection } from "../components/DepartamentsSection"
 import { HospitalsSection } from "../components/HospitalsSection"
 import { BottomNavigation } from "../components/BottomNavigation"
-import { colors } from "../theme"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useAppTheme } from "../utils/useAppTheme"
 
@@ -23,12 +22,36 @@ export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_pro
   }
 
   const services = [
-    { icon: "hospital-building" as keyof typeof MaterialCommunityIcons.glyphMap, title: "Consulta\nClínica", color: theme.colors.tint },
-    { icon: "home" as keyof typeof MaterialCommunityIcons.glyphMap, title: "Consulta\nDomiciliar", color: theme.colors.tint },
-    { icon: "video" as keyof typeof MaterialCommunityIcons.glyphMap, title: "Consulta\nOnline", color: theme.colors.tint },
-    { icon: "pill" as keyof typeof MaterialCommunityIcons.glyphMap, title: "Farmácia", color: theme.colors.tint },
-    { icon: "virus" as keyof typeof MaterialCommunityIcons.glyphMap, title: "Doenças", color: theme.colors.tint },
-    { icon: "shield-virus" as keyof typeof MaterialCommunityIcons.glyphMap, title: "Covid-19", color: theme.colors.tint },
+    {
+      icon: "hospital-building" as keyof typeof MaterialCommunityIcons.glyphMap,
+      title: "Consulta\nClínica",
+      color: theme.colors.tint,
+    },
+    {
+      icon: "home" as keyof typeof MaterialCommunityIcons.glyphMap,
+      title: "Consulta\nDomiciliar",
+      color: theme.colors.tint,
+    },
+    {
+      icon: "video" as keyof typeof MaterialCommunityIcons.glyphMap,
+      title: "Consulta\nOnline",
+      color: theme.colors.tint,
+    },
+    {
+      icon: "pill" as keyof typeof MaterialCommunityIcons.glyphMap,
+      title: "Farmácia",
+      color: theme.colors.tint,
+    },
+    {
+      icon: "virus" as keyof typeof MaterialCommunityIcons.glyphMap,
+      title: "Doenças",
+      color: theme.colors.tint,
+    },
+    {
+      icon: "shield-virus" as keyof typeof MaterialCommunityIcons.glyphMap,
+      title: "Covid-19",
+      color: theme.colors.tint,
+    },
   ]
 
   const departments = [
@@ -55,13 +78,15 @@ export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen(_pro
   const hospitals = [
     {
       name: "Hospital São Lucas",
-      image: "https://images.pexels.com/photos/668298/pexels-photo-668298.jpeg?auto=compress&cs=tinysrgb&w=800",
+      image:
+        "https://images.pexels.com/photos/668298/pexels-photo-668298.jpeg?auto=compress&cs=tinysrgb&w=800",
       rating: "4.8",
       distance: "1.2 km",
     },
     {
       name: "Hospital Albert Einstein",
-      image: "https://images.pexels.com/photos/127873/pexels-photo-127873.jpeg?auto=compress&cs=tinysrgb&w=800",
+      image:
+        "https://images.pexels.com/photos/127873/pexels-photo-127873.jpeg?auto=compress&cs=tinysrgb&w=800",
       rating: "4.9",
       distance: "2.5 km",
     },

@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react"
-import { View, TextInput, TouchableOpacity } from "react-native"
-import { Text } from "../../components"
+import { View, TextInput, TouchableOpacity, Text } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useAppTheme } from "../../utils/useAppTheme"
 
@@ -24,9 +23,9 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ formData, updateFormData }) => {
     `flex-row items-center bg-[rgba(80,90,110,0.95)] rounded-2xl border px-5 h-16 ${
       isFocused ? "border-primary-300" : "border-primary-500"
     }`
-  
+
   const inputStyle = "flex-1 text-base text-neutral-900 font-body"
-  
+
   return (
     <View>
       <Text className="text-lg font-semibold text-white mb-4 text-center">Informações Gerais</Text>

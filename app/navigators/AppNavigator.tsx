@@ -11,6 +11,9 @@ import { ComponentProps } from "react"
 export type AppStackParamList = {
   Login: undefined
   Register: undefined
+  ForgotPassword: undefined
+  CodeConfirmation: { email: string }
+  ResetPassword: { email: string }
   Home: undefined
 }
 
@@ -24,7 +27,9 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-  const { theme: { colors } } = useAppTheme()
+  const {
+    theme: { colors },
+  } = useAppTheme()
 
   return (
     <Stack.Navigator
@@ -38,9 +43,11 @@ const AppStack = observer(function AppStack() {
       initialRouteName="Login"
     >
       <Stack.Screen name="Login" component={Screens.LoginScreen} />
-      <Stack.Screen name="Register" component={Screens.RegisterScreen} />
+      <Stack.Screen name="Register" component={Screens.RegisterUserScreen} />
+      <Stack.Screen name="ForgotPassword" component={Screens.ForgotPasswordScreen} />
+      <Stack.Screen name="CodeConfirmation" component={Screens.CodeConfirmationScreen} />
+      <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />
       <Stack.Screen name="Home" component={Screens.HomeScreen} />
-
     </Stack.Navigator>
   )
 })

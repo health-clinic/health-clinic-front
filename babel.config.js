@@ -1,3 +1,5 @@
+const { plugins } = require('./tailwind.config')
+
 /** @type {import('@babel/core').TransformOptions} */
 module.exports = function (api) {
   api.cache(true)

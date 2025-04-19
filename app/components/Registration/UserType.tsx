@@ -1,8 +1,6 @@
 import React, { FC } from "react"
-import { View, TouchableOpacity } from "react-native"
-import { Text } from "../../components"
+import { View, TouchableOpacity, Text } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { colors } from "../../theme"
 
 interface UserTypeProps {
   userType: "administrator" | "patient" | "doctor" | null

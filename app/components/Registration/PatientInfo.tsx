@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react"
-import { View, TextInput } from "react-native"
-import { Text } from "../../components"
+import { View, TextInput, Text } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { spacing } from "../../theme"
 import { useAppTheme } from "../../utils/useAppTheme"

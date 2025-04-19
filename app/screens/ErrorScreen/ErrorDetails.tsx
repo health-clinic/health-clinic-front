@@ -1,8 +1,8 @@
 import { ErrorInfo } from "react"
-import { ScrollView, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text } from "../../components"
+import { ScrollView, TextStyle, View, ViewStyle, Text, TouchableOpacity } from "react-native"
 import type { ThemedStyle } from "@/theme"
 import { useAppTheme } from "@/utils/useAppTheme"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export interface ErrorDetailsProps {
   error: Error
@@ -18,13 +18,13 @@ export interface ErrorDetailsProps {
 export function ErrorDetails(props: ErrorDetailsProps) {
   const { themed } = useAppTheme()
   return (
-    <Screen
+    <View
       preset="fixed"
       safeAreaEdges={["top", "bottom"]}
       contentContainerStyle={themed($contentContainer)}
     >
       <View style={$topSection}>
-        <Icon icon="ladybug" size={64} />
+        <MaterialCommunityIcons icon="ladybug" size={64} />
         <Text style={themed($heading)} preset="subheading" tx="errorScreen:title" />
         <Text tx="errorScreen:friendlySubtitle" />
       </View>
@@ -41,13 +41,13 @@ export function ErrorDetails(props: ErrorDetailsProps) {
         />
       </ScrollView>
 
-      <Button
+      <TouchableOpacity
         preset="reversed"
         style={themed($resetButton)}
         onPress={props.onReset}
         tx="errorScreen:reset"
       />
-    </Screen>
+    </View>
   )
 }
 
