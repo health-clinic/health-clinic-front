@@ -1,4 +1,4 @@
-export * from "./LoginScreen"
+export * from "./Auth/LoginScreen"
 export * from "./ForgotPasswordScreen/index"
 export * from "./RegisterUserScreen"
 export * from "./HomeScreen"
