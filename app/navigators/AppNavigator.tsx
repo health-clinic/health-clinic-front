@@ -39,7 +39,7 @@ const AppStack = observer(function AppStack() {
           backgroundColor: colors.background,
         },
       }}
-      initialRouteName="Login"
+      initialRouteName="Home"
     >
       <Stack.Screen name="Login" component={Screens.Login.Screen} />
       <Stack.Screen name="Register" component={Screens.RegisterUserScreen} />
