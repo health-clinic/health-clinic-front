@@ -2,7 +2,7 @@ import { AppStackParamList } from "@/navigators"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { FC, useState } from "react"
 import { Alert, Image, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { createAuthApi } from "@/services/api/authService.api"
+import { createAuthenticationApi } from "@/services/authentication/authentication.api"
 import { api } from "@/services/api"
 import { ActivityIndicator } from "react-native-paper"
 
@@ -21,7 +21,7 @@ export const ForgotPasswordScreen: FC<ForgotPasswordScreenProps> = (_props) => {
     setIsLoading(true)
 
     try {
-      const { kind } = await createAuthApi(api).sendForgotPasswordMail(email)
+      const { kind } = await createAuthenticationApi(api).sendForgotPasswordMail(email)
       if (kind !== "ok") {
         throw new Error("Erro ao enviar código de recuperação")
       }

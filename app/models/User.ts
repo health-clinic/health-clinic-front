@@ -2,16 +2,16 @@ import { Instance, SnapshotIn, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
 import { AddressModel } from "@/models/Address"
 import { AdministratorModel } from "@/models/Administrator"
-import { DoctorModel } from "@/models/Doctor"
+import { ProfessionalModel } from "@/models/Professional"
 import { PatientModel } from "@/models/Patient"
 
 export const UserModel = types
   .model("User")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     address: types.reference(AddressModel),
     admin: types.maybe(types.reference(types.late(() => AdministratorModel))),
-    doctor: types.maybe(types.reference(types.late(() => DoctorModel))),
+    professional: types.maybe(types.reference(types.late(() => ProfessionalModel))),
     patient: types.maybe(types.reference(types.late(() => PatientModel))),
     name: types.string,
     email: types.string,
@@ -23,11 +23,12 @@ export const UserModel = types
     updatedAt: types.Date,
   })
   .actions(withSetPropAction)
-  .views(self => ({
-    isAdministrator: () => self.role === 'ADMINISTRATOR',
-    isDoctor: () => self.role === 'DOCTOR',
-    isPatient: () => self.role === 'PATIENT',
-  }));
+  .views((self) => ({
+    isAdministrator: () => self.role === "ADMINISTRATOR",
+    isProfessional: () => self.role === "DOCTOR",
+    isPatient: () => self.role === "PATIENT",
+  }))
 
 export interface User extends Instance<typeof UserModel> {}
+
 export interface UserSnapshotIn extends SnapshotIn<typeof UserModel> {}

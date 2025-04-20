@@ -6,6 +6,9 @@ import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
+import { Unit } from "@/models/Unit"
+import { Specialty } from "@/models/Specialty"
+import { Professional } from "@/models/Professional"
 
 export type AppStackParamList = {
   Login: undefined
@@ -14,6 +17,11 @@ export type AppStackParamList = {
   CodeConfirmation: { email: string }
   ResetPassword: { email: string }
   Home: undefined
+  SelectUnit: undefined
+  SelectSpecialty: { unit: Unit }
+  SelectProfessional: { specialty: Specialty; unit: Unit }
+  SelectDateTime: { professional: Professional }
+  ConfirmAppointment: { professional: Professional; date: string; time: string }
 }
 
 const exitRoutes = Config.exitRoutes
@@ -39,14 +47,21 @@ const AppStack = observer(function AppStack() {
           backgroundColor: colors.background,
         },
       }}
-      initialRouteName="Home"
+      initialRouteName="SelectUnit"
     >
       <Stack.Screen name="Login" component={Screens.Login.Screen} />
       <Stack.Screen name="Register" component={Screens.RegisterUserScreen} />
       <Stack.Screen name="ForgotPassword" component={Screens.ForgotPasswordScreen} />
       <Stack.Screen name="CodeConfirmation" component={Screens.CodeConfirmationScreen} />
       <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />
+
       <Stack.Screen name="Home" component={Screens.HomeScreen} />
+
+      <Stack.Screen name="SelectUnit" component={Screens.SelectUnitScreen} />
+      <Stack.Screen name="SelectSpecialty" component={Screens.SelectSpecialtyScreen} />
+      <Stack.Screen name="SelectProfessional" component={Screens.SelectProfessionalScreen} />
+      <Stack.Screen name="SelectDateTime" component={Screens.SelectDateTimeScreen} />
+      <Stack.Screen name="ConfirmAppointment" component={Screens.ConfirmAppointmentScreen} />
     </Stack.Navigator>
   )
 })

@@ -5,7 +5,7 @@ import { Alert, Image, Text, TextInput, TouchableOpacity, View } from "react-nat
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useAppTheme } from "../../utils/useAppTheme"
 import { ActivityIndicator } from "react-native-paper"
-import { createAuthApi } from "@/services/api/authService.api"
+import { createAuthenticationApi } from "@/services/authentication/authentication.api"
 import { api } from "@/services/api"
 
 interface ResetPasswordScreenProps
@@ -31,7 +31,7 @@ export const ResetPasswordScreen: FC<ResetPasswordScreenProps> = ({
     setIsLoading(true)
 
     try {
-      const { kind } = await createAuthApi(api).resetUserPassword(email, password)
+      const { kind } = await createAuthenticationApi(api).resetUserPassword(email, password)
       if (kind !== "ok") {
         throw new Error(
           "Não foi possível validar o código internamente, por favor, solicite outro e revalide.",

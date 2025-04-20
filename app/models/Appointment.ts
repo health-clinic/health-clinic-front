@@ -1,13 +1,16 @@
-import { Instance, types } from "mobx-state-tree"
+import { Instance, SnapshotIn, types } from "mobx-state-tree"
 import { withSetPropAction } from "@/models/helpers/withSetPropAction"
-import { DoctorModel } from "@/models/Doctor"
+import { ProfessionalModel } from "@/models/Professional"
+import { UnitModel } from "@/models/Unit"
+import { PatientModel } from "@/models/Patient"
 
 export const AppointmentModel = types
   .model("Appointment")
   .props({
-    id: types.identifier,
-    // clinic: types.reference(ClinicModel),
-    doctor: types.reference(DoctorModel),
+    id: types.identifierNumber,
+    professional: types.reference(ProfessionalModel),
+    patient: types.reference(PatientModel),
+    unit: types.reference(UnitModel),
     date: types.Date,
     status: types.enumeration("Status", ["confirmed", "pending", "cancelled", "completed"]),
     createdAt: types.Date,
@@ -16,3 +19,5 @@ export const AppointmentModel = types
   .actions(withSetPropAction)
 
 export interface Appointment extends Instance<typeof AppointmentModel> {}
+
+export interface AppointmentSnapshotIn extends SnapshotIn<typeof AppointmentModel> {}

@@ -25,7 +25,7 @@ interface RegisterPayload {
   specialty?: string
 }
 
-export const createAuthApi = (api: Api) => {
+export const createAuthenticationApi = (api: Api) => {
   return {
     login: async (
       email: string,

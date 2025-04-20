@@ -7,7 +7,7 @@ export function makeServer({ environment = "development" } = {}) {
     serializers: {
       application: JSONAPISerializer,
     },
-    routes, // ✅ Make sure this is passed
+    routes,
     timing: 750,
   })
 }

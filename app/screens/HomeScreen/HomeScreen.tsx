@@ -17,15 +17,15 @@ export const HomeScreen = ({ navigation }: HomeScreenProps): ReactElement => {
   const fetchAppointments = (): void => {
     const appointments: Appointment[] = [
       {
-        id: "appt-1",
+        id: "1",
         date: new Date("2025-04-20T14:30:00"),
         status: "confirmed",
         doctor: {
-          id: "doc-1",
+          id: "1",
           user: {
-            id: "user-1",
+            id: "1",
             address: {
-              id: "addr-1",
+              id: "1",
               zipCode: "12345-678",
               street: "Av. Paulista",
               number: "1000",
@@ -56,15 +56,15 @@ export const HomeScreen = ({ navigation }: HomeScreenProps): ReactElement => {
         updatedAt: new Date(),
       },
       {
-        id: "appt-2",
+        id: "2",
         date: new Date("2025-03-15T09:00:00"),
         status: "completed",
         doctor: {
-          id: "doc-2",
+          id: "2",
           user: {
-            id: "user-2",
+            id: "2",
             address: {
-              id: "addr-2",
+              id: "2",
               zipCode: "98765-432",
               street: "Rua das Flores",
               number: "200",
@@ -115,7 +115,12 @@ export const HomeScreen = ({ navigation }: HomeScreenProps): ReactElement => {
         className="px-4 mt-4"
         contentContainerClassName="flex-row justify-between gap-4"
       >
-        <QuickAction icon={Plus} label="Nova consulta" highlight />
+        <QuickAction
+          icon={Plus}
+          label="Nova consulta"
+          highlight
+          onPress={() => navigation.navigate("SelectUnit")}
+        />
         <QuickAction icon={Folder} label="Meus dados médicos" />
         <QuickAction icon={CalendarDays} label="Calendário" />
         <QuickAction icon={Pill} label="Prescrições" />
