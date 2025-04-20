@@ -1,5 +1,6 @@
 import { Server } from "miragejs"
-import { authRouter } from "./auth"
+import { appointmentRouter } from "./appointment"
+import { authenticationRouter } from "./authentication"
 
 export default function routes(this: Server) {
   this.namespace = "/api/v1"
@@ -7,5 +8,6 @@ export default function routes(this: Server) {
   this.passthrough("https://**")
   this.passthrough("http://**")
 
-  authRouter.apply(this)
+  authenticationRouter.apply(this)
+  appointmentRouter.apply(this)
 }

@@ -5,7 +5,7 @@ import { UserModel } from "@/models/User"
 export const AdministratorModel = types
   .model("Administrator")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     user: types.reference(UserModel),
     createdAt: types.Date,
     updatedAt: types.Date,

@@ -100,7 +100,6 @@ export const RegisterUserScreen: FC<RegisterUserScreenProps> = observer(
     }
 
     const register = () => {
-      console.log("Registration data:", formData)
       navigation.navigate("Home")
     }
 

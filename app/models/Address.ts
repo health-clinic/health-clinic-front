@@ -4,7 +4,7 @@ import { withSetPropAction } from "./helpers/withSetPropAction"
 export const AddressModel = types
   .model("Address")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     zipCode: types.string,
     state: types.string,
     city: types.string,

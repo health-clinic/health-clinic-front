@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import { FC, useState } from "react"
 import { Alert, View } from "react-native"
 import { AppStackScreenProps } from "@/navigators"
-import { createAuthApi } from "@/services/api/authService.api"
+import { createAuthenticationApi } from "@/services/authentication/authentication.api"
 import { api } from "@/services/api"
 import { AuthHeader } from "@/components/AuthHeader"
 import { Login } from "."
@@ -21,7 +21,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
 
     setIsLoading(true)
 
-    const { kind } = await createAuthApi(api).login(email, password)
+    const { kind } = await createAuthenticationApi(api).login(email, password)
     if (kind !== "ok") {
       setIsLoading(false)
       Alert.alert("Não foi possível entrar", "Verifique se seu e-mail e senha estão corretos.")

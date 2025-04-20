@@ -5,7 +5,7 @@ import { UserModel } from "@/models/User"
 export const PatientModel = types
   .model("Patient")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     user: types.reference(UserModel),
     cns: types.string,
     createdAt: types.Date,

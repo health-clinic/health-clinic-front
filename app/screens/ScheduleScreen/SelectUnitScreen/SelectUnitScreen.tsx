@@ -1,16 +1,14 @@
-import { FC, ReactElement, useEffect, useState } from "react"
-import { View } from "react-native"
+import { ReactElement, useEffect, useState } from "react"
+import { FlatList, Text, View } from "react-native"
 import { TextInput } from "@/components/TextInput"
 import { AppStackScreenProps } from "@/navigators"
 import { Unit } from "@/models/Unit"
 import { Search } from "lucide-react-native"
-import { UnitList } from "@/screens/Schedule/SelectUnitScreen/UnitList"
+import { UnitCard } from "@/screens/ScheduleScreen/SelectUnitScreen/UnitCard"
 
 interface SelectUnitScreenProps extends AppStackScreenProps<"SelectUnit"> {}
 
-export const SelectUnitScreen: FC<SelectUnitScreenProps> = ({
-  navigation,
-}: SelectUnitScreenProps): ReactElement => {
+export const SelectUnitScreen = ({ navigation }: SelectUnitScreenProps): ReactElement => {
   const [units, setUnits] = useState<Unit[]>([])
   const [filteredUnits, setFilteredUnits] = useState<Unit[]>([])
   const [search, setSearch] = useState<string>("")
@@ -70,24 +68,34 @@ export const SelectUnitScreen: FC<SelectUnitScreenProps> = ({
   }, [search, units])
 
   return (
-    <View className="flex-1 bg-background px-6 pt-10 gap-6">
-      <Text preset="heading" className="text-center">
+    <View className="flex-1 gap-6 p-6">
+      <Text className="text-center text-xl font-semibold text-primary-500" preset="heading">
         Selecione a unidade
       </Text>
 
-      <TextInput.Root>
-        <TextInput.Icon icon={Search} />
+      <View>
+        <TextInput.Root>
+          <TextInput.Icon icon={Search} />
 
-        <TextInput.Control
-          onChangeText={setSearch}
-          placeholder="Buscar unidade..."
-          value={search}
-        />
-      </TextInput.Root>
+          <TextInput.Control
+            onChangeText={setSearch}
+            placeholder="Buscar unidade..."
+            value={search}
+          />
+        </TextInput.Root>
+      </View>
 
-      <UnitList
-        onSelect={(unit: Unit): void => navigation.navigate("SelectSpecialty", { unit })}
-        units={filteredUnits}
+      <FlatList
+        data={filteredUnits}
+        keyExtractor={(unit: Unit) => unit.id}
+        renderItem={({ item: unit }) => (
+          <UnitCard
+            unit={unit}
+            onPress={() => navigation.navigate("SelectSpecialty", { unit })}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="gap-4"
       />
     </View>
   )

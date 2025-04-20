@@ -4,10 +4,10 @@ import { UserModel } from "@/models/User"
 import { SpecialtyModel } from "@/models/Specialty"
 import { UnitModel } from "@/models/Unit"
 
-export const DoctorModel = types
-  .model("Doctor")
+export const ProfessionalModel = types
+  .model("Professional")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     specialty: types.reference(SpecialtyModel),
     unit: types.reference(UnitModel),
     user: types.reference(UserModel),
@@ -17,4 +17,4 @@ export const DoctorModel = types
   })
   .actions(withSetPropAction)
 
-export interface Doctor extends Instance<typeof DoctorModel> {}
+export interface Professional extends Instance<typeof ProfessionalModel> {}

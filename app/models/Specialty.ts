@@ -4,7 +4,7 @@ import { withSetPropAction } from "./helpers/withSetPropAction"
 export const SpecialtyModel = types
   .model("Specialty")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     name: types.string,
     createdAt: types.Date,
     updatedAt: types.Date,

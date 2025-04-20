@@ -5,7 +5,7 @@ import { AddressModel } from "@/models/Address"
 export const UnitModel = types
   .model("Unit")
   .props({
-    id: types.identifier,
+    id: types.identifierNumber,
     address: types.reference(AddressModel),
     name: types.string,
     distance: types.string,

@@ -5,7 +5,7 @@ function maybeGenerateField(generatorFunction: () => {}, probability = 1) {
   return Math.random() < probability ? generatorFunction() : null
 }
 
-export function authRouter(this: Server): void {
+export function authenticationRouter(this: Server): void {
   this.post("/auth/login", (_schema, request) => {
     const { email, password } = JSON.parse(request.requestBody)
 
@@ -52,7 +52,6 @@ export function authRouter(this: Server): void {
 
   this.post("/auth/verify-code", (_schema, request) => {
     const { code } = JSON.parse(request.requestBody)
-    console.log(code)
 
     if (code !== "123456") {
       return new Response(422, {}, { error: "Invalid code" })
