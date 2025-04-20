@@ -12,6 +12,6 @@ export const DoctorModel = types
     createdAt: types.Date,
     updatedAt: types.Date,
   })
-  .actions(withSetPropAction);
+  .actions(withSetPropAction)
 
 export interface Doctor extends Instance<typeof DoctorModel> {}
