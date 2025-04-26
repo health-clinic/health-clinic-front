@@ -8,14 +8,10 @@ interface ButtonProps extends TouchableOpacityProps {
   children: ReactNode
 }
 
-export const Button = ({ isLoading, children, ...props }: ButtonProps) => {
+export const Button = ({ isLoading, children, className, ...props }: ButtonProps) => {
   return (
     <TouchableOpacity
-      className={cn(
-        "w-full items-center py-4 rounded-xl",
-        isLoading ? "bg-primary-400" : "bg-primary-500",
-        props.className,
-      )}
+      className={cn("w-full items-center py-4 rounded-xl bg-primary-600", className)}
       disabled={isLoading}
       {...props}
     >

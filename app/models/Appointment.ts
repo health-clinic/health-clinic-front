@@ -8,10 +8,11 @@ export const AppointmentModel = types
   .model("Appointment")
   .props({
     id: types.identifierNumber,
-    professional: types.reference(ProfessionalModel),
     patient: types.reference(PatientModel),
+    professional: types.reference(ProfessionalModel),
     unit: types.reference(UnitModel),
     date: types.Date,
+    time: types.string,
     status: types.enumeration("Status", ["confirmed", "pending", "cancelled", "completed"]),
     createdAt: types.Date,
     updatedAt: types.Date,

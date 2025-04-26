@@ -16,9 +16,26 @@ export function authenticationRouter(this: Server): void {
     return {
       token: "::demo-token::",
       user: {
+        id: faker.number.int({ min: 1, max: 1000 }),
+        address: {
+          id: faker.number.int({ min: 1, max: 1000 }),
+          zipCode: faker.location.zipCode("#####-###"),
+          state: faker.location.state(),
+          city: faker.location.city(),
+          district: faker.location.county(),
+          street: faker.location.street(),
+          number: faker.number.int({ min: 1, max: 9999 }).toString(),
+          createdAt: faker.date.past(),
+          updatedAt: faker.date.recent(),
+        },
         name: faker.person.fullName(),
-        email,
-        type: "Patient",
+        email: faker.internet.email(),
+        phone: faker.phone.number("+55 ## #####-####"),
+        birthdate: faker.date.birthdate({ min: 18, max: 90, mode: "age" }),
+        document: faker.number.int({ min: 10000000000, max: 99999999999 }).toString(),
+        role: "PATIENT",
+        createdAt: faker.date.past(),
+        updatedAt: faker.date.recent(),
       },
     }
   })
