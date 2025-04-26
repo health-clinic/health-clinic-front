@@ -9,10 +9,10 @@ interface HistoryCardProps {
 
 export const AppointmentCard = ({ appointment }: HistoryCardProps): ReactElement => {
   return (
-    <View className="w-full rounded-2xl border border-zinc-700 p-4 space-y-2 bg-zinc-900">
-      <Text className="text-white font-semibold">{appointment.doctor.user.name}</Text>
+    <View className="w-full p-4 rounded-2xl border border-primary-500 bg-neutral-200">
+      <Text className="text-white font-semibold">{appointment.professional.user.name}</Text>
 
-      <Text className="text-zinc-400 text-sm">{appointment.doctor.specialty}</Text>
+      <Text className="text-zinc-400 text-sm">{appointment.professional.specialty.name}</Text>
 
       <View className="flex-row items-center space-x-1 mt-2">
         <CalendarDays className="text-primary-300" size={16} />

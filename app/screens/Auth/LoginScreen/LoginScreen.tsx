@@ -4,16 +4,19 @@ import { Alert, View } from "react-native"
 import { AppStackScreenProps } from "@/navigators"
 import { createAuthenticationApi } from "@/services/authentication/authentication.api"
 import { api } from "@/services/api"
-import { AuthHeader } from "@/components/AuthHeader"
-import { Login } from "."
-import { Link } from "@/components/Link"
 import { authenticateWithBiometrics } from "@/utils/useBiometricAuth"
+import { useStores } from "@/models"
+import { AuthHeader } from "@/components/AuthHeader"
+import { Login } from "@/screens"
+import { Link } from "@/components/Link"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
   navigation,
 }: LoginScreenProps) {
+  const { userStore } = useStores()
+
   const [isLoading, setIsLoading] = useState(false)
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -21,7 +24,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
 
     setIsLoading(true)
 
-    const { kind } = await createAuthenticationApi(api).login(email, password)
+    const { kind, user } = await createAuthenticationApi(api).login(email, password)
     if (kind !== "ok") {
       setIsLoading(false)
       Alert.alert("Não foi possível entrar", "Verifique se seu e-mail e senha estão corretos.")
@@ -30,6 +33,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen({
     }
 
     setIsLoading(false)
+
+    userStore.assign(user)
 
     navigation.navigate("Home")
   }

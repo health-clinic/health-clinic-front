@@ -9,19 +9,20 @@ export interface QuickActionProps extends TouchableOpacityProps {
   highlight?: boolean
 }
 
-export function QuickAction({ icon: Icon, label, highlight, ...props }: QuickActionProps) {
+export function Action({ icon: Icon, label, highlight, ...props }: QuickActionProps) {
   return (
     <TouchableOpacity
       className={cn(
         props.className,
-        "w-28 h-28 flex-col items-start justify-center rounded-3xl p-4 border",
-        highlight ? "bg-primary-500 " : "bg-zinc-900 border-zinc-700",
+        "w-[25%] h-24 rounded-2xl p-3 border bg-neutral-200 border-primary-400",
+        highlight && "bg-primary-500 border-primary-500",
+        "flex flex-col items-start justify-around",
       )}
       {...props}
     >
-      <Icon size={24} className={cn(highlight ? "text-white" : "text-primary-300")} />
+      <Icon size={20} className={cn(highlight ? "text-white" : "text-primary-500")} />
 
-      <Text className={cn("mt-2 text-sm font-medium", highlight ? "text-white" : "text-white")}>
+      <Text className="mt-3 text-left text-sm font-semibold leading-tight text-neutral-800">
         {label}
       </Text>
     </TouchableOpacity>

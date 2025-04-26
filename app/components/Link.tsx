@@ -8,7 +8,7 @@ interface LinkProps extends TouchableOpacityProps {
 export const Link = ({ text, ...props }: LinkProps) => {
   return (
     <TouchableOpacity accessibilityRole="link" {...props}>
-      <Text className="text-sm text-primary-300 font-medium">{text}</Text>
+      <Text className="text-sm text-primary-600 font-medium">{text}</Text>
     </TouchableOpacity>
   )
 }

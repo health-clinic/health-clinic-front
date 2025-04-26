@@ -1,5 +1,5 @@
-import { Instance, types } from "mobx-state-tree"
-import { withSetPropAction } from "./helpers/withSetPropAction"
+import { Instance, SnapshotIn, types } from "mobx-state-tree"
+import { withSetPropAction } from "../helpers/withSetPropAction"
 import { UserModel } from "@/models/User"
 
 export const AdministratorModel = types
@@ -10,6 +10,8 @@ export const AdministratorModel = types
     createdAt: types.Date,
     updatedAt: types.Date,
   })
-  .actions(withSetPropAction);
+  .actions(withSetPropAction)
 
 export interface Administrator extends Instance<typeof AdministratorModel> {}
+
+export interface AdministratorSnapshotIn extends SnapshotIn<typeof AdministratorModel> {}
