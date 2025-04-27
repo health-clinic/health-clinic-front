@@ -73,7 +73,7 @@ export const SelectDateTimeScreen = ({
           <TouchableOpacity
             className="flex-1 border border-primary-500 rounded-xl px-4 py-2"
             onPress={(): void =>
-              navigation.navigate("ConfirmAppointment", { professional, date, time })
+              navigation.navigate("ConfirmSchedule", { professional, date, time })
             }
           >
             <Text className="text-white text-center">{time}</Text>

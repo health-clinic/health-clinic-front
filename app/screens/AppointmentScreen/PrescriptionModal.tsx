@@ -36,7 +36,7 @@ export const PrescriptionModal = ({
                 onChangeText={(text) => {
                   const updated = [...prescriptions]
                   updated[index].name = text
-                  setPrescriptions(updated)
+                  onPrescriptionAdded(updated)
                 }}
               />
 
