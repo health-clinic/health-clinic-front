@@ -33,7 +33,7 @@ export function authenticationRouter(this: Server): void {
         phone: faker.phone.number("+55 ## #####-####"),
         birthdate: faker.date.birthdate({ min: 18, max: 90, mode: "age" }),
         document: faker.number.int({ min: 10000000000, max: 99999999999 }).toString(),
-        role: "PATIENT",
+        role: "Professional",
         createdAt: faker.date.past(),
         updatedAt: faker.date.recent(),
       },

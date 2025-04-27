@@ -9,6 +9,9 @@ import { ComponentProps } from "react"
 import { Unit } from "@/models/Unit"
 import { Specialty } from "@/models/Specialty"
 import { Professional } from "@/models/Professional"
+import { Appointment } from "@/models/Appointment"
+import { Diagnosis } from "@/models/Diagosis"
+import { Prescription } from "@/models/Prescription"
 
 export type AppStackParamList = {
   Login: undefined
@@ -21,7 +24,14 @@ export type AppStackParamList = {
   SelectSpecialty: { unit: Unit }
   SelectProfessional: { specialty: Specialty; unit: Unit }
   SelectDateTime: { professional: Professional }
-  ConfirmAppointment: { professional: Professional; date: string; time: string }
+  ConfirmSchedule: { professional: Professional; date: string; time: string }
+  Appointment: { appointment: Appointment }
+  ConfirmAppointment: {
+    appointment: Appointment
+    complaints: string[]
+    diagnoses: Diagnosis[]
+    prescriptions: Prescription[]
+  }
 }
 
 const exitRoutes = Config.exitRoutes
@@ -61,6 +71,9 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="SelectSpecialty" component={Screens.SelectSpecialtyScreen} />
       <Stack.Screen name="SelectProfessional" component={Screens.SelectProfessionalScreen} />
       <Stack.Screen name="SelectDateTime" component={Screens.SelectDateTimeScreen} />
+      <Stack.Screen name="ConfirmSchedule" component={Screens.ConfirmScheduleScreen} />
+
+      <Stack.Screen name="Appointment" component={Screens.AppointmentScreen} />
       <Stack.Screen name="ConfirmAppointment" component={Screens.ConfirmAppointmentScreen} />
     </Stack.Navigator>
   )

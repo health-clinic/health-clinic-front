@@ -8,12 +8,12 @@ import { api } from "@/services/api"
 import { createAppointmentApi } from "@/services/appointment/appointment.api"
 import { Professional } from "@/models/Professional"
 
-interface ConfirmAppointmentScreenProps extends AppStackScreenProps<"ConfirmAppointment"> {}
+interface ConfirmScheduleScreenProps extends AppStackScreenProps<"ConfirmSchedule"> {}
 
-export const ConfirmAppointmentScreen = ({
+export const ConfirmScheduleScreen = ({
   navigation,
   route,
-}: ConfirmAppointmentScreenProps): ReactElement => {
+}: ConfirmScheduleScreenProps): ReactElement => {
   const { professional, date, time } = route.params as {
     professional: Professional
     date: string

@@ -13,14 +13,14 @@ export const UserModel = types
     birthdate: types.Date,
     document: types.string,
     address: types.reference(AddressModel),
-    role: types.enumeration("Role", ["ADMINISTRATOR", "PATIENT", "PROFESSIONAL"]),
+    role: types.enumeration("Role", ["Administrator", "Patient", "Professional"]),
     createdAt: types.Date,
     updatedAt: types.Date,
   })
   .views((self) => ({
-    isAdministrator: () => self.role === "ADMINISTRATOR",
-    isPatient: () => self.role === "PATIENT",
-    isProfessional: () => self.role === "PROFESSIONAL",
+    isAdministrator: () => self.role === "Administrator",
+    isPatient: () => self.role === "Patient",
+    isProfessional: () => self.role === "Professional",
   }))
   .actions(withSetPropAction)
 

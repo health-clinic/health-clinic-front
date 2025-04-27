@@ -49,7 +49,7 @@ export const NextAppointment = ({ appointment }: NextAppointmentProps): ReactEle
 
       <Button
         className="mt-2 py-2 rounded-xl bg-primary-500 active:opacity-90 shadow-sm"
-        onPress={() => navigation.navigate("AppointmentDetails", { appointment })}
+        onPress={() => navigation.navigate("Appointment", { appointment })}
       >
         <Text className="text-white font-semibold text-sm text-center">Iniciar atendimento</Text>
       </Button>
