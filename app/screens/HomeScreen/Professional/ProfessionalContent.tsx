@@ -50,6 +50,26 @@ export const ProfessionalContent = (): ReactElement => {
             },
           },
         },
+        prescriptions: [
+          {
+            id: 1,
+            name: "Amoxicilina",
+            dosage: "500 mg",
+            frequency: "3 vezes por dia",
+            duration: "7 dias",
+            created_at: "2025-04-16T09:00:00Z",
+            updated_at: "2025-04-16T09:00:00Z",
+          },
+          {
+            id: 2,
+            name: "Ibuprofeno",
+            dosage: "400 mg",
+            frequency: "2 vezes por dia",
+            duration: "5 dias",
+            created_at: "2025-04-16T09:00:00Z",
+            updated_at: "2025-04-16T09:00:00Z",
+          },
+        ],
         professional: {
           id: 1,
           crm: "CRM123456",

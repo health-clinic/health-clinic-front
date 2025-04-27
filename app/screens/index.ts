@@ -3,5 +3,6 @@ export * from "./ForgotPasswordScreen/index"
 export * from "./RegisterUserScreen"
 export * from "./HomeScreen"
 export * from "./ScheduleScreen"
+export * from "./AppointmentScreen"
 
 export * from "./ErrorScreen/ErrorBoundary"
