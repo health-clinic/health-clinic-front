@@ -31,6 +31,7 @@
     "@expo-google-fonts/inter": "^0.3.0",
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/metro-runtime": "~4.0.0",
+    "@hookform/resolvers": "^5.0.1",
     "@react-native-community/datetimepicker": "^8.3.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.1.5",
@@ -57,6 +58,7 @@
     "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-hook-form": "^7.56.1",
     "react-i18next": "^15.0.1",
     "react-native": "0.76.9",
     "react-native-calendars": "^1.1311.0",
@@ -70,9 +72,11 @@
     "react-native-safe-area-context": "^5.3.0",
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.11.2",
+    "react-native-toast-message": "^2.3.0",
     "react-native-web": "~0.19.6",
     "tailwind-merge": "^3.2.0",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

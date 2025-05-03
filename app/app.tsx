@@ -1,7 +1,4 @@
-/* eslint-disable import/first */
-if (__DEV__) {
-  require("./devtools/ReactotronConfig.ts")
-}
+import { toastConfig } from "@/components/toast/toastConfig"
 import "./global.css"
 import "./utils/gestureHandler"
 import { initI18n } from "./i18n"
@@ -13,16 +10,19 @@ import * as Linking from "expo-linking"
 import * as SplashScreen from "expo-splash-screen"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
-import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
+import { ErrorBoundary } from "@/screens/ErrorScreen/ErrorBoundary"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
 import { KeyboardProvider } from "react-native-keyboard-controller"
 import { loadDateFnsLocale } from "./utils/formatDate"
 import { makeServer } from "./mirage/server"
+import Toast from "react-native-toast-message"
 
 if (__DEV__) {
-  makeServer()
+  require("./devtools/ReactotronConfig.ts")
+
+  // makeServer()
 }
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
@@ -79,6 +79,8 @@ export function App() {
             initialState={initialNavigationState}
             onStateChange={onNavigationStateChange}
           />
+
+          <Toast config={toastConfig} />
         </KeyboardProvider>
       </ErrorBoundary>
     </SafeAreaProvider>
