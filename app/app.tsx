@@ -22,7 +22,7 @@ import Toast from "react-native-toast-message"
 if (__DEV__) {
   require("./devtools/ReactotronConfig.ts")
 
-  // makeServer()
+  makeServer()
 }
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
