@@ -1,33 +1,43 @@
+import { Children, cloneElement, isValidElement, ReactNode, useState } from "react"
 import { View, ViewProps } from "react-native"
 import { cn } from "@/utils/cn"
-import { ReactNode, isValidElement, useState, Children, cloneElement } from "react"
-import { TextInputControl } from "./TextInputControl"
 
 interface InputRootProps extends ViewProps {
   children: ReactNode
+  hasError?: boolean
 }
 
-export const TextInputRoot = ({ children, ...props }: InputRootProps) => {
-  const [isFocused, setIsFocused] = useState(false)
+export const TextInputRoot = ({ children, hasError, className, ...props }: InputRootProps) => {
+  const [isFocused, setIsFocused] = useState<boolean>(false)
+
+  const borderColor = hasError
+    ? "border-red-500"
+    : isFocused
+      ? "border-primary-500"
+      : "border-neutral-500"
 
   return (
     <View
       className={cn(
-        "flex-row items-center gap-2 bg-[rgba(80,90,110,0.95)] rounded-xl px-4 py-3 h-14 border-2",
-        isFocused ? "border-primary-500" : "border-primary-300",
-        props.className,
+        `flex-row items-center gap-2 h-14 rounded-xl border bg-neutral-200 px-4 ${borderColor}`,
+        className,
       )}
       {...props}
     >
-      {Children.map(children, (child) => {
-        if (isValidElement(child) && child.type === TextInputControl) {
-          return cloneElement(child, {
-            onFocus: () => setIsFocused(true),
-            onBlur: () => setIsFocused(false),
-          })
-        }
-        return child
-      })}
+      {Children.map(children, (child) =>
+        isValidElement(child)
+          ? cloneElement(child, {
+              onFocus: (...args: any) => {
+                child.props.onFocus?.(...args)
+                setIsFocused(true)
+              },
+              onBlur: (...args: any) => {
+                child.props.onBlur?.(...args)
+                setIsFocused(false)
+              },
+            })
+          : child,
+      )}
     </View>
   )
 }

@@ -1,21 +1,23 @@
-import { TouchableOpacity, ActivityIndicator } from "react-native"
 import type { TouchableOpacityProps } from "react-native"
+import { ActivityIndicator, TouchableOpacity } from "react-native"
 import { cn } from "@/utils/cn"
 import { ReactNode } from "react"
+import { useStores } from "@/models"
 
 interface ButtonProps extends TouchableOpacityProps {
-  isLoading?: boolean
   children: ReactNode
 }
 
-export const Button = ({ isLoading, children, className, ...props }: ButtonProps) => {
+export const Button = ({ children, className, ...props }: ButtonProps) => {
+  const { loadingStore } = useStores()
+
   return (
     <TouchableOpacity
       className={cn("w-full items-center py-4 rounded-xl bg-primary-600", className)}
-      disabled={isLoading}
+      disabled={loadingStore.isLoading}
       {...props}
     >
-      {isLoading ? <ActivityIndicator className="text-neutral-900" /> : children}
+      {loadingStore.isLoading ? <ActivityIndicator color="white" /> : children}
     </TouchableOpacity>
   )
 }
