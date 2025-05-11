@@ -1,16 +1,12 @@
 import { types } from "mobx-state-tree"
-import { Address, AddressModel } from "@/models/Address"
+import { AddressModel, AddressSnapshotIn } from "@/models/Address"
 
 export const AddressStore = types
   .model("AddressStore")
   .props({ items: types.map(AddressModel) })
   .actions((store) => ({
-    set(id: number, address: Address) {
-      store.items.set(id, {
-        ...address,
-        createdAt: new Date(address.createdAt),
-        updatedAt: new Date(address.updatedAt),
-      })
+    set(id: number, address: AddressSnapshotIn) {
+      store.items.set(id, { ...address })
     },
 
     delete(id: string) {

@@ -1,94 +1,46 @@
-import { ErrorInfo } from "react"
-import { ScrollView, TextStyle, View, ViewStyle, Text, TouchableOpacity } from "react-native"
-import type { ThemedStyle } from "@/theme"
-import { useAppTheme } from "@/utils/useAppTheme"
+import { ErrorInfo, ReactElement } from "react"
+import { ScrollView, Text, View } from "react-native"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { useTranslation } from "react-i18next"
+import { Button } from "@/components/Button"
 
 export interface ErrorDetailsProps {
   error: Error
   errorInfo: ErrorInfo | null
+
   onReset(): void
 }
 
-/**
- * Renders the error details screen.
- * @param {ErrorDetailsProps} props - The props for the `ErrorDetails` component.
- * @returns {JSX.Element} The rendered `ErrorDetails` component.
- */
-export function ErrorDetails(props: ErrorDetailsProps) {
-  const { themed } = useAppTheme()
+export const ErrorDetails = (props: ErrorDetailsProps): ReactElement => {
+  const { t } = useTranslation()
+
   return (
-    <View
-      preset="fixed"
-      safeAreaEdges={["top", "bottom"]}
-      contentContainerStyle={themed($contentContainer)}
-    >
-      <View style={$topSection}>
-        <MaterialCommunityIcons icon="ladybug" size={64} />
-        <Text style={themed($heading)} preset="subheading" tx="errorScreen:title" />
-        <Text tx="errorScreen:friendlySubtitle" />
+    <View className="flex-1 justify-center bg-neutral-100 px-6 py-6">
+      <View className="items-center gap-6">
+        <MaterialCommunityIcons name="bug" size={64} color="#FF6B8B" />
+
+        <Text className="text-xl font-bold text-neutral-900 text-center">
+          {t("errorScreen:title")}
+        </Text>
+
+        <Text className="text-base text-neutral-700 text-center">
+          {t("errorScreen:friendlySubtitle")}
+        </Text>
+
+        <ScrollView className="w-full bg-neutral-300 rounded-lg p-4 max-h-72 border border-neutral-400">
+          <Text className="font-bold text-angry-500 mb-2">{props.error?.toString().trim()}</Text>
+
+          <Text selectable className="text-xs text-neutral-700">
+            {props.errorInfo?.componentStack?.trim()}
+          </Text>
+        </ScrollView>
+
+        <Button className="bg-primary-500 w-full py-3 rounded-lg" onPress={props.onReset}>
+          <Text className="text-center font-semibold text-neutral-900">
+            {t("errorScreen:reset")}
+          </Text>
+        </Button>
       </View>
-
-      <ScrollView
-        style={themed($errorSection)}
-        contentContainerStyle={themed($errorSectionContentContainer)}
-      >
-        <Text style={themed($errorContent)} weight="bold" text={`${props.error}`.trim()} />
-        <Text
-          selectable
-          style={themed($errorBacktrace)}
-          text={`${props.errorInfo?.componentStack ?? ""}`.trim()}
-        />
-      </ScrollView>
-
-      <TouchableOpacity
-        preset="reversed"
-        style={themed($resetButton)}
-        onPress={props.onReset}
-        tx="errorScreen:reset"
-      />
     </View>
   )
 }
-
-const $contentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  alignItems: "center",
-  paddingHorizontal: spacing.lg,
-  paddingTop: spacing.xl,
-  flex: 1,
-})
-
-const $topSection: ViewStyle = {
-  flex: 1,
-  alignItems: "center",
-}
-
-const $heading: ThemedStyle<TextStyle> = ({ colors, spacing }) => ({
-  color: colors.error,
-  marginBottom: spacing.md,
-})
-
-const $errorSection: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
-  flex: 2,
-  backgroundColor: colors.separator,
-  marginVertical: spacing.md,
-  borderRadius: 6,
-})
-
-const $errorSectionContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  padding: spacing.md,
-})
-
-const $errorContent: ThemedStyle<TextStyle> = ({ colors }) => ({
-  color: colors.error,
-})
-
-const $errorBacktrace: ThemedStyle<TextStyle> = ({ colors, spacing }) => ({
-  marginTop: spacing.md,
-  color: colors.textDim,
-})
-
-const $resetButton: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
-  backgroundColor: colors.error,
-  paddingHorizontal: spacing.xxl,
-})

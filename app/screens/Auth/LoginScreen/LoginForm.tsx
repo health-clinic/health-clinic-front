@@ -5,7 +5,6 @@ import { Text, View } from "react-native"
 import { useState } from "react"
 import { z } from "zod"
 import { Controller, FieldErrors, useForm, useFormState } from "react-hook-form"
-import { showErrorToast } from "@/components/toast"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 interface LoginFormProps {
@@ -33,16 +32,12 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
   const { errors } = useFormState<FormData>({ control })
 
   const onError = (errors: FieldErrors<FormData>) => {
-    const message = Object.values(errors)[0]?.message
     const field = Object.keys(errors)[0] as keyof FormData
-
     setFocus(field)
-    showErrorToast(message)
   }
 
-  const hasEmailError = (Object.keys(errors)[0] as keyof FormData) === "email"
-
-  const hasPasswordError = (Object.keys(errors)[0] as keyof FormData) === "password"
+  const hasEmailError = Boolean(errors.email)
+  const hasPasswordError = Boolean(errors.password)
 
   return (
     <View className="flex-col gap-4">
@@ -50,45 +45,61 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
         control={control}
         name="email"
         render={({ field: { onChange, onBlur, ref, value } }) => (
-          <TextInput.Root hasError={hasEmailError}>
-            <TextInput.Icon icon={Mail} />
+          <View>
+            <TextInput.Root hasError={hasEmailError}>
+              <TextInput.Icon icon={Mail} />
 
-            <TextInput.Control
-              ref={ref}
-              placeholder="E-mail"
-              value={value ?? ""}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              textContentType="emailAddress"
-              autoComplete="email"
-            />
-          </TextInput.Root>
+              <TextInput.Control
+                ref={ref}
+                placeholder="E-mail"
+                value={value ?? ""}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                textContentType="emailAddress"
+                autoComplete="email"
+              />
+            </TextInput.Root>
+
+            {errors.email && (
+              <Text className="text-angry-500 text-xs mt-1">{errors.email.message}</Text>
+            )}
+          </View>
         )}
       />
 
       <Controller
         control={control}
         name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput.Root hasError={hasPasswordError}>
-            <TextInput.Icon icon={LockKeyhole} />
+        render={({ field: { onChange, onBlur, ref, value } }) => (
+          <View>
+            <TextInput.Root hasError={hasPasswordError}>
+              <TextInput.Icon icon={LockKeyhole} />
 
-            <TextInput.Control
-              placeholder="Senha"
-              value={value ?? ""}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              secureTextEntry={isPasswordHidden}
-              textContentType="password"
-              autoComplete="password"
-            />
+              <TextInput.Control
+                ref={ref}
+                placeholder="Senha"
+                value={value ?? ""}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                secureTextEntry={isPasswordHidden}
+                textContentType="password"
+                autoComplete="password"
+              />
 
-            <TextInput.Action onPress={() => setIsPasswordHidden(!isPasswordHidden)}>
-              <TextInput.Icon icon={isPasswordHidden ? EyeOff : Eye} />
-            </TextInput.Action>
-          </TextInput.Root>
+              <TextInput.Action onPress={() => setIsPasswordHidden(!isPasswordHidden)}>
+                <TextInput.Icon
+                  icon={isPasswordHidden ? EyeOff : Eye}
+                  hasError={hasPasswordError}
+                />
+              </TextInput.Action>
+            </TextInput.Root>
+
+            {errors.password && (
+              <Text className="text-angry-500 text-xs mt-1">{errors.password.message}</Text>
+            )}
+          </View>
         )}
       />
 

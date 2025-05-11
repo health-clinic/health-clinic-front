@@ -1,5 +1,4 @@
 import { Api } from "../api"
-import type { UserSnapshotIn } from "@/models/User/User"
 import { GeneralApiProblem, getGeneralApiProblem } from "@/services/api/apiProblem"
 import { ApiResponse } from "apisauce"
 import { AppointmentSnapshotIn } from "@/models/Appointment"

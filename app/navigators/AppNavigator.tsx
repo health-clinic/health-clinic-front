@@ -60,7 +60,7 @@ const AppStack = observer(function AppStack() {
       initialRouteName="Login"
     >
       <Stack.Screen name="Login" component={Screens.Login.Screen} />
-      <Stack.Screen name="Register" component={Screens.RegisterUserScreen} />
+      <Stack.Screen name="Register" component={Screens.Register.Screen} />
       <Stack.Screen name="ForgotPassword" component={Screens.ForgotPasswordScreen} />
       <Stack.Screen name="CodeConfirmation" component={Screens.CodeConfirmationScreen} />
       <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />

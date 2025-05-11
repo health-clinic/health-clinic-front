@@ -16,7 +16,7 @@ export const ProfessionalCard = ({ professional, ...props }: ProfessionalCardPro
     >
       <Image
         className="rounded-full mr-4"
-        source={require("./../../../../assets/images/avatar.png")}
+        source={professional.user.avatar}
         style={{ width: 64, height: 64 }}
         resizeMode="cover"
       />
