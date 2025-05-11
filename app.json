@@ -1,13 +1,13 @@
 {
-  "name": "health-clinic-front",
-  "displayName": "health-clinic-front",
+  "name": "health-clinic",
+  "displayName": "health-clinic",
   "expo": {
-    "name": "health-clinic-front",
-    "slug": "health-clinic-front",
-    "scheme": "health-clinic-front",
+    "name": "Postinho de Saúde",
+    "slug": "health-clinic",
+    "scheme": "healthclinic",
     "version": "1.0.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "icon": "./assets/images/app-icon-all.png",
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -26,15 +26,6 @@
       },
       "allowBackup": false
     },
-    "ios": {
-      "icon": "./assets/images/app-icon-ios.png",
-      "supportsTablet": true,
-      "bundleIdentifier": "com.healthclinicfront"
-    },
-    "web": {
-      "favicon": "./assets/images/app-icon-web-favicon.png",
-      "bundler": "metro"
-    },
     "plugins": [
       "expo-localization",
       "expo-font",
@@ -50,6 +41,11 @@
     ],
     "experiments": {
       "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "83bd347a-3030-4e4e-9452-7f402587c1fc"
+      }
     }
   },
   "ignite": {

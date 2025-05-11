@@ -1,37 +1,13 @@
 import { Api } from "../api"
-import type { UserSnapshotIn } from "@/models/User/User"
+import { RegisterPayload } from "@/screens/Auth/RegisterScreen/RegisterForm"
 import { GeneralApiProblem, getGeneralApiProblem } from "@/services/api/apiProblem"
 import { ApiResponse } from "apisauce"
-
-interface AddressPayload {
-  zipCode: string
-  street: string
-  number: string
-  district: string
-  city: string
-  state: string
-}
-
-interface RegisterPayload {
-  name: string
-  email: string
-  password: string
-  document: string
-  phone: string
-  birthdate: string
-  cns?: string
-  address?: AddressPayload
-  crm?: string
-  specialty?: string
-}
+import { AuthPayload, AuthSession } from "@/services/authentication/authentication.api.types"
 
 export const createAuthenticationApi = (api: Api) => {
   return {
-    login: async (
-      email: string,
-      password: string,
-    ): Promise<{ kind: "ok"; user: UserSnapshotIn; token: string } | GeneralApiProblem> => {
-      const response: ApiResponse<any> = await api.apisauce.post("api/v1/auth/login", {
+    login: async (email: string, password: string): Promise<AuthSession | GeneralApiProblem> => {
+      const response: ApiResponse<AuthPayload> = await api.apisauce.post("api/v1/auth/login", {
         email,
         password,
       })
@@ -53,10 +29,11 @@ export const createAuthenticationApi = (api: Api) => {
       }
     },
 
-    register: async (
-      data: RegisterPayload,
-    ): Promise<{ kind: "ok"; user: UserSnapshotIn; token: string } | GeneralApiProblem> => {
-      const response: ApiResponse<any> = await api.apisauce.post("api/v1/auth/register", data)
+    register: async (data: RegisterPayload): Promise<AuthSession | GeneralApiProblem> => {
+      const response: ApiResponse<AuthPayload> = await api.apisauce.post(
+        "api/v1/auth/register",
+        data,
+      )
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) return problem

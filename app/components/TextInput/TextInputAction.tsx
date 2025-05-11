@@ -8,7 +8,7 @@ interface InputActionProps extends TouchableOpacityProps {
 
 export const TextInputAction = ({ children, ...props }: InputActionProps) => {
   return (
-    <TouchableOpacity className="p-2" {...props}>
+    <TouchableOpacity className="w-8 h-8 justify-center items-center" {...props}>
       {children}
     </TouchableOpacity>
   )

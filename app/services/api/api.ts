@@ -1,6 +1,7 @@
 import { ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
 import type { ApiConfig } from "./api.types"
+import { routes } from "@/interceptors/routes"
 
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: Config.API_URL,
@@ -24,3 +25,9 @@ export class Api {
 }
 
 export const api = new Api()
+
+if (__DEV__) {
+  routes(api.apisauce.axiosInstance)
+
+  console.log("[Mock Server] Axios interceptors registered.")
+}

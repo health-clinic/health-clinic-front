@@ -1,18 +1,22 @@
 import { Bell } from "lucide-react-native"
 import { ReactElement } from "react"
 import { Image, Text, TouchableOpacity, View } from "react-native"
+import { useStores } from "@/models"
+import { User } from "@/models/User"
 
 export const HomeHeader = (): ReactElement => {
+  const { user } = useStores().userStore as { user: User }
+
   return (
     <View className="px-4 pt-6 pb-4 bg-primary">
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center space-x-3">
           <Image
-            source={require("assets/images/logo.png")}
+            source={require("../../../../assets/images/logo.png")}
             style={{ width: 32, height: 32 }}
             resizeMode="contain"
           />
-          <Text className="text-white text-lg font-semibold">Oi, João 👋</Text>
+          <Text className="text-white text-lg font-semibold">Oi, {user.name} 👋</Text>
         </View>
 
         <View className="flex-row items-center space-x-4">
@@ -24,7 +28,7 @@ export const HomeHeader = (): ReactElement => {
           <TouchableOpacity>
             <Image
               className="rounded-full"
-              source={require("assets/images/avatar.png")}
+              source={user.avatar}
               style={{ width: 32, height: 32 }}
             />
           </TouchableOpacity>
