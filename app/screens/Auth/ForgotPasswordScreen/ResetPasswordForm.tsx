@@ -1,17 +1,14 @@
-import { ReactElement, useState } from "react"
-import { Text, View } from "react-native"
-import { RegisterPayload } from "./RegisterForm"
+import { FC, ReactElement, useState } from "react"
 import { Controller, FieldErrors, useForm, useFormState } from "react-hook-form"
+import { Text, View } from "react-native"
+import { TextInput } from "@/components/TextInput"
+import { Eye, EyeOff, LockKeyhole } from "lucide-react-native"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { TextInput } from "@/components/TextInput"
-import { Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react-native"
 import { Button } from "@/components/Button"
 
 const schema = z
   .object({
-    name: z.string().min(1, "Por favor, informe seu nome completo."),
-    email: z.string().email("O e-mail digitado não é válido."),
     password: z
       .string()
       .min(8, "A senha deve ter no mínimo 8 caracteres.")
@@ -28,26 +25,22 @@ const schema = z
 
 type FormData = z.infer<typeof schema>
 
-interface BasicInformationFormProps {
-  initialValues?: Partial<RegisterPayload>
-  onNext: (values: Partial<RegisterPayload>) => void
-  onBack: () => void
+interface ResetPasswordFormProps {
+  email: string
+  onSubmit: (email: string, password: string) => void
 }
 
-export const BasicInformationForm = ({
-  initialValues,
-  onNext,
-  onBack,
-}: BasicInformationFormProps): ReactElement => {
+export const ResetPasswordForm: FC<ResetPasswordFormProps> = ({
+  email,
+  onSubmit,
+}: ResetPasswordFormProps): ReactElement => {
   const [isPasswordHidden, setIsPasswordHidden] = useState<boolean>(true)
   const [isConfirmPasswordHidden, setIsConfirmPasswordHidden] = useState<boolean>(true)
 
   const { control, handleSubmit, setFocus } = useForm<FormData>({
     defaultValues: {
-      name: initialValues?.name ?? "",
-      email: initialValues?.email ?? "",
-      password: initialValues?.password ?? "",
-      confirmPassword: initialValues?.confirmPassword ?? "",
+      password: "",
+      confirmPassword: "",
     },
     resolver: zodResolver(schema),
   })
@@ -62,58 +55,12 @@ export const BasicInformationForm = ({
     (Object.keys(errors) as (keyof FormData)[]).includes(field)
 
   return (
-    <View className="flex-col gap-4">
-      <Controller
-        control={control}
-        name="name"
-        render={({ field: { onChange, onBlur, ref, value } }) => (
-          <View>
-            <TextInput.Root hasError={hasError("name")}>
-              <TextInput.Icon icon={User} />
+    <View className="gap-4">
+      <Text className="text-2xl font-bold text-neutral-900 mb-2">Redefinir senha</Text>
 
-              <TextInput.Control
-                ref={ref}
-                placeholder="Nome completo"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                autoCapitalize="words"
-                textContentType="name"
-              />
-            </TextInput.Root>
-
-            {errors.name && (
-              <Text className="text-angry-500 text-xs mt-1">{errors.name.message}</Text>
-            )}
-          </View>
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <View>
-            <TextInput.Root hasError={hasError("email")}>
-              <TextInput.Icon icon={Mail} />
-
-              <TextInput.Control
-                ref={ref}
-                placeholder="E-mail"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                autoCapitalize="none"
-                keyboardType="email-address"
-              />
-            </TextInput.Root>
-
-            {errors.email && (
-              <Text className="text-angry-500 text-xs mt-1">{errors.email.message}</Text>
-            )}
-          </View>
-        )}
-      />
+      <Text className="text-base text-neutral-700 mb-6">
+        Crie uma nova senha para sua conta. Ela deve ter pelo menos 8 caracteres.
+      </Text>
 
       <Controller
         control={control}
@@ -183,15 +130,9 @@ export const BasicInformationForm = ({
         )}
       />
 
-      <View className="flex-row gap-2">
-        <Button onPress={onBack} className="flex-1 bg-transparent border border-primary-600">
-          <Text className="text-base font-bold text-primary-600">Voltar</Text>
-        </Button>
-
-        <Button onPress={handleSubmit((data) => onNext(data), onError)} className="flex-1">
-          <Text className="text-base font-bold text-neutral-900">Próximo</Text>
-        </Button>
-      </View>
+      <Button onPress={handleSubmit(({ password }): void => onSubmit(email, password), onError)}>
+        <Text className="text-neutral-900 font-bold text-base">Redefinir senha</Text>
+      </Button>
     </View>
   )
 }

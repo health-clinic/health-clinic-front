@@ -97,10 +97,11 @@ export const ProfessionalDetailsForm = ({
         )}
       />
 
-      <View className="flex-row justify-between mt-4">
+      <View className="flex-row gap-2">
         <Button onPress={onBack}>
           <Text className="text-base font-bold text-neutral-900">Voltar</Text>
         </Button>
+
         <Button onPress={handleSubmit((data) => onNext(data), onError)}>
           <Text className="text-base font-bold text-neutral-900">Próximo</Text>
         </Button>

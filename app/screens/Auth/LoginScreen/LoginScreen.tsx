@@ -53,7 +53,7 @@ export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
   // }
 
   return (
-    <View className="flex-1 justify-center gap-6 bg-background px-6 py-6">
+    <View className="flex-1 justify-center gap-6 p-6">
       <AuthHeader />
 
       <Login.Form onSubmit={login} />

@@ -17,8 +17,6 @@ export type AppStackParamList = {
   Login: undefined
   Register: undefined
   ForgotPassword: undefined
-  CodeConfirmation: { email: string }
-  ResetPassword: { email: string }
   Home: undefined
   SelectUnit: undefined
   SelectSpecialty: { unit: Unit }
@@ -61,9 +59,7 @@ const AppStack = observer(function AppStack() {
     >
       <Stack.Screen name="Login" component={Screens.Login.Screen} />
       <Stack.Screen name="Register" component={Screens.Register.Screen} />
-      <Stack.Screen name="ForgotPassword" component={Screens.ForgotPasswordScreen} />
-      <Stack.Screen name="CodeConfirmation" component={Screens.CodeConfirmationScreen} />
-      <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />
+      <Stack.Screen name="ForgotPassword" component={Screens.ForgotPassword.Screen} />
 
       <Stack.Screen name="Home" component={Screens.HomeScreen} />
 
