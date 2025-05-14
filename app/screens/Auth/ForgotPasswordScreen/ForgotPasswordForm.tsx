@@ -86,15 +86,15 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     case "sendCodeConfirmation":
       return <ForgotPassword.Form.SendCodeConfirmation onSubmit={generateCode} />
     case "codeConfirmation":
-      return <ForgotPassword.Form.CodeConfirmation email={email} onSubmit={isMatchCode} />
-    case "resetPassword":
       return (
-        <ForgotPassword.Form.ResetPassword
+        <ForgotPassword.Form.CodeConfirmation
           email={email}
-          onSubmit={onSubmit}
+          onSubmit={isMatchCode}
           onResendCode={resendCode}
         />
       )
+    case "resetPassword":
+      return <ForgotPassword.Form.ResetPassword email={email} onSubmit={onSubmit} />
     default:
       return <></>
   }
