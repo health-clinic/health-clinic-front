@@ -6,8 +6,8 @@ import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
 import { ComponentProps } from "react"
-import { Unit } from "@/models/Unit"
-import { Specialty } from "@/models/Specialty"
+import { UnitModel } from "@/models/Unit/unit.model"
+import { SpecialtyModel } from "@/models/Specialty/specialty.model"
 import { Professional } from "@/models/Professional"
 import { Appointment } from "@/models/Appointment"
 import { Diagnosis } from "@/models/Diagosis"
@@ -17,14 +17,16 @@ export type AppStackParamList = {
   Login: undefined
   Register: undefined
   ForgotPassword: undefined
-  CodeConfirmation: { email: string }
-  ResetPassword: { email: string }
   Home: undefined
   SelectUnit: undefined
-  SelectSpecialty: { unit: Unit }
-  SelectProfessional: { specialty: Specialty; unit: Unit }
-  SelectDateTime: { professional: Professional }
-  ConfirmSchedule: { professional: Professional; date: string; time: string }
+  SelectSpecialty: { unit: UnitModel }
+  SelectProfessional: { specialty: SpecialtyModel; unit: UnitModel }
+  SelectDateTime: { appointmentId?: number; professional: Professional }
+  ConfirmSchedule: {
+    appointmentId?: number
+    professional: Professional
+    scheduledFor: string
+  }
   Appointment: { appointment: Appointment }
   ConfirmAppointment: {
     appointment: Appointment
@@ -32,6 +34,8 @@ export type AppStackParamList = {
     diagnoses: Diagnosis[]
     prescriptions: Prescription[]
   }
+  AppointmentDetails: { appointment: Appointment }
+  Settings: undefined
 }
 
 const exitRoutes = Config.exitRoutes
@@ -61,9 +65,7 @@ const AppStack = observer(function AppStack() {
     >
       <Stack.Screen name="Login" component={Screens.Login.Screen} />
       <Stack.Screen name="Register" component={Screens.Register.Screen} />
-      <Stack.Screen name="ForgotPassword" component={Screens.ForgotPasswordScreen} />
-      <Stack.Screen name="CodeConfirmation" component={Screens.CodeConfirmationScreen} />
-      <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />
+      <Stack.Screen name="ForgotPassword" component={Screens.ForgotPassword.Screen} />
 
       <Stack.Screen name="Home" component={Screens.HomeScreen} />
 
@@ -75,6 +77,10 @@ const AppStack = observer(function AppStack() {
 
       <Stack.Screen name="Appointment" component={Screens.AppointmentScreen} />
       <Stack.Screen name="ConfirmAppointment" component={Screens.ConfirmAppointmentScreen} />
+
+      <Stack.Screen name="AppointmentDetails" component={Screens.AppointmentDetailsScreen} />
+
+      <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
     </Stack.Navigator>
   )
 })

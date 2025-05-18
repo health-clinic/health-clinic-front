@@ -1,9 +1,9 @@
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native"
-import { Specialty } from "@/models/Specialty"
+import { SpecialtyModel } from "@/models/Specialty/specialty.model"
 import { Baby } from "lucide-react-native"
 
 interface SpecialtyCardProps extends TouchableOpacityProps {
-  specialty: Specialty
+  specialty: SpecialtyModel
 }
 
 export const SpecialtyCard = ({ specialty, ...props }: SpecialtyCardProps) => {

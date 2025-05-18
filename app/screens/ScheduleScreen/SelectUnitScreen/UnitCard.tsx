@@ -1,9 +1,9 @@
 import { Text, TouchableOpacity, View } from "react-native"
 import type { TouchableOpacityProps } from "react-native"
-import { Unit } from "@/models/Unit"
+import { UnitModel } from "@/models/Unit/unit.model"
 
 interface UnitCardProps extends TouchableOpacityProps {
-  unit: Unit
+  unit: UnitModel
 }
 
 export const UnitCard = ({ unit, ...props }: UnitCardProps) => {

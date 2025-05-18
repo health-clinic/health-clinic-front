@@ -1,5 +1,3 @@
-import type { UserSnapshotIn } from "@/models/User"
-
 export type Address = {
   id: number
   zipCode: string

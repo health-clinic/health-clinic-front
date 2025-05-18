@@ -58,7 +58,8 @@ export const BasicInformationForm = ({
     setFocus(Object.keys(errors)[0] as keyof FormData)
   }
 
-  const hasError = (field: keyof FormData) => (Object.keys(errors) as (keyof FormData)[]).includes(field)
+  const hasError = (field: keyof FormData) =>
+    (Object.keys(errors) as (keyof FormData)[]).includes(field)
 
   return (
     <View className="flex-col gap-4">
@@ -67,9 +68,9 @@ export const BasicInformationForm = ({
         name="name"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("name")}> 
+            <TextInput.Root hasError={hasError("name")}>
               <TextInput.Icon icon={User} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="Nome completo"
@@ -80,7 +81,7 @@ export const BasicInformationForm = ({
                 textContentType="name"
               />
             </TextInput.Root>
-            
+
             {errors.name && (
               <Text className="text-angry-500 text-xs mt-1">{errors.name.message}</Text>
             )}
@@ -93,9 +94,9 @@ export const BasicInformationForm = ({
         name="email"
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <View>
-            <TextInput.Root hasError={hasError("email")}> 
+            <TextInput.Root hasError={hasError("email")}>
               <TextInput.Icon icon={Mail} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="E-mail"
@@ -106,7 +107,7 @@ export const BasicInformationForm = ({
                 keyboardType="email-address"
               />
             </TextInput.Root>
-            
+
             {errors.email && (
               <Text className="text-angry-500 text-xs mt-1">{errors.email.message}</Text>
             )}
@@ -119,9 +120,9 @@ export const BasicInformationForm = ({
         name="password"
         render={({ field: { onChange, onBlur, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("password")}> 
+            <TextInput.Root hasError={hasError("password")}>
               <TextInput.Icon icon={LockKeyhole} />
-              
+
               <TextInput.Control
                 placeholder="Senha"
                 value={value}
@@ -131,12 +132,15 @@ export const BasicInformationForm = ({
                 textContentType="newPassword"
                 autoCapitalize="none"
               />
-              
+
               <TextInput.Action onPress={() => setIsPasswordHidden(!isPasswordHidden)}>
-                <TextInput.Icon icon={isPasswordHidden ? EyeOff : Eye} hasError={hasError("password")} />
+                <TextInput.Icon
+                  icon={isPasswordHidden ? EyeOff : Eye}
+                  hasError={hasError("password")}
+                />
               </TextInput.Action>
             </TextInput.Root>
-            
+
             {errors.password && (
               <Text className="text-angry-500 text-xs mt-1">{errors.password.message}</Text>
             )}
@@ -149,9 +153,9 @@ export const BasicInformationForm = ({
         name="confirmPassword"
         render={({ field: { onChange, onBlur, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("confirmPassword")}> 
+            <TextInput.Root hasError={hasError("confirmPassword")}>
               <TextInput.Icon icon={LockKeyhole} />
-              
+
               <TextInput.Control
                 placeholder="Confirmar senha"
                 value={value}
@@ -162,11 +166,16 @@ export const BasicInformationForm = ({
                 autoCapitalize="none"
               />
 
-              <TextInput.Action onPress={() => setIsConfirmPasswordHidden(!isConfirmPasswordHidden)}>
-                <TextInput.Icon icon={isConfirmPasswordHidden ? EyeOff : Eye} hasError={hasError("confirmPassword")} />
+              <TextInput.Action
+                onPress={() => setIsConfirmPasswordHidden(!isConfirmPasswordHidden)}
+              >
+                <TextInput.Icon
+                  icon={isConfirmPasswordHidden ? EyeOff : Eye}
+                  hasError={hasError("confirmPassword")}
+                />
               </TextInput.Action>
             </TextInput.Root>
-            
+
             {errors.confirmPassword && (
               <Text className="text-angry-500 text-xs mt-1">{errors.confirmPassword.message}</Text>
             )}
@@ -174,7 +183,7 @@ export const BasicInformationForm = ({
         )}
       />
 
-      <View className="flex-row gap-4 mt-4">
+      <View className="flex-row gap-2">
         <Button onPress={onBack} className="flex-1 bg-transparent border border-primary-600">
           <Text className="text-base font-bold text-primary-600">Voltar</Text>
         </Button>

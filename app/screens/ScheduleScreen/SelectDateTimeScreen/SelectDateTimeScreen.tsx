@@ -3,6 +3,7 @@ import { ReactElement, useState } from "react"
 import { FlatList, Text, TouchableOpacity, View } from "react-native"
 import { Calendar } from "react-native-calendars"
 import { Professional } from "@/models/Professional"
+import { format, parse } from "date-fns"
 
 interface SelectDateTimeScreenProps extends AppStackScreenProps<"SelectDateTime"> {}
 
@@ -10,7 +11,10 @@ export const SelectDateTimeScreen = ({
   navigation,
   route,
 }: SelectDateTimeScreenProps): ReactElement => {
-  const { professional } = route.params as { professional: Professional }
+  const { appointmentId, professional } = route.params as {
+    appointmentId?: number
+    professional: Professional
+  }
 
   const [date, setDate] = useState<string>("")
 
@@ -72,9 +76,15 @@ export const SelectDateTimeScreen = ({
         renderItem={({ item: time }) => (
           <TouchableOpacity
             className="flex-1 border border-primary-500 rounded-xl px-4 py-2"
-            onPress={(): void =>
-              navigation.navigate("ConfirmSchedule", { professional, date, time })
-            }
+            onPress={(): void => {
+              const parsed = parse(`${date} ${time}`, "yyyy-MM-dd HH:mm", new Date())
+
+              navigation.navigate("ConfirmSchedule", {
+                appointmentId,
+                professional,
+                scheduledFor: format(parsed, "yyyy-MM-dd HH:mm"),
+              })
+            }}
           >
             <Text className="text-white text-center">{time}</Text>
           </TouchableOpacity>

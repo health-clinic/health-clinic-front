@@ -5,7 +5,7 @@ import { Link } from "@/components/Link"
 export function AppointmentHistoryHeader(): ReactElement {
   return (
     <View className="flex-row justify-between items-center">
-      <Text className="text-white font-semibold text-base">Histórico de Consultas</Text>
+      <Text className="text-white font-semibold text-base">Histórico de consultas</Text>
 
       <Link text="Ver todo histórico" />
     </View>

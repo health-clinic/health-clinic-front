@@ -1,7 +1,7 @@
 import { Instance, SnapshotIn, types } from "mobx-state-tree"
 import { withSetPropAction } from "@/models/helpers/withSetPropAction"
 import { ProfessionalModel } from "@/models/Professional"
-import { UnitModel } from "@/models/Unit"
+import { UnitModel } from "@/models/Unit/unit.model"
 import { PatientModel } from "@/models/Patient"
 import { PrescriptionModel } from "@/models/Prescription/prescription.model"
 import { DiagnosisModel } from "@/models/Diagosis"
@@ -15,9 +15,10 @@ export const AppointmentModel = types
     prescriptions: types.optional(types.array(PrescriptionModel), []),
     professional: types.reference(ProfessionalModel),
     unit: types.reference(UnitModel),
-    date: types.Date,
     complaints: types.optional(types.array(types.string), []),
-    status: types.enumeration("Status", ["Pending", "Confirmed", "Cancelled", "Completed"]),
+    status: types.enumeration("Status", ["pending", "scheduled", "cancelled", "completed"]),
+    scheduledFor: types.Date,
+    scheduledAt: types.Date,
     createdAt: types.Date,
     updatedAt: types.Date,
   })

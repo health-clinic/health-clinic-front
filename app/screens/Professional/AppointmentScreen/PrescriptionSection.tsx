@@ -2,7 +2,7 @@ import { Prescription } from "@/models/Prescription/prescription.model"
 import { forwardRef, ReactElement, useImperativeHandle, useState } from "react"
 import { Text, View } from "react-native"
 import { Button } from "@/components/Button"
-import { PrescriptionModal } from "@/screens/AppointmentScreen/PrescriptionModal"
+import { PrescriptionModal } from "@/screens/Professional/AppointmentScreen/PrescriptionModal"
 
 interface PrescriptionSectionProps {
   prescriptions: Prescription[]

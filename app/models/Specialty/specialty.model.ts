@@ -1,5 +1,5 @@
-import { Instance, types } from "mobx-state-tree"
-import { withSetPropAction } from "./helpers/withSetPropAction"
+import { Instance, SnapshotIn, types } from "mobx-state-tree"
+import { withSetPropAction } from "../helpers/withSetPropAction"
 
 export const SpecialtyModel = types
   .model("Specialty")
@@ -12,3 +12,5 @@ export const SpecialtyModel = types
   .actions(withSetPropAction)
 
 export interface Specialty extends Instance<typeof SpecialtyModel> {}
+
+export interface SpecialtySnapshotIn extends SnapshotIn<typeof SpecialtyModel> {}

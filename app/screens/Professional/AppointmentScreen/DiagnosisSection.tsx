@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react-native"
 import { forwardRef, ReactElement, useImperativeHandle, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import { DiagnosisModal } from "@/screens/AppointmentScreen/DiagnosisModal"
+import { DiagnosisModal } from "@/screens/Professional/AppointmentScreen/DiagnosisModal"
 import { Diagnosis } from "@/models/Diagosis"
 
 interface DiagnosisSectionProps {

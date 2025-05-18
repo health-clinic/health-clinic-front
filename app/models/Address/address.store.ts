@@ -6,7 +6,9 @@ export const AddressStore = types
   .props({ items: types.map(AddressModel) })
   .actions((store) => ({
     set(id: number, address: AddressSnapshotIn) {
-      store.items.set(id, { ...address })
+      if (store.items.has(id)) return
+
+      store.items.set(id, AddressModel.create(address))
     },
 
     delete(id: string) {

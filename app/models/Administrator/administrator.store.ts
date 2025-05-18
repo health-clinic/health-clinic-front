@@ -1,16 +1,14 @@
 import { types } from "mobx-state-tree"
-import { Administrator, AdministratorModel } from "@/models/Administrator"
+import { AdministratorModel, AdministratorSnapshotIn } from "@/models/Administrator"
 
 export const AdministratorStore = types
   .model("AdministratorStore")
   .props({ items: types.map(AdministratorModel) })
   .actions((store) => ({
-    set(id: number, administrator: Administrator) {
-      store.items.set(id, {
-        ...administrator,
-        createdAt: new Date(administrator.createdAt),
-        updatedAt: new Date(administrator.updatedAt),
-      })
+    set(id: number, administrator: AdministratorSnapshotIn) {
+      if (store.items.has(id)) return
+
+      store.items.set(id, AdministratorModel.create(administrator))
     },
 
     delete(id: string) {

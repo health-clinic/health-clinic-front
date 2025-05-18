@@ -15,6 +15,9 @@ import Config from "./config"
 import { KeyboardProvider } from "react-native-keyboard-controller"
 import { loadDateFnsLocale } from "./utils/formatDate"
 import Toast from "react-native-toast-message"
+import { useInitialRootStore } from "@/models"
+import * as SplashScreen from "expo-splash-screen"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 if (__DEV__) {
   require("./devtools/ReactotronConfig.ts")
@@ -47,18 +50,18 @@ export function App() {
       .then(() => loadDateFnsLocale())
   }, [])
 
-  // const { rehydrated } = useInitialRootStore(() => {
-  //   setTimeout(SplashScreen.hideAsync, 500)
-  // })
+  const { rehydrated } = useInitialRootStore(() => {
+    setTimeout(SplashScreen.hideAsync, 500)
+  })
 
-  // if (
-  //   !rehydrated ||
-  //   !isNavigationStateRestored ||
-  //   !isI18nInitialized ||
-  //   (!areFontsLoaded && !fontLoadError)
-  // ) {
-  //   return null
-  // }
+  if (
+    !rehydrated ||
+    !isNavigationStateRestored ||
+    !isI18nInitialized ||
+    (!areFontsLoaded && !fontLoadError)
+  ) {
+    return null
+  }
 
   const linking = {
     prefixes: [prefix],
@@ -66,18 +69,20 @@ export function App() {
   }
 
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <ErrorBoundary catchErrors={Config.catchErrors}>
-        <KeyboardProvider>
-          <AppNavigator
-            linking={linking}
-            initialState={initialNavigationState}
-            onStateChange={onNavigationStateChange}
-          />
+    <GestureHandlerRootView>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <ErrorBoundary catchErrors={Config.catchErrors}>
+          <KeyboardProvider>
+            <AppNavigator
+              linking={linking}
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
 
-          <Toast position="top" topOffset={40} config={toastConfig} />
-        </KeyboardProvider>
-      </ErrorBoundary>
-    </SafeAreaProvider>
+            <Toast position="top" topOffset={40} config={toastConfig} />
+          </KeyboardProvider>
+        </ErrorBoundary>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   )
 }

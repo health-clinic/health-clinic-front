@@ -11,7 +11,7 @@ export const HomeScreen = (): ReactElement => {
   const { user } = useStores().userStore as { user: User }
 
   return (
-    <View className="flex-1 bg-neutral-100">
+    <View className="flex-1 gap-4 bg-neutral-100">
       <View className="bg-neutral-200 p-2 shadow-md">
         <HomeHeader />
       </View>

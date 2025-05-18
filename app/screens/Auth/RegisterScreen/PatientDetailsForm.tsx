@@ -7,6 +7,7 @@ import { Calendar, IdCard, Phone } from "lucide-react-native"
 import { Button } from "@/components/Button"
 import { TextInput } from "@/components/TextInput"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { format, isValid, parse } from "date-fns"
 
 interface PatientDetailsFormProps {
   initialValues?: Partial<RegisterPayload>
@@ -18,15 +19,30 @@ const schema = z.object({
   document: z
     .string()
     .min(1, "Por favor, insira o CPF.")
-    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido. Digite um CPF válido no formato 000.000.000-00."),
+    .regex(
+      /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+      "CPF inválido. Digite um CPF válido no formato 000.000.000-00.",
+    ),
   phone: z
     .string()
     .min(1, "Por favor, insira o telefone.")
-    .regex(/^\(\d{2}\) \d{5}-\d{4}$/, "Telefone inválido. Digite um número válido no formato (99) 99999-9999."),
+    .regex(
+      /^\(\d{2}\) \d{5}-\d{4}$/,
+      "Telefone inválido. Digite um número válido no formato (99) 99999-9999.",
+    ),
   birthdate: z
     .string()
     .min(1, "Por favor, insira a data de nascimento.")
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Data de nascimento inválida. Use o formato DD/MM/AAAA."),
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Data de nascimento inválida. Use o formato DD/MM/AAAA.")
+    .transform((value) => {
+      const parsed = parse(value, "dd/MM/yyyy", new Date())
+
+      if (!isValid(parsed)) {
+        throw new Error("Data inválida.")
+      }
+
+      return format(parsed, "yyyy-MM-dd")
+    }),
 })
 
 type FormData = z.infer<typeof schema>
@@ -64,9 +80,9 @@ export const PatientDetailsForm = ({
         name="document"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("document")}> 
+            <TextInput.Root hasError={hasError("document")}>
               <TextInput.Icon icon={IdCard} />
-              
+
               <TextInput.MaskedControl
                 ref={ref}
                 mask="999.999.999-99"
@@ -77,7 +93,7 @@ export const PatientDetailsForm = ({
                 onBlur={onBlur}
               />
             </TextInput.Root>
-            
+
             {errors.document && (
               <Text className="text-angry-500 text-xs mt-1">{errors.document.message}</Text>
             )}
@@ -90,9 +106,9 @@ export const PatientDetailsForm = ({
         name="phone"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("phone")}> 
+            <TextInput.Root hasError={hasError("phone")}>
               <TextInput.Icon icon={Phone} />
-              
+
               <TextInput.MaskedControl
                 ref={ref}
                 mask="(99) 99999-9999"
@@ -103,7 +119,7 @@ export const PatientDetailsForm = ({
                 keyboardType="phone-pad"
               />
             </TextInput.Root>
-            
+
             {errors.phone && (
               <Text className="text-angry-500 text-xs mt-1">{errors.phone.message}</Text>
             )}
@@ -116,16 +132,16 @@ export const PatientDetailsForm = ({
         name="birthdate"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("birthdate")}> 
+            <TextInput.Root hasError={hasError("birthdate")}>
               <TextInput.Icon icon={Calendar} />
-              
+
               <TextInput.DateControl
                 value={value}
                 onChange={onChange}
                 placeholder="Data de nascimento"
               />
             </TextInput.Root>
-            
+
             {errors.birthdate && (
               <Text className="text-angry-500 text-xs mt-1">{errors.birthdate.message}</Text>
             )}
@@ -133,7 +149,7 @@ export const PatientDetailsForm = ({
         )}
       />
 
-      <View className="flex-row gap-4 mt-4">
+      <View className="flex-row gap-2">
         <Button onPress={onBack} className="flex-1 bg-transparent border border-primary-600">
           <Text className="text-base font-bold text-primary-600">Voltar</Text>
         </Button>

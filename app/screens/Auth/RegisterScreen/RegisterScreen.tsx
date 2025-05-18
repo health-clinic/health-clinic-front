@@ -14,7 +14,7 @@ import { GeneralApiProblem } from "@/services/api/apiProblem"
 
 interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 
-export const RegisterScreen = ({ navigation }: RegisterScreenProps): ReactElement => {
+export const RegisterScreen: FC<RegisterScreenProps> = ({ navigation }: RegisterScreenProps): ReactElement => {
   const { authenticationStore, loadingStore, userStore } = useStores()
 
   const register = async (formData: RegisterPayload): Promise<void> => {
@@ -24,7 +24,8 @@ export const RegisterScreen = ({ navigation }: RegisterScreenProps): ReactElemen
       const response: AuthSession | GeneralApiProblem =
         await createAuthenticationApi(api).register(formData)
       if (response.kind !== "ok") {
-        showErrorToast("Erro ao criar usuário. Verifique os dados e tente novamente.")
+        showErrorToast(response.data.error)
+
         return
       }
 
@@ -32,9 +33,11 @@ export const RegisterScreen = ({ navigation }: RegisterScreenProps): ReactElemen
 
       authenticationStore.setAuthToken(token)
       userStore.assign(user)
+
       navigation.navigate("Home")
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
+
       showErrorToast("Ocorreu um erro inesperado")
     } finally {
       loadingStore.setLoading(false)
@@ -42,7 +45,7 @@ export const RegisterScreen = ({ navigation }: RegisterScreenProps): ReactElemen
   }
 
   return (
-    <View className="flex-1 justify-between px-6 py-6">
+    <View className="flex-1 justify-between p-6">
       <View className="flex-1 justify-center">
         <AuthHeader />
 

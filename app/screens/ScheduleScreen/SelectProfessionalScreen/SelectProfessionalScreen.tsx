@@ -3,8 +3,13 @@ import { ReactElement, useEffect, useState } from "react"
 import { Professional } from "@/models/Professional"
 import { FlatList, Text, View } from "react-native"
 import { ProfessionalCard } from "@/screens/ScheduleScreen/SelectProfessionalScreen/ProfessionalCard"
-import { Unit } from "@/models/Unit"
-import { Specialty } from "@/models/Specialty"
+import { Unit } from "@/models/Unit/unit.model"
+import { showErrorToast } from "@/components/toast"
+import { useStores } from "@/models"
+import { ProfessionalResponse } from "@/services/professional/professional.api.types"
+import { createProfessionalApi } from "@/services/professional/professional.api"
+import { GeneralApiProblem } from "@/services/api/apiProblem"
+import { api } from "@/services/api"
 
 interface SelectProfessionalScreenProps extends AppStackScreenProps<"SelectProfessional"> {}
 
@@ -12,128 +17,64 @@ export const SelectProfessionalScreen = ({
   navigation,
   route,
 }: SelectProfessionalScreenProps): ReactElement => {
-  const { specialty, unit } = route.params as { specialty: Specialty; unit: Unit }
+  const { specialty, unit } = route.params as { specialty: string; unit: Unit }
+  const { loadingStore, professionalStore, userStore } = useStores()
 
   const [professionals, setProfessionals] = useState<Professional[]>([])
 
-  const fetchProfessionals = (): void => {
-    const professionals: Professional[] = [
-      {
-        id: "1",
-        specialty: {
-          id: "1",
-          name: "Cardiology",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        unit: {
-          id: "1",
-          name: "Southside Medical Center",
-          distance: "1.2 mi",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          address: {
-            id: "1",
-            zipCode: "12345-678",
-            state: "CA",
-            city: "Los Angeles",
-            district: "Downtown",
-            street: "Main St",
-            number: "100",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        },
-        user: {
-          id: "1",
-          name: "Dr. Jane Doe",
-          email: "jane.doe@example.com",
-          phone: "+1 555-1234",
-          birthdate: "1980-06-15",
-          document: "123.456.789-00",
-          role: "DOCTOR",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          address: {
-            id: "1",
-            zipCode: "12345-678",
-            state: "CA",
-            city: "Los Angeles",
-            district: "Downtown",
-            street: "Main St",
-            number: "100",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          admin: undefined,
-          professional: "1",
-          patient: undefined,
-        },
-        crm: "CRM123456",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: "2",
-        specialty: {
-          id: "2",
-          name: "Cardiology",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        unit: {
-          id: "2",
-          name: "Southside Medical Center",
-          distance: "1.2 mi",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          address: {
-            id: "2",
-            zipCode: "12345-678",
-            state: "CA",
-            city: "Los Angeles",
-            district: "Downtown",
-            street: "Main St",
-            number: "100",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        },
-        user: {
-          id: "2",
-          name: "Dr. Jane Doe",
-          email: "jane.doe@example.com",
-          phone: "+1 555-1234",
-          birthdate: "1980-06-15",
-          document: "123.456.789-00",
-          role: "DOCTOR",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          address: {
-            id: "2",
-            zipCode: "12345-678",
-            state: "CA",
-            city: "Los Angeles",
-            district: "Downtown",
-            street: "Main St",
-            number: "100",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          admin: undefined,
-          professional: "2",
-          patient: undefined,
-        },
-        crm: "CRM123456",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ]
+  const toProfessionals = (data: ProfessionalResponse): Professional[] => {
+    return data.map((professional) => {
+      userStore.set(professional.id, {
+        id: professional.id,
+        address: null,
+        name: professional.name,
+        email: professional.email,
+        avatar: null,
+        phone: "",
+        birthdate: null,
+        document: "",
+        role: "professional",
+        createdAt: new Date(professional.createdAt),
+        updatedAt: new Date(professional.updatedAt),
+      })
 
-    setProfessionals(professionals)
+      return professionalStore.set(professional.id, {
+        id: professional.id,
+        specialty: professional.specialty,
+        unit: unit.id,
+        user: professional.id,
+        crm: "",
+        createdAt: new Date(professional.createdAt),
+        updatedAt: new Date(professional.updatedAt),
+      })
+    })
   }
 
-  useEffect((): void => fetchProfessionals(), [])
+  const fetchProfessionals: () => Promise<void> = async (): Promise<void> => {
+    loadingStore.setLoading(true)
+
+    try {
+      const response: { kind: "ok"; units: Unit[] } | GeneralApiProblem =
+        await createProfessionalApi(api).findAll({ specialty })
+      if (response.kind !== "ok") {
+        showErrorToast(response.data?.error)
+
+        return
+      }
+
+      setProfessionals(toProfessionals(response.professionals))
+    } catch (error) {
+      console.error(error)
+
+      showErrorToast("Ocorreu um erro inesperado")
+    } finally {
+      loadingStore.setLoading(false)
+    }
+  }
+
+  useEffect((): void => {
+    fetchProfessionals()
+  }, [])
 
   return (
     <View className="flex-1 gap-6 p-6">
@@ -141,7 +82,7 @@ export const SelectProfessionalScreen = ({
         Escolha um médico
       </Text>
 
-      <Text className="text-center text-zinc-400 font-medium mb-4">{specialty.name}</Text>
+      <Text className="text-center text-zinc-400 font-medium mb-4">{specialty}</Text>
 
       <FlatList
         data={professionals}
