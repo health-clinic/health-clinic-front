@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import { Calendar, CalendarCheck, Home, Settings, User } from "lucide-react-native"
+import { CalendarCheck, Home, Pill, Settings } from "lucide-react-native"
 import { ReactElement } from "react"
+import { useNavigation } from "@react-navigation/native"
 
 export type RoleType = "PROFESSIONAL" | "PATIENT"
 
@@ -9,17 +10,12 @@ interface NavigationBarProps {
 }
 
 export const NavigationBar = ({ role }: NavigationBarProps): ReactElement => {
+  const navigation = useNavigation()
+
   const menuItems = [
-    { icon: Calendar, label: "Consultas", isHome: false, isActive: false, screen: "Appointments" },
-    {
-      icon: User,
-      label: role === "PROFESSIONAL" ? "Pacientes" : "Perfil",
-      isHome: false,
-      isActive: false,
-      screen: role === "PROFESSIONAL" ? "Patients" : "Profile",
-    },
     { icon: Home, label: "Início", isHome: true, isActive: true, screen: "Home" },
     { icon: CalendarCheck, label: "Agenda", isHome: false, isActive: false, screen: "Agenda" },
+    { icon: Pill, label: "Prescrições", isHome: false, isActive: false, screen: "Prescriptions" },
     { icon: Settings, label: "Configurações", isHome: false, isActive: false, screen: "Settings" },
   ]
 
@@ -31,21 +27,14 @@ export const NavigationBar = ({ role }: NavigationBarProps): ReactElement => {
         return (
           <TouchableOpacity
             key={index}
-            className={`items-center ${item.isHome ? "mt-[-12px]" : ""}`}
-            onPress={() => undefined}
+            className="items-center"
+            onPress={() => navigation.navigate(item.screen)}
           >
-            <item.icon
-              size={item.isHome ? 32 : 24}
-              color={isActive ? "#5BB6FF" : "#8A8A8A"} // primary-400 for active, neutral-600 for inactive
-            />
+            <item.icon size={24} color={isActive ? "#5BB6FF" : "#8A8A8A"} />
 
-            {!item.isHome && (
-              <Text
-                className={`text-xs mt-1 ${isActive ? "text-primary-400" : "text-neutral-600"}`}
-              >
-                {item.label}
-              </Text>
-            )}
+            <Text className={`text-xs mt-1 ${isActive ? "text-primary-400" : "text-neutral-600"}`}>
+              {item.label}
+            </Text>
           </TouchableOpacity>
         )
       })}

@@ -15,11 +15,6 @@ export const AddressModel = types
     createdAt: types.Date,
     updatedAt: types.Date,
   })
-  .preProcessSnapshot((snapshot: AddressPayload) => ({
-    ...snapshot,
-    createdAt: new Date(snapshot?.createdAt),
-    updatedAt: new Date(snapshot?.updatedAt),
-  }))
   .actions(withSetPropAction)
 
 export interface Address extends Instance<typeof AddressModel> {}

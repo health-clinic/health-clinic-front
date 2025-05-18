@@ -1,70 +1,81 @@
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useEffect, useMemo, useState } from "react"
 import { FlatList, Text, View } from "react-native"
 import { TextInput } from "@/components/TextInput"
 import { AppStackScreenProps } from "@/navigators"
-import { Unit } from "@/models/Unit"
+import { Unit } from "@/models/Unit/unit.model"
 import { Search } from "lucide-react-native"
 import { UnitCard } from "@/screens/ScheduleScreen/SelectUnitScreen/UnitCard"
+import { GeneralApiProblem } from "@/services/api/apiProblem"
+import { api } from "@/services/api"
+import { showErrorToast } from "@/components/toast"
+import { useStores } from "@/models"
+import { UnitResponse } from "@/services/unit/unit.api.types"
+import { createUnitApi } from "@/services/unit/unit.api"
 
 interface SelectUnitScreenProps extends AppStackScreenProps<"SelectUnit"> {}
 
 export const SelectUnitScreen = ({ navigation }: SelectUnitScreenProps): ReactElement => {
+  const { addressStore, loadingStore, unitStore } = useStores()
+
   const [units, setUnits] = useState<Unit[]>([])
-  const [filteredUnits, setFilteredUnits] = useState<Unit[]>([])
   const [search, setSearch] = useState<string>("")
 
-  const fetchUnits = (): void => {
-    const units: Unit[] = [
-      {
-        id: "4b3e56ec-2bfa-4e95-a34d-7ef452faeb4a",
-        name: "Southside Medical Center",
-        address: {
-          id: "f62dbe2f-12f9-4035-8b8d-217169d3e4a2",
-          zipCode: "00000-000",
-          state: "SP",
-          city: "São Paulo",
-          district: "Centro",
-          street: "Maple St.",
-          number: "101",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        distance: "1.2 mi",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: "9d7c032a-6467-4a64-92c3-0a9c2f529672",
-        name: "Riverside Health Clinic",
-        address: {
-          id: "09a9e1cd-fc1b-4c13-a30e-8a6c3f3a3aa3",
-          zipCode: "00000-001",
-          state: "SP",
-          city: "São Paulo",
-          district: "Centro",
-          street: "Oak Ave.",
-          number: "250",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        distance: "2.5 mi",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ]
+  const toUnits = (data: UnitResponse): Unit[] => {
+    return data.map((unit) => {
+      addressStore.set(unit.address.id, {
+        id: unit.address.id,
+        zipCode: unit.address.zipCode,
+        state: unit.address.state,
+        city: unit.address.city,
+        district: unit.address.district,
+        street: unit.address.street,
+        number: Number(unit.address.number),
+        createdAt: new Date(unit.address.createdAt),
+        updatedAt: new Date(unit.address.updatedAt),
+      })
 
-    setUnits(units)
-    setFilteredUnits(units)
+      return unitStore.set(unit.id, {
+        id: unit.id,
+        address: unit.address.id,
+        name: unit.name,
+        phone: unit.phone,
+        distance: unit.distance,
+        createdAt: new Date(unit.createdAt),
+        updatedAt: new Date(unit.updatedAt),
+      })
+    })
   }
 
-  useEffect((): void => fetchUnits(), [])
+  const fetchUnits: () => Promise<void> = async (): Promise<void> => {
+    loadingStore.setLoading(true)
+
+    try {
+      const response: { kind: "ok"; units: Unit[] } | GeneralApiProblem =
+        await createUnitApi(api).findAll()
+      if (response.kind !== "ok") {
+        showErrorToast(response.data?.error)
+
+        return
+      }
+
+      setUnits(toUnits(response.units))
+    } catch (error) {
+      console.error(error)
+
+      showErrorToast("Ocorreu um erro inesperado")
+    } finally {
+      loadingStore.setLoading(false)
+    }
+  }
 
   useEffect((): void => {
-    const filtered: Unit[] = units.filter((unit: Unit): boolean =>
-      unit.name.toLowerCase().includes(search.toLowerCase()),
-    )
+    fetchUnits()
+  }, [])
 
-    setFilteredUnits(filtered)
+  const filteredUnits = useMemo(() => {
+    if (!search?.trim()) return units
+
+    return units.filter((unit: Unit) => unit.name.toLowerCase().includes(search.toLowerCase()))
   }, [search, units])
 
   return (
@@ -89,10 +100,7 @@ export const SelectUnitScreen = ({ navigation }: SelectUnitScreenProps): ReactEl
         data={filteredUnits}
         keyExtractor={(unit: Unit) => unit.id}
         renderItem={({ item: unit }) => (
-          <UnitCard
-            unit={unit}
-            onPress={() => navigation.navigate("SelectSpecialty", { unit })}
-          />
+          <UnitCard unit={unit} onPress={() => navigation.navigate("SelectSpecialty", { unit })} />
         )}
         showsVerticalScrollIndicator={false}
         contentContainerClassName="gap-4"

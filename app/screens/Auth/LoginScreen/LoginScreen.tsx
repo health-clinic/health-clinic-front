@@ -12,7 +12,7 @@ import { showErrorToast } from "@/components/toast"
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
-  const { authenticationStore, loadingStore, userStore } = useStores()
+  const { addressStore, authenticationStore, loadingStore, userStore } = useStores()
 
   const login = async (email: string, password: string): Promise<void> => {
     loadingStore.setLoading(true)
@@ -20,7 +20,8 @@ export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
     try {
       const response = await createAuthenticationApi(api).login(email, password)
       if (response.kind !== "ok") {
-        showErrorToast("Usuário ou senha inválidos. Verifique os dados e tente novamente.")
+        showErrorToast(response.data.error)
+
         return
       }
 
@@ -30,8 +31,9 @@ export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
       userStore.assign(user)
 
       navigation.navigate("Home")
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
+
       showErrorToast("Ocorreu um erro inesperado")
     } finally {
       loadingStore.setLoading(false)

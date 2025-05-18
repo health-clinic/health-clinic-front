@@ -3,6 +3,7 @@ import { Button } from "@/components/Button"
 import { ScrollView, Text, View } from "react-native"
 import { BriefcaseMedical, IdCard, MapPin, User } from "lucide-react-native"
 import { RegisterPayload } from "@/screens/Auth/RegisterScreen/RegisterForm"
+import { format, parseISO } from "date-fns"
 
 interface ReviewRegistrationScreenProps {
   formData: RegisterPayload
@@ -67,7 +68,10 @@ export const ReviewRegistrationScreen = ({
 
               {renderField("Telefone", formData.phone)}
 
-              {renderField("Data de Nascimento", formData.birthdate)}
+              {renderField(
+                "Data de Nascimento",
+                format(parseISO(formData.birthdate as string), "dd/MM/yyyy"),
+              )}
             </View>
 
             {formData.address && (

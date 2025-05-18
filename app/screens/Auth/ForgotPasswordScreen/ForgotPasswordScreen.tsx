@@ -20,9 +20,7 @@ export const ForgotPasswordScreen = ({ navigation }: ForgotPasswordScreenProps) 
     try {
       const response = await createAuthenticationApi(api).resetUserPassword(email, password)
       if (response.kind !== "ok") {
-        showErrorToast(
-          "Não foi possível validar o código internamente, por favor, solicite outro e tente novamente.",
-        )
+        showErrorToast(response.data.error)
 
         return
       }

@@ -1,7 +1,7 @@
 import { forwardRef, ReactElement, useImperativeHandle, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 import { ArrowRight } from "lucide-react-native"
-import { ComplaintModal } from "@/screens/AppointmentScreen/ComplaintModal"
+import { ComplaintModal } from "@/screens/Professional/AppointmentScreen/ComplaintModal"
 
 interface ComplaintSectionProps {
   complaints: string[]

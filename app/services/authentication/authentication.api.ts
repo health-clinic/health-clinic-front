@@ -13,7 +13,12 @@ export const createAuthenticationApi = (api: Api) => {
       })
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
-        if (problem) return problem
+        if (problem) {
+          return {
+            ...problem,
+            ...response,
+          }
+        }
       }
 
       try {
@@ -36,7 +41,12 @@ export const createAuthenticationApi = (api: Api) => {
       )
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
-        if (problem) return problem
+        if (problem) {
+          return {
+            ...problem,
+            ...response,
+          }
+        }
       }
 
       try {
@@ -61,21 +71,33 @@ export const createAuthenticationApi = (api: Api) => {
       })
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
-        if (problem) return problem
+        if (problem) {
+          return {
+            ...problem,
+            ...response,
+          }
+        }
       }
 
       return { kind: "ok" }
     },
 
     isCodeMatch: async (
+      email: string,
       code: string,
     ): Promise<{ kind: "ok"; match: boolean } | GeneralApiProblem> => {
       const response: ApiResponse<any> = await api.apisauce.post("api/v1/auth/verify-code", {
+        email,
         code,
       })
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
-        if (problem) return problem
+        if (problem) {
+          return {
+            ...problem,
+            ...response,
+          }
+        }
       }
 
       try {
@@ -101,7 +123,12 @@ export const createAuthenticationApi = (api: Api) => {
       })
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
-        if (problem) return problem
+        if (problem) {
+          return {
+            ...problem,
+            ...response,
+          }
+        }
       }
 
       return { kind: "ok" }

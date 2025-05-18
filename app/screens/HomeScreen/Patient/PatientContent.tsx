@@ -1,354 +1,213 @@
-import { ReactElement, useEffect, useState } from "react"
-import { ScrollView, Text, View } from "react-native"
+import { FC, ReactElement, useEffect, useMemo, useState } from "react"
+import { Image, Pressable, ScrollView, Text, View } from "react-native"
 import { Action } from "@/screens/HomeScreen/Common/Action"
-import { CalendarDays, Folder, Pill, Plus } from "lucide-react-native"
-import { NextAppointment } from "@/screens/HomeScreen/Patient/NextAppointment"
-import { AppointmentHistoryHeader } from "@/screens/HomeScreen/Patient/AppointmentHistoryHeader"
-import { AppointmentCard } from "@/screens/HomeScreen/Patient/AppointmentCard"
+import { Calendar, ChevronRight, Clock, Info, Pill, Plus } from "lucide-react-native"
 import { Appointment } from "@/models/Appointment"
 import { useNavigation } from "@react-navigation/native"
+import { useStores } from "@/models"
+import { createAppointmentApi } from "@/services/appointment/appointment.api"
+import { api } from "@/services/api"
+import { showErrorToast, showSuccessToast } from "@/components/toast"
+import { GeneralApiProblem } from "@/services/api/apiProblem"
+import { format, isAfter, isBefore } from "date-fns"
+import { Link } from "@/components/Link"
+import tailwind from "./../../../../tailwind.config"
+import { Swipeable } from "@/components/Swipeable"
+import Animated from "react-native-reanimated"
+import { AppointmentResponse } from "@/services/appointment/appointment.api.types"
 
-export const PatientContent = (): ReactElement => {
+export const PatientContent: FC = (): ReactElement => {
   const navigation = useNavigation()
+  const {
+    addressStore,
+    appointmentStore,
+    loadingStore,
+    patientStore,
+    professionalStore,
+    unitStore,
+    userStore,
+  } = useStores()
+
+  const colors = tailwind.theme.extend.colors
 
   const [appointments, setAppointments] = useState<Appointment[]>([])
 
-  const fetchAppointments = (): void => {
-    const appointments: Appointment[] = [
-      {
-        id: 1,
-        date: "2025-04-21",
-        time: "09:00",
-        status: "confirmed",
-        created_at: "2025-04-15T10:00:00Z",
-        updated_at: "2025-04-15T10:00:00Z",
-        patient: {
-          id: 1,
-          cns: "123456789012345",
-          created_at: "2025-01-01T10:00:00Z",
-          updated_at: "2025-01-01T10:00:00Z",
-          user: {
-            id: 1,
-            name: "Alice Smith",
-            email: "alice@example.com",
-            phone: "+5511999999999",
-            birthdate: "1990-06-15T00:00:00Z",
-            document: "12345678900",
-            role: "PATIENT",
-            created_at: "2025-01-01T10:00:00Z",
-            updated_at: "2025-01-01T10:00:00Z",
-            address: {
-              id: 1,
-              zip_code: "01001-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Centro",
-              street: "Rua A",
-              number: "100",
-              created_at: "2025-01-01T09:00:00Z",
-              updated_at: "2025-01-01T09:00:00Z",
-            },
-          },
-        },
-        professional: {
-          id: 1,
-          crm: "CRM123456",
-          created_at: "2025-01-01T10:00:00Z",
-          updated_at: "2025-01-01T10:00:00Z",
-          specialty: {
-            id: 1,
-            name: "Cardiology",
-            created_at: "2025-01-01T08:00:00Z",
-            updated_at: "2025-01-01T08:00:00Z",
-          },
-          unit: {
-            id: 1,
-            name: "Health Unit A",
-            distance: "2km",
-            created_at: "2025-01-01T08:30:00Z",
-            updated_at: "2025-01-01T08:30:00Z",
-            address: {
-              id: 2,
-              zip_code: "02002-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Bela Vista",
-              street: "Rua B",
-              number: "200",
-              created_at: "2025-01-01T08:00:00Z",
-              updated_at: "2025-01-01T08:00:00Z",
-            },
-          },
-          user: {
-            id: 2,
-            name: "Dr. Bruno Costa",
-            email: "bruno@example.com",
-            phone: "+5511988888888",
-            birthdate: "1980-03-10T00:00:00Z",
-            document: "98765432100",
-            role: "PROFESSIONAL",
-            created_at: "2025-01-01T10:00:00Z",
-            updated_at: "2025-01-01T10:00:00Z",
-            address: {
-              id: 3,
-              zip_code: "03003-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Mooca",
-              street: "Rua C",
-              number: "300",
-              created_at: "2025-01-01T09:00:00Z",
-              updated_at: "2025-01-01T09:00:00Z",
-            },
-          },
-        },
-        unit: {
-          id: 1,
-          name: "Health Unit A",
-          distance: "2km",
-          created_at: "2025-01-01T08:30:00Z",
-          updated_at: "2025-01-01T08:30:00Z",
-          address: {
-            id: 2,
-            zip_code: "02002-000",
-            state: "SP",
-            city: "São Paulo",
-            district: "Bela Vista",
-            street: "Rua B",
-            number: "200",
-            created_at: "2025-01-01T08:00:00Z",
-            updated_at: "2025-01-01T08:00:00Z",
-          },
-        },
-      },
-      {
-        id: 2,
-        date: "2025-04-22",
-        time: "10:00",
-        status: "pending",
-        created_at: "2025-04-16T09:00:00Z",
-        updated_at: "2025-04-16T09:00:00Z",
-        patient: {
-          id: 2,
-          cns: "123456789012346",
-          created_at: "2025-01-02T10:00:00Z",
-          updated_at: "2025-01-02T10:00:00Z",
-          user: {
-            id: 3,
-            name: "Carlos Lima",
-            email: "carlos@example.com",
-            phone: "+5511977777777",
-            birthdate: "1985-09-20T00:00:00Z",
-            document: "22345678900",
-            role: "PATIENT",
-            created_at: "2025-01-02T10:00:00Z",
-            updated_at: "2025-01-02T10:00:00Z",
-            address: {
-              id: 4,
-              zip_code: "04004-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Itaim Bibi",
-              street: "Rua D",
-              number: "400",
-              created_at: "2025-01-02T09:00:00Z",
-              updated_at: "2025-01-02T09:00:00Z",
-            },
-          },
-        },
-        professional: {
-          id: 2,
-          crm: "CRM654321",
-          created_at: "2025-01-02T10:00:00Z",
-          updated_at: "2025-01-02T10:00:00Z",
-          specialty: {
-            id: 2,
-            name: "Dermatology",
-            created_at: "2025-01-01T08:00:00Z",
-            updated_at: "2025-01-01T08:00:00Z",
-          },
-          unit: {
-            id: 2,
-            name: "Health Unit B",
-            distance: "4km",
-            created_at: "2025-01-02T08:30:00Z",
-            updated_at: "2025-01-02T08:30:00Z",
-            address: {
-              id: 5,
-              zip_code: "05005-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Pinheiros",
-              street: "Rua E",
-              number: "500",
-              created_at: "2025-01-02T08:00:00Z",
-              updated_at: "2025-01-02T08:00:00Z",
-            },
-          },
-          user: {
-            id: 4,
-            name: "Dr. Daniela Rocha",
-            email: "daniela@example.com",
-            phone: "+5511966666666",
-            birthdate: "1975-02-10T00:00:00Z",
-            document: "11223344556",
-            role: "PROFESSIONAL",
-            created_at: "2025-01-02T10:00:00Z",
-            updated_at: "2025-01-02T10:00:00Z",
-            address: {
-              id: 6,
-              zip_code: "06006-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Liberdade",
-              street: "Rua F",
-              number: "600",
-              created_at: "2025-01-02T09:00:00Z",
-              updated_at: "2025-01-02T09:00:00Z",
-            },
-          },
-        },
-        unit: {
-          id: 2,
-          name: "Health Unit B",
-          distance: "4km",
-          created_at: "2025-01-02T08:30:00Z",
-          updated_at: "2025-01-02T08:30:00Z",
-          address: {
-            id: 5,
-            zip_code: "05005-000",
-            state: "SP",
-            city: "São Paulo",
-            district: "Pinheiros",
-            street: "Rua E",
-            number: "500",
-            created_at: "2025-01-02T08:00:00Z",
-            updated_at: "2025-01-02T08:00:00Z",
-          },
-        },
-      },
-      {
-        id: 3,
-        date: "2025-04-23",
-        time: "11:00",
-        status: "confirmed",
-        created_at: "2025-04-16T10:00:00Z",
-        updated_at: "2025-04-16T10:00:00Z",
-        patient: {
-          id: 1,
-          cns: "123456789012345",
-          created_at: "2025-01-01T10:00:00Z",
-          updated_at: "2025-01-01T10:00:00Z",
-          user: {
-            id: 1,
-            name: "Alice Smith",
-            email: "alice@example.com",
-            phone: "+5511999999999",
-            birthdate: "1990-06-15T00:00:00Z",
-            document: "12345678900",
-            role: "PATIENT",
-            created_at: "2025-01-01T10:00:00Z",
-            updated_at: "2025-01-01T10:00:00Z",
-            address: {
-              id: 1,
-              zip_code: "01001-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Centro",
-              street: "Rua A",
-              number: "100",
-              created_at: "2025-01-01T09:00:00Z",
-              updated_at: "2025-01-01T09:00:00Z",
-            },
-          },
-        },
-        professional: {
-          id: 1,
-          crm: "CRM123456",
-          created_at: "2025-01-01T10:00:00Z",
-          updated_at: "2025-01-01T10:00:00Z",
-          specialty: {
-            id: 1,
-            name: "Cardiology",
-            created_at: "2025-01-01T08:00:00Z",
-            updated_at: "2025-01-01T08:00:00Z",
-          },
-          unit: {
-            id: 1,
-            name: "Health Unit A",
-            distance: "2km",
-            created_at: "2025-01-01T08:30:00Z",
-            updated_at: "2025-01-01T08:30:00Z",
-            address: {
-              id: 2,
-              zip_code: "02002-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Bela Vista",
-              street: "Rua B",
-              number: "200",
-              created_at: "2025-01-01T08:00:00Z",
-              updated_at: "2025-01-01T08:00:00Z",
-            },
-          },
-          user: {
-            id: 2,
-            name: "Dr. Bruno Costa",
-            email: "bruno@example.com",
-            phone: "+5511988888888",
-            birthdate: "1980-03-10T00:00:00Z",
-            document: "98765432100",
-            role: "PROFESSIONAL",
-            created_at: "2025-01-01T10:00:00Z",
-            updated_at: "2025-01-01T10:00:00Z",
-            address: {
-              id: 3,
-              zip_code: "03003-000",
-              state: "SP",
-              city: "São Paulo",
-              district: "Mooca",
-              street: "Rua C",
-              number: "300",
-              created_at: "2025-01-01T09:00:00Z",
-              updated_at: "2025-01-01T09:00:00Z",
-            },
-          },
-        },
-        unit: {
-          id: 1,
-          name: "Health Unit A",
-          distance: "2km",
-          created_at: "2025-01-01T08:30:00Z",
-          updated_at: "2025-01-01T08:30:00Z",
-          address: {
-            id: 2,
-            zip_code: "02002-000",
-            state: "SP",
-            city: "São Paulo",
-            district: "Bela Vista",
-            street: "Rua B",
-            number: "200",
-            created_at: "2025-01-01T08:00:00Z",
-            updated_at: "2025-01-01T08:00:00Z",
-          },
-        },
-      },
-    ]
+  const toAppointments = (data: AppointmentResponse): Appointment[] => {
+    return data.map((appointment) => {
+      addressStore.set(appointment.patient.address.id, {
+        id: appointment.patient.address.id,
+        zipCode: appointment.patient.address.zipCode,
+        state: appointment.patient.address.state,
+        city: appointment.patient.address.city,
+        district: appointment.patient.address.district,
+        street: appointment.patient.address.street,
+        number: Number(appointment.patient.address.number),
+        createdAt: new Date(appointment.patient.address.createdAt),
+        updatedAt: new Date(appointment.patient.address.updatedAt),
+      })
 
-    setAppointments(appointments)
+      userStore.set(appointment.patient.id, {
+        id: appointment.patient.id,
+        address: appointment.patient.address.id,
+        name: appointment.patient.name,
+        email: appointment.patient.email,
+        avatar: null,
+        phone: appointment.patient.phone,
+        birthdate: new Date(appointment.patient.birthdate),
+        document: appointment.patient.document,
+        role: appointment.patient.role,
+        createdAt: new Date(appointment.patient.createdAt),
+        updatedAt: new Date(appointment.patient.updatedAt),
+      })
+
+      patientStore.set(appointment.patient.id, {
+        id: appointment.patient.id,
+        user: appointment.patient.id,
+        cns: "",
+        lastVisit: null,
+        note: "",
+        tags: [],
+        createdAt: new Date(appointment.patient.createdAt),
+        updatedAt: new Date(appointment.patient.updatedAt),
+      })
+
+      userStore.set(appointment.professional.id, {
+        id: appointment.professional.id,
+        address: null,
+        name: appointment.professional.name,
+        email: appointment.professional.email,
+        avatar: null,
+        phone: "",
+        birthdate: null,
+        document: "",
+        role: "professional",
+        createdAt: new Date(appointment.professional.createdAt),
+        updatedAt: new Date(appointment.professional.updatedAt),
+      })
+
+      professionalStore.set(appointment.professional.id, {
+        id: appointment.professional.id,
+        specialty: appointment.professional.specialty,
+        unit: appointment.unit.id,
+        user: appointment.professional.id,
+        crm: "",
+        createdAt: new Date(appointment.professional.createdAt),
+        updatedAt: new Date(appointment.professional.updatedAt),
+      })
+
+      addressStore.set(appointment.unit.address.id, {
+        id: appointment.unit.address.id,
+        zipCode: appointment.unit.address.zipCode,
+        state: appointment.unit.address.state,
+        city: appointment.unit.address.city,
+        district: appointment.unit.address.district,
+        street: appointment.unit.address.street,
+        number: Number(appointment.unit.address.number),
+        createdAt: new Date(appointment.unit.address.createdAt),
+        updatedAt: new Date(appointment.unit.address.updatedAt),
+      })
+
+      unitStore.set(appointment.unit.id, {
+        id: appointment.unit.id,
+        address: appointment.unit.address.id,
+        name: appointment.unit.name,
+        phone: appointment.unit.phone,
+        distance: appointment.unit.distance || "",
+        createdAt: new Date(appointment.unit.createdAt),
+        updatedAt: new Date(appointment.unit.updatedAt),
+      })
+
+      return appointmentStore.set(appointment.id, {
+        id: appointment.id,
+        diagnoses: [],
+        patient: appointment.patient.id,
+        prescriptions: [],
+        professional: appointment.professional.id,
+        unit: appointment.unit.id,
+        complaints: appointment.complaints,
+        status: appointment.status,
+        scheduledFor: new Date(appointment.scheduledFor),
+        scheduledAt: new Date(appointment.scheduledAt),
+        createdAt: new Date(appointment.createdAt),
+        updatedAt: new Date(appointment.updatedAt),
+      })
+    })
   }
+
+  const fetchAppointments: () => Promise<void> = async (): Promise<void> => {
+    loadingStore.setLoading(true)
+
+    try {
+      const response: { kind: "ok"; appointments: Appointment[] } | GeneralApiProblem =
+        await createAppointmentApi(api).findAll()
+      if (response.kind !== "ok") {
+        showErrorToast(response.data?.error)
+
+        return
+      }
+
+      setAppointments(toAppointments(response.appointments))
+    } catch (error) {
+      console.error(error)
+
+      showErrorToast("Ocorreu um erro inesperado")
+    } finally {
+      loadingStore.setLoading(false)
+    }
+  }
+
+  const cancelAppointment: (id: number) => Promise<void> = async (id: number): Promise<void> => {
+    loadingStore.setLoading(true)
+
+    try {
+      const response = await createAppointmentApi(api).cancel(id)
+      if (response.kind !== "ok") {
+        showErrorToast(response.data.error)
+
+        return
+      }
+
+      setAppointments((appointments: Appointment[]): Appointment[] =>
+        appointments.filter((appointment: Appointment): boolean => appointment.id !== id),
+      )
+
+      showSuccessToast("Consulta cancelada com sucesso")
+    } catch (error) {
+      console.error("Error cancelling appointment:", error)
+
+      showErrorToast("Ocorreu um erro ao cancelar a consulta")
+    } finally {
+      loadingStore.setLoading(false)
+    }
+  }
+
+  const now = useMemo(() => new Date(), [])
+
+  const pastAppointments = useMemo(
+    () => appointments.filter((appointment) => isBefore(new Date(appointment.scheduledFor), now)),
+    [appointments, now],
+  )
+
+  const upcomingAppointments = useMemo(
+    () => appointments.filter((appointment) => isAfter(new Date(appointment.scheduledFor), now)),
+    [appointments, now],
+  )
+
+  const nextUpcomingAppointment = useMemo(
+    () => (upcomingAppointments.length > 0 ? upcomingAppointments[0] : undefined),
+    [upcomingAppointments],
+  )
 
   useEffect((): void => {
     fetchAppointments()
   }, [])
 
   return (
-    <View>
+    <View className="flex-1 flex-col gap-4">
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="px-4 mt-4"
-        contentContainerClassName="flex-row justify-between gap-4"
+        contentContainerClassName="flex-row gap-4 pl-4 pr-16"
       >
         <Action
           icon={Plus}
@@ -356,28 +215,283 @@ export const PatientContent = (): ReactElement => {
           highlight
           onPress={() => navigation.navigate("SelectUnit")}
         />
-        <Action icon={Folder} label="Meus dados médicos" />
-        <Action icon={CalendarDays} label="Calendário" />
         <Action icon={Pill} label="Prescrições" />
       </ScrollView>
 
-      <View className="mt-6 px-4">
-        {appointments.length === 0 ? (
-          <Text className="text-white">Nenhuma consulta agendada.</Text>
-        ) : (
-          <NextAppointment appointment={appointments[0]} />
-        )}
-      </View>
+      {nextUpcomingAppointment ? (
+        <View className="px-4 gap-4">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-white font-semibold text-base">Próxima consulta</Text>
+          </View>
 
-      <View className="mt-6 px-4">
-        <AppointmentHistoryHeader />
+          <Swipeable onSwipeComplete={() => cancelAppointment(nextUpcomingAppointment.id)}>
+            {(animatedStyle) => (
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("AppointmentDetails", {
+                    appointment: nextUpcomingAppointment,
+                  })
+                }
+              >
+                <Animated.View
+                  className="border border-neutral-500 rounded-2xl overflow-hidden mb-3"
+                  style={animatedStyle}
+                >
+                  <View className="h-1 bg-blue-500" />
 
-        <ScrollView className="mt-2" contentContainerClassName="flex flex-col gap-4">
-          {appointments.slice(0, 2).map((appointment) => (
-            <AppointmentCard key={appointment.id} appointment={appointment} />
+                  <View className="flex gap-2 p-4">
+                    <View className="flex-row items-center">
+                      <Image
+                        source={nextUpcomingAppointment.professional.user?.avatar || ""}
+                        className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
+                      />
+
+                      <View className="flex-1">
+                        <Text className="text-white font-semibold text-base">
+                          {nextUpcomingAppointment.professional.user.name}
+                        </Text>
+
+                        <Text className="text-zinc-400 text-sm">
+                          {nextUpcomingAppointment.professional.specialty}
+                        </Text>
+
+                        <View className="mt-3 flex-row items-center">
+                          <View className="flex-row items-center mr-3">
+                            <Calendar size={16} color={colors.primary[500]} />
+
+                            <Text className="text-white text-sm ml-2">
+                              {format(nextUpcomingAppointment.scheduledFor, "dd/MM/yyyy")}
+                            </Text>
+                          </View>
+
+                          <View className="flex-row items-center">
+                            <Clock size={16} color={colors.primary[500]} />
+
+                            <Text className="text-white text-sm ml-2">
+                              {format(nextUpcomingAppointment.scheduledFor, "hh:mm")}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+
+                      <View className="justify-center ml-2">
+                        <ChevronRight size={20} color="white" opacity={0.4} />
+                      </View>
+                    </View>
+
+                    <View className="bg-primary-500/10 border border-primary-500/30 p-3 rounded-lg mt-2 flex-row items-center">
+                      <View className="bg-blue-500 p-1.5 rounded-full mr-3 self-center">
+                        <Info size={18} color={colors.neutral[900]} />
+                      </View>
+
+                      <Text className="text-neutral-900 text-xs flex-1">
+                        Lembre-se de levar seu documento de identidade e chegar 15 minutos antes.
+                      </Text>
+                    </View>
+                  </View>
+                </Animated.View>
+              </Pressable>
+            )}
+          </Swipeable>
+        </View>
+      ) : (
+        <View className="flex flex-col gap-4 px-4">
+          <Text className="text-white font-semibold text-base">Próxima consulta</Text>
+
+          <View className="p-6 border border-neutral-500 rounded-2xl">
+            <View className="w-full h-0.5 bg-neutral-700 mb-4">
+              <View className="w-0 h-full bg-primary-500" />
+            </View>
+
+            <Text className="text-white font-medium text-base text-center">
+              Primeiro passo da sua jornada
+            </Text>
+
+            <Text className="text-zinc-400 text-center mt-2">
+              Invista em prevenção. Agende sua consulta e mantenha sua saúde em dia.
+            </Text>
+          </View>
+        </View>
+      )}
+
+      {upcomingAppointments.slice(1).length > 0 ? (
+        <View className="px-4 gap-4">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-white font-semibold text-base">Consultas futuras</Text>
+
+            <Link text="Ver próximas consultas" />
+          </View>
+
+          {upcomingAppointments.slice(1).map((appointment: Appointment) => (
+            <Swipeable
+              key={appointment.id}
+              onSwipeComplete={() => cancelAppointment(appointment.id)}
+            >
+              {(animatedStyle) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("AppointmentDetails", {
+                      appointment,
+                    })
+                  }
+                >
+                  <Animated.View
+                    className="border border-neutral-500 rounded-2xl overflow-hidden mb-3"
+                    style={animatedStyle}
+                  >
+                    <View className="h-1 bg-blue-500" />
+
+                    <View className="p-4">
+                      <View className="flex-row items-center">
+                        <Image
+                          source={appointment.professional.user?.avatar || ""}
+                          className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
+                        />
+
+                        <View className="flex-1">
+                          <Text className="text-white font-semibold text-base">
+                            {appointment.professional.user.name}
+                          </Text>
+                          <Text className="text-zinc-400 text-sm">
+                            {appointment.professional.specialty}
+                          </Text>
+
+                          <View className="mt-3 flex-row items-center">
+                            <View className="flex-row items-center mr-3">
+                              <Calendar size={16} color={colors.primary[500]} />
+
+                              <Text className="text-white text-sm ml-2">
+                                {format(appointment.scheduledFor, "dd/MM/yyyy")}
+                              </Text>
+                            </View>
+
+                            <View className="flex-row items-center">
+                              <Clock size={16} color={colors.primary[500]} />
+
+                              <Text className="text-white text-sm ml-2">
+                                {format(appointment.scheduledFor, "hh:mm")}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+
+                    <View className="absolute right-2 top-0 bottom-0 justify-center">
+                      <ChevronRight size={20} color="white" opacity={0.4} />
+                    </View>
+                  </Animated.View>
+                </Pressable>
+              )}
+            </Swipeable>
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      ) : (
+        <View className="flex flex-col gap-4 px-4">
+          <Text className="text-white font-semibold text-base">Consultas futuras</Text>
+
+          <View className="p-6 border border-neutral-500 rounded-2xl">
+            <View className="w-full h-0.5 bg-neutral-700 mb-4">
+              {nextUpcomingAppointment ? (
+                <View className="w-1/4 h-full bg-primary-500" />
+              ) : (
+                <View className="w-0 h-full bg-primary-500" />
+              )}
+            </View>
+
+            <Text className="text-white font-medium text-base text-center">
+              Planejando seu cuidado contínuo
+            </Text>
+
+            <Text className="text-zinc-400 text-center mt-2">
+              Após agendar sua primeira consulta, você poderá visualizar consultas futuras
+              programadas aqui.
+            </Text>
+          </View>
+        </View>
+      )}
+
+      {pastAppointments.length > 0 ? (
+        <View className="px-4 gap-4">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-white font-semibold text-base">Histórico de consultas</Text>
+
+            <Link text="Ver todo histórico" />
+          </View>
+
+          {pastAppointments.map((appointment: Appointment) => (
+            <Pressable
+              className="border border-neutral-500 rounded-2xl overflow-hidden mb-3 active:opacity-90"
+              key={appointment.id}
+              onPress={() =>
+                navigation.navigate("AppointmentDetails", {
+                  appointment,
+                })
+              }
+            >
+              <View className="h-1 bg-blue-500" />
+
+              <View className="p-4">
+                <View className="flex-row items-center">
+                  <Image
+                    source={appointment.professional.user?.avatar || ""}
+                    className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
+                  />
+
+                  <View className="flex-1">
+                    <Text className="text-white font-semibold text-base">
+                      {appointment.professional.user.name}
+                    </Text>
+                    <Text className="text-zinc-400 text-sm">
+                      {appointment.professional.specialty}
+                    </Text>
+
+                    <View className="mt-3 flex-row items-center">
+                      <View className="flex-row items-center mr-3">
+                        <Calendar size={16} color={colors.primary[500]} />
+
+                        <Text className="text-white text-sm ml-2">
+                          {format(appointment.scheduledFor, "dd/MM/yyyy")}
+                        </Text>
+                      </View>
+
+                      <View className="flex-row items-center">
+                        <Clock size={16} color={colors.primary[500]} />
+
+                        <Text className="text-white text-sm ml-2">
+                          {format(appointment.scheduledFor, "hh:mm")}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              <View className="absolute right-2 top-0 bottom-0 justify-center">
+                <ChevronRight size={20} color="white" opacity={0.4} />
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      ) : (
+        <View className="flex flex-col gap-4 px-4">
+          <Text className="text-white font-semibold text-base">Histórico de consultas</Text>
+
+          <View className="p-6 border border-neutral-500 rounded-2xl">
+            <View className="w-full h-0.5 bg-neutral-700 mb-4">
+              <View className="w-0 h-full bg-primary-500" />
+            </View>
+
+            <Text className="text-white font-medium text-base text-center">
+              Histórico em construção
+            </Text>
+            <Text className="text-zinc-400 text-center mt-2">
+              Após realizar sua primeira consulta, você poderá acompanhar todo seu histórico médico
+              nesta seção.
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }

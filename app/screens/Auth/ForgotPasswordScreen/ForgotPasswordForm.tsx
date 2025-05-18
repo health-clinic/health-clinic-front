@@ -23,9 +23,11 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     loadingStore.setLoading(true)
 
     try {
-      const { kind } = await createAuthenticationApi(api).sendForgotPasswordMail(email)
-      if (kind !== "ok") {
-        throw new Error("Erro ao enviar código de recuperação")
+      const response = await createAuthenticationApi(api).sendForgotPasswordMail(email)
+      if (response.kind !== "ok") {
+        showErrorToast(response.data.error)
+
+        return
       }
 
       setEmail(email)
@@ -43,11 +45,11 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     loadingStore.setLoading(true)
 
     try {
-      const response = await createAuthenticationApi(api).isCodeMatch(code)
+      const response = await createAuthenticationApi(api).isCodeMatch(email, code)
       if (response.kind !== "ok") {
-        throw new Error(
-          "Não foi possível validar o código internamente, por favor, solicite outro e revalide.",
-        )
+        showErrorToast(response.data.error)
+
+        return
       }
 
       const { match } = response
@@ -71,7 +73,9 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     try {
       const response = await createAuthenticationApi(api).sendForgotPasswordMail(email)
       if (response.kind !== "ok") {
-        throw new Error("Erro ao enviar código de recuperação")
+        showErrorToast(response.data.error)
+
+        return
       }
     } catch (error: any) {
       console.error(error)

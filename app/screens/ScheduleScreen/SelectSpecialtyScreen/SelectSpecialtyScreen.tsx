@@ -1,8 +1,7 @@
 import { ReactElement, useEffect, useState } from "react"
 import { AppStackScreenProps } from "@/navigators"
-import { Specialty } from "@/models/Specialty"
+import { Specialty } from "@/models/Specialty/specialty.model"
 import { FlatList, Text, View } from "react-native"
-import { SpecialtyList } from "@/screens/ScheduleScreen/SelectSpecialtyScreen/SpecialtyList"
 import { SpecialtyCard } from "@/screens/ScheduleScreen/SelectSpecialtyScreen/SpecialtyCard"
 
 interface SelectSpecialtyScreenProps extends AppStackScreenProps<"SelectSpecialty"> {}
@@ -61,7 +60,9 @@ export const SelectSpecialtyScreen = ({
         renderItem={({ item: specialty }) => (
           <SpecialtyCard
             specialty={specialty}
-            onPress={() => navigation.navigate("SelectProfessional", { specialty, unit })}
+            onPress={() =>
+              navigation.navigate("SelectProfessional", { specialty: specialty.name, unit })
+            }
           />
         )}
         columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 16 }}
