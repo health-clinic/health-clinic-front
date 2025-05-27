@@ -26,8 +26,8 @@ export class Api {
 
 export const api = new Api()
 
-if (__DEV__) {
-  routes(api.apisauce.axiosInstance)
-
-  console.log("[Mock Server] Axios interceptors registered.")
-}
+// if (__DEV__) {
+//   routes(api.apisauce.axiosInstance)
+//
+//   console.log("[Mock Server] Axios interceptors registered.")
+// }
