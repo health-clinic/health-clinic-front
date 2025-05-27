@@ -12,7 +12,7 @@ import { showErrorToast } from "@/components/toast"
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
-  const { addressStore, authenticationStore, loadingStore, userStore } = useStores()
+  const { authenticationStore, loadingStore, userStore } = useStores()
 
   const login = async (email: string, password: string): Promise<void> => {
     loadingStore.setLoading(true)

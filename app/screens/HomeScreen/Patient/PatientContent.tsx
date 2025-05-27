@@ -184,12 +184,12 @@ export const PatientContent: FC = (): ReactElement => {
   const now = useMemo(() => new Date(), [])
 
   const pastAppointments = useMemo(
-    () => appointments.filter((appointment) => isBefore(new Date(appointment.scheduledFor), now)),
+    () => appointments.filter((appointment) => isBefore(appointment.scheduledFor, now)),
     [appointments, now],
   )
 
   const upcomingAppointments = useMemo(
-    () => appointments.filter((appointment) => isAfter(new Date(appointment.scheduledFor), now)),
+    () => appointments.filter((appointment) => isAfter(appointment.scheduledFor, now)),
     [appointments, now],
   )
 
@@ -319,7 +319,15 @@ export const PatientContent: FC = (): ReactElement => {
           <View className="flex-row justify-between items-center">
             <Text className="text-white font-semibold text-base">Consultas futuras</Text>
 
-            <Link text="Ver próximas consultas" />
+            <Link
+              text="Ver próximas consultas"
+              onPress={() =>
+                navigation.navigate("AppointmentList", {
+                  type: "upcoming",
+                  appointments: upcomingAppointments,
+                })
+              }
+            />
           </View>
 
           {upcomingAppointments.slice(1).map((appointment: Appointment) => (
@@ -416,7 +424,15 @@ export const PatientContent: FC = (): ReactElement => {
           <View className="flex-row justify-between items-center">
             <Text className="text-white font-semibold text-base">Histórico de consultas</Text>
 
-            <Link text="Ver todo histórico" />
+            <Link
+              text="Ver todo histórico"
+              onPress={() =>
+                navigation.navigate("AppointmentList", {
+                  type: "history",
+                  appointments: pastAppointments,
+                })
+              }
+            />
           </View>
 
           {pastAppointments.map((appointment: Appointment) => (

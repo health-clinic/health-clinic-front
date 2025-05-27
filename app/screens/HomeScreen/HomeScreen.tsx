@@ -17,9 +17,9 @@ export const HomeScreen = (): ReactElement => {
       </View>
 
       <ScrollView contentContainerClassName="pb-32" showsVerticalScrollIndicator={false}>
-        {user.isPatient() && <PatientContent />}
+        {user?.isPatient() && <PatientContent />}
 
-        {user.isProfessional() && <ProfessionalContent />}
+        {user?.isProfessional() && <ProfessionalContent />}
       </ScrollView>
 
       <NavigationBar role={user.role as RoleType} />

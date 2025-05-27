@@ -16,7 +16,7 @@ export const AppointmentModel = types
     professional: types.reference(ProfessionalModel),
     unit: types.reference(UnitModel),
     complaints: types.optional(types.array(types.string), []),
-    status: types.enumeration("Status", ["pending", "scheduled", "cancelled", "completed"]),
+    status: types.enumeration("Status", ["scheduled", "cancelled", "completed"]),
     scheduledFor: types.Date,
     scheduledAt: types.Date,
     createdAt: types.Date,
