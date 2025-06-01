@@ -84,6 +84,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="AppointmentList" component={Screens.AppointmentListScreen} />
 
       <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
+      <Stack.Screen name="Profile" component={Screens.ProfileScreen} />
     </Stack.Navigator>
   )
 })

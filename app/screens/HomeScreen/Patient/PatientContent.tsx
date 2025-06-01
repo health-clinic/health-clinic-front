@@ -1,7 +1,7 @@
 import { FC, ReactElement, useEffect, useMemo, useState } from "react"
 import { Image, Pressable, ScrollView, Text, View } from "react-native"
 import { Action } from "@/screens/HomeScreen/Common/Action"
-import { Calendar, ChevronRight, Clock, Info, Pill, Plus } from "lucide-react-native"
+import { Calendar, ChevronRight, Clock, Info, Pill, Plus, User as UserIcon } from "lucide-react-native"
 import { Appointment } from "@/models/Appointment"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "@/models"
@@ -241,10 +241,16 @@ export const PatientContent: FC = (): ReactElement => {
 
                   <View className="flex gap-2 p-4">
                     <View className="flex-row items-center">
-                      <Image
-                        source={nextUpcomingAppointment.professional.user?.avatar || ""}
-                        className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
-                      />
+                      <View className="w-12 h-12 rounded-full bg-neutral-300 items-center justify-center mr-3">
+                        {nextUpcomingAppointment.professional.user?.avatar ? (
+                          <Image
+                            source={{ uri: nextUpcomingAppointment.professional.user.avatar }}
+                            className="w-12 h-12 rounded-full border border-neutral-400"
+                          />
+                        ) : (
+                          <UserIcon size={24} color="#8A8A8A" />
+                        )}
+                      </View>
 
                       <View className="flex-1">
                         <Text className="text-white font-semibold text-base">
@@ -351,10 +357,16 @@ export const PatientContent: FC = (): ReactElement => {
 
                     <View className="p-4">
                       <View className="flex-row items-center">
-                        <Image
-                          source={appointment.professional.user?.avatar || ""}
-                          className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
-                        />
+                        <View className="w-12 h-12 rounded-full bg-neutral-300 items-center justify-center mr-3">
+                          {appointment.professional.user?.avatar ? (
+                            <Image
+                              source={{ uri: appointment.professional.user.avatar }}
+                              className="w-12 h-12 rounded-full border border-neutral-400"
+                            />
+                          ) : (
+                            <UserIcon size={24} color="#8A8A8A" />
+                          )}
+                        </View>
 
                         <View className="flex-1">
                           <Text className="text-white font-semibold text-base">
@@ -449,10 +461,16 @@ export const PatientContent: FC = (): ReactElement => {
 
               <View className="p-4">
                 <View className="flex-row items-center">
-                  <Image
-                    source={appointment.professional.user?.avatar || ""}
-                    className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
-                  />
+                  <View className="w-12 h-12 rounded-full bg-neutral-300 items-center justify-center mr-3">
+                    {appointment.professional.user?.avatar ? (
+                      <Image
+                        source={{ uri: appointment.professional.user.avatar }}
+                        className="w-12 h-12 rounded-full border border-neutral-400"
+                      />
+                    ) : (
+                      <UserIcon size={24} color="#8A8A8A" />
+                    )}
+                  </View>
 
                   <View className="flex-1">
                     <Text className="text-white font-semibold text-base">

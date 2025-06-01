@@ -7,5 +7,6 @@ export * from "./Professional/AppointmentScreen"
 export * from "./AppointmentDetailsScreen"
 export * from "./SettingsScreen"
 export * from "./AppointmentListScreen"
+export * from "./ProfileScreen"
 
 export * from "./ErrorScreen/ErrorBoundary"

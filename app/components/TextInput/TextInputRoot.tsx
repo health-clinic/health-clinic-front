@@ -35,7 +35,7 @@ export const TextInputRoot = ({ children, hasError, className, ...props }: Input
                 child.props.onBlur?.(...args)
                 setIsFocused(false)
               },
-              ...(child.type?.name === 'TextInputIcon' ? { hasError } : {}),
+              ...(child.type?.name === "TextInputIcon" ? { hasError } : {}),
             })
           : child,
       )}

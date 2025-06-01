@@ -4,10 +4,13 @@ import { Image, Text, TouchableOpacity, View } from "react-native"
 import { useStores } from "@/models"
 import { User } from "@/models/User"
 import tailwind from "./../../../../tailwind.config"
+import { useNavigation } from "@react-navigation/native"
+import { User as UserIcon } from "lucide-react-native"
 
 export const HomeHeader = (): ReactElement => {
   const { user } = useStores().userStore as { user: User }
 
+  const navigation = useNavigation()
   const colors = tailwind.theme.extend.colors
 
   return (
@@ -29,12 +32,20 @@ export const HomeHeader = (): ReactElement => {
             <View className="w-2 h-2 rounded-full bg-red-500 absolute top-0 right-0" />
           </TouchableOpacity>
 
-          <TouchableOpacity>
-            <Image
-              source={user.avatar}
-              className="w-10 h-10 rounded-full border border-neutral-400"
-              style={{ width: 32, height: 32 }}
-            />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Profile")}
+            className="active:opacity-70"
+          >
+            <View className="w-8 h-8 rounded-full bg-neutral-300 items-center justify-center">
+              {user?.avatar ? (
+                <Image
+                  source={{ uri: user.avatar }}
+                  className="w-8 h-8 rounded-full border border-neutral-400"
+                />
+              ) : (
+                <UserIcon size={20} color="#8A8A8A" />
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </View>

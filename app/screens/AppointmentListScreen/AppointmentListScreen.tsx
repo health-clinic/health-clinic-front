@@ -1,6 +1,6 @@
 import { FC, ReactElement, useState } from "react"
 import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native"
-import { Calendar, ChevronLeft, ChevronRight, Clock } from "lucide-react-native"
+import { Calendar, ChevronLeft, ChevronRight, Clock, User as UserIcon } from "lucide-react-native"
 import { AppStackScreenProps } from "@/navigators"
 import { Appointment } from "@/models/Appointment"
 import { format } from "date-fns"
@@ -90,10 +90,16 @@ export const AppointmentListScreen: FC<AppointmentListScreenProps> = ({
 
                       <View className="p-4">
                         <View className="flex-row items-center">
-                          <Image
-                            source={appointment.professional.user?.avatar || ""}
-                            className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
-                          />
+                          <View className="w-12 h-12 rounded-full bg-neutral-300 items-center justify-center mr-3">
+                            {appointment.professional.user?.avatar ? (
+                              <Image
+                                source={{ uri: appointment.professional.user.avatar }}
+                                className="w-12 h-12 rounded-full border border-neutral-400"
+                              />
+                            ) : (
+                              <UserIcon size={24} color="#8A8A8A" />
+                            )}
+                          </View>
 
                           <View className="flex-1">
                             <Text className="text-white font-semibold text-base">
@@ -145,10 +151,16 @@ export const AppointmentListScreen: FC<AppointmentListScreenProps> = ({
 
                 <View className="p-4">
                   <View className="flex-row items-center">
-                    <Image
-                      source={appointment.professional.user?.avatar || ""}
-                      className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
-                    />
+                    <View className="w-12 h-12 rounded-full bg-neutral-300 items-center justify-center mr-3">
+                      {appointment.professional.user?.avatar ? (
+                        <Image
+                          source={{ uri: appointment.professional.user.avatar }}
+                          className="w-12 h-12 rounded-full border border-neutral-400"
+                        />
+                      ) : (
+                        <UserIcon size={24} color="#8A8A8A" />
+                      )}
+                    </View>
 
                     <View className="flex-1">
                       <Text className="text-white font-semibold text-base">

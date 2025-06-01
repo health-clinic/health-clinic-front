@@ -53,9 +53,9 @@ export const ProfessionalDetailsForm = ({
         name="crm"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("crm")}> 
+            <TextInput.Root hasError={hasError("crm")}>
               <TextInput.Icon icon={BriefcaseMedical} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="CRM"
@@ -65,7 +65,7 @@ export const ProfessionalDetailsForm = ({
                 autoCapitalize="characters"
               />
             </TextInput.Root>
-            
+
             {errors.crm && (
               <Text className="text-angry-500 text-xs mt-1">{errors.crm.message}</Text>
             )}
@@ -78,9 +78,9 @@ export const ProfessionalDetailsForm = ({
         name="specialty"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("specialty")}> 
+            <TextInput.Root hasError={hasError("specialty")}>
               <TextInput.Icon icon={Stethoscope} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="Especialidade"
@@ -89,7 +89,7 @@ export const ProfessionalDetailsForm = ({
                 onBlur={onBlur}
               />
             </TextInput.Root>
-            
+
             {errors.specialty && (
               <Text className="text-angry-500 text-xs mt-1">{errors.specialty.message}</Text>
             )}
