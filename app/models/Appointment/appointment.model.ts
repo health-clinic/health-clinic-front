@@ -3,7 +3,6 @@ import { withSetPropAction } from "@/models/helpers/withSetPropAction"
 import { ProfessionalModel } from "@/models/Professional"
 import { UnitModel } from "@/models/Unit/unit.model"
 import { PatientModel } from "@/models/Patient"
-import { PrescriptionModel } from "@/models/Prescription/prescription.model"
 import { DiagnosisModel } from "@/models/Diagosis"
 
 export const AppointmentModel = types
@@ -12,7 +11,6 @@ export const AppointmentModel = types
     id: types.identifierNumber,
     diagnoses: types.optional(types.array(DiagnosisModel), []),
     patient: types.reference(PatientModel),
-    prescriptions: types.optional(types.array(PrescriptionModel), []),
     professional: types.reference(ProfessionalModel),
     unit: types.reference(UnitModel),
     complaints: types.optional(types.array(types.string), []),

@@ -1,6 +1,4 @@
 {
-  "name": "health-clinic",
-  "displayName": "health-clinic",
   "expo": {
     "name": "Postinho de Saúde",
     "slug": "health-clinic",
@@ -10,13 +8,15 @@
     "userInterfaceStyle": "dark",
     "icon": "./assets/images/app-icon-all.png",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/83bd347a-3030-4e4e-9452-7f402587c1fc"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
     "newArchEnabled": true,
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.healthclinicfront",
@@ -26,6 +26,7 @@
       },
       "allowBackup": false
     },
+    "ios": {},
     "plugins": [
       "expo-localization",
       "expo-font",

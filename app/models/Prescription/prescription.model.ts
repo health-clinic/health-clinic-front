@@ -1,10 +1,12 @@
 import { Instance, SnapshotIn, types } from "mobx-state-tree"
 import { withSetPropAction } from "@/models/helpers/withSetPropAction"
+import { AppointmentModel } from "../Appointment/appointment.model"
 
 export const PrescriptionModel = types
   .model("Prescription")
   .props({
     id: types.identifierNumber,
+    appointment: types.reference(AppointmentModel),
     name: types.string,
     dosage: types.string,
     frequency: types.string,

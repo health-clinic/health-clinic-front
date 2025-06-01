@@ -9,6 +9,7 @@ import { useStores } from "@/models"
 import tailwind from "./../../../tailwind.config"
 import { format } from "date-fns"
 import { Appointment } from "@/models/Appointment"
+import { toZonedDate } from "@/utils/date/convert"
 
 interface AppointmentDetailsScreenProps extends AppStackScreenProps<"AppointmentDetails"> {}
 

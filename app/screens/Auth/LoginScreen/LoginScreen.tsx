@@ -7,7 +7,7 @@ import { useStores } from "@/models"
 import { AuthHeader } from "@/components/AuthHeader"
 import { Login } from "@/screens"
 import { Link } from "@/components/Link"
-import { showErrorToast } from "@/components/toast"
+import { showErrorToast, showInfoToast } from "@/components/toast"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -19,8 +19,9 @@ export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
 
     try {
       const response = await createAuthenticationApi(api).login(email, password)
+      console.log(response)
       if (response.kind !== "ok") {
-        showErrorToast(response.data.error)
+        showErrorToast(response.data?.error)
 
         return
       }
@@ -34,7 +35,7 @@ export const LoginScreen = ({ navigation }: LoginScreenProps): ReactElement => {
     } catch (error: any) {
       console.error(error)
 
-      showErrorToast("Ocorreu um erro inesperado")
+      showErrorToast(`Não foi possível realizar o login: ${error?.message}`)
     } finally {
       loadingStore.setLoading(false)
     }
