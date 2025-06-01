@@ -1,5 +1,5 @@
 import { FC, ReactElement, useEffect, useMemo, useState } from "react"
-import { ScrollView, View, Text } from "react-native"
+import { ScrollView, View, Text, Pressable } from "react-native"
 import { AppStackScreenProps } from "@/navigators"
 import { PrescriptionHeader } from "@/components/PrescriptionHeader"
 import { createPrescriptionApi } from "@/services/prescription/prescription.api"
@@ -254,28 +254,34 @@ export const PrescriptionListScreen: FC<PrescriptionListScreenProps> = ({
                 </Text>
               </View>
 
-              <View className="p-4 border-t border-neutral-500">
+              <View className="px-4 pb-4">
                 <View className="flex flex-col gap-4">
                   {group.prescriptions.map((prescription: Prescription) => (
-                    <View key={prescription.id} className="flex-row">
-                      <View className="w-8 flex items-start pt-1">
-                        <Pill size={20} color="#8A8A8A" />
+                    <Pressable
+                      key={prescription.id}
+                      className="bg-neutral-100 border border-neutral-500 rounded-2xl overflow-hidden active:opacity-70 p-4"
+                      onPress={() => navigation.navigate("PrescriptionDetails", { prescription })}
+                    >
+                      <View key={prescription.id} className="flex-row">
+                        <View className="w-8 flex items-start pt-1">
+                          <Pill size={20} color="#8A8A8A" />
+                        </View>
+
+                        <View className="flex-col gap-1">
+                          <Text className="text-neutral-900 text-lg font-medium">
+                            {prescription.name}
+                          </Text>
+
+                          <Text className="text-neutral-600 text-base">
+                            {prescription.dosage} • {prescription.frequency}
+                          </Text>
+
+                          <Text className="text-neutral-600 text-base">
+                            Duração: {prescription.duration}
+                          </Text>
+                        </View>
                       </View>
-
-                      <View className="flex-col gap-1">
-                        <Text className="text-neutral-900 text-lg font-medium">
-                          {prescription.name}
-                        </Text>
-
-                        <Text className="text-neutral-600 text-base">
-                          {prescription.dosage} • {prescription.frequency}
-                        </Text>
-
-                        <Text className="text-neutral-600 text-base">
-                          Duração: {prescription.duration}
-                        </Text>
-                      </View>
-                    </View>
+                    </Pressable>
                   ))}
                 </View>
               </View>
@@ -290,17 +296,13 @@ export const PrescriptionListScreen: FC<PrescriptionListScreenProps> = ({
             </View>
 
             <Text className="text-white font-medium text-base text-center">
-              {selectedTabId === "active" 
-                ? "Nenhuma prescrição ativa"
-                : "Histórico de prescrições"
-              }
+              {selectedTabId === "active" ? "Nenhuma prescrição ativa" : "Histórico de prescrições"}
             </Text>
-            
+
             <Text className="text-zinc-400 text-center mt-2">
               {selectedTabId === "active"
                 ? "Você não possui prescrições ativas no momento. Após uma consulta, suas prescrições aparecerão aqui."
-                : "Após o vencimento de suas prescrições ativas, você poderá visualizar todo o histórico nesta seção."
-              }
+                : "Após o vencimento de suas prescrições ativas, você poderá visualizar todo o histórico nesta seção."}
             </Text>
           </View>
         )}
