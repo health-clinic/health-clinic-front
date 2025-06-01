@@ -19,8 +19,8 @@ export type AppStackParamList = {
   ForgotPassword: undefined
   Home: undefined
   SelectUnit: undefined
-  SelectSpecialty: { unit: UnitModel }
-  SelectProfessional: { specialty: SpecialtyModel; unit: UnitModel }
+  SelectSpecialty: { unit: typeof UnitModel }
+  SelectProfessional: { specialty: typeof SpecialtyModel; unit: typeof UnitModel }
   SelectDateTime: { appointmentId?: number; professional: Professional }
   ConfirmSchedule: {
     appointmentId?: number
@@ -37,6 +37,7 @@ export type AppStackParamList = {
   AppointmentDetails: { appointment: Appointment }
   AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
   Settings: undefined
+  Profile: undefined
 }
 
 const exitRoutes = Config.exitRoutes
