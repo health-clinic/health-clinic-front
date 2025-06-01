@@ -22,18 +22,10 @@ const schema = z.object({
     .string()
     .min(1, "Por favor, insira o CEP.")
     .regex(/^\d{5}-\d{3}$/, "O CEP digitado não é válido."),
-  street: z
-    .string()
-    .min(1, "Por favor, insira a rua."),
-  number: z
-    .string()
-    .min(1, "Por favor, insira o número."),
-  district: z
-    .string()
-    .min(1, "Por favor, insira o bairro."),
-  city: z
-    .string()
-    .min(1, "Por favor, insira a cidade."),
+  street: z.string().min(1, "Por favor, insira a rua."),
+  number: z.string().min(1, "Por favor, insira o número."),
+  district: z.string().min(1, "Por favor, insira o bairro."),
+  city: z.string().min(1, "Por favor, insira a cidade."),
   state: z
     .string()
     .min(1, "Por favor, insira o UF.")
@@ -100,9 +92,9 @@ export const PatientAddressForm = ({
         name="zipCode"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("zipCode")}> 
+            <TextInput.Root hasError={hasError("zipCode")}>
               <TextInput.Icon icon={MapPin} />
-              
+
               <TextInput.MaskedControl
                 ref={ref}
                 mask="99999-999"
@@ -116,7 +108,7 @@ export const PatientAddressForm = ({
                 keyboardType="number-pad"
               />
             </TextInput.Root>
-            
+
             {errors.zipCode && (
               <Text className="text-angry-500 text-xs mt-1">{errors.zipCode.message}</Text>
             )}
@@ -129,9 +121,9 @@ export const PatientAddressForm = ({
         name="street"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("street")}> 
+            <TextInput.Root hasError={hasError("street")}>
               <TextInput.Icon icon={Route} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="Rua"
@@ -140,7 +132,7 @@ export const PatientAddressForm = ({
                 onBlur={onBlur}
               />
             </TextInput.Root>
-            
+
             {errors.street && (
               <Text className="text-angry-500 text-xs mt-1">{errors.street.message}</Text>
             )}
@@ -153,9 +145,9 @@ export const PatientAddressForm = ({
         name="number"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("number")}> 
+            <TextInput.Root hasError={hasError("number")}>
               <TextInput.Icon icon={House} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="Número"
@@ -165,7 +157,7 @@ export const PatientAddressForm = ({
                 keyboardType="number-pad"
               />
             </TextInput.Root>
-            
+
             {errors.number && (
               <Text className="text-angry-500 text-xs mt-1">{errors.number.message}</Text>
             )}
@@ -178,9 +170,9 @@ export const PatientAddressForm = ({
         name="district"
         render={({ field: { onChange, onBlur, ref, value } }) => (
           <View>
-            <TextInput.Root hasError={hasError("district")}> 
+            <TextInput.Root hasError={hasError("district")}>
               <TextInput.Icon icon={Layers} />
-              
+
               <TextInput.Control
                 ref={ref}
                 placeholder="Bairro"
@@ -189,7 +181,7 @@ export const PatientAddressForm = ({
                 onBlur={onBlur}
               />
             </TextInput.Root>
-            
+
             {errors.district && (
               <Text className="text-angry-500 text-xs mt-1">{errors.district.message}</Text>
             )}
@@ -204,9 +196,9 @@ export const PatientAddressForm = ({
             name="city"
             render={({ field: { onChange, onBlur, ref, value } }) => (
               <View>
-                <TextInput.Root hasError={hasError("city")}> 
+                <TextInput.Root hasError={hasError("city")}>
                   <TextInput.Icon icon={Building2} />
-                  
+
                   <TextInput.Control
                     ref={ref}
                     placeholder="Cidade"
@@ -215,7 +207,7 @@ export const PatientAddressForm = ({
                     onBlur={onBlur}
                   />
                 </TextInput.Root>
-                
+
                 {errors.city && (
                   <Text className="text-angry-500 text-xs mt-1">{errors.city.message}</Text>
                 )}
@@ -230,9 +222,9 @@ export const PatientAddressForm = ({
             name="state"
             render={({ field: { onChange, onBlur, ref, value } }) => (
               <View>
-                <TextInput.Root hasError={hasError("state")}> 
+                <TextInput.Root hasError={hasError("state")}>
                   <TextInput.Icon icon={Globe} />
-                  
+
                   <TextInput.Control
                     ref={ref}
                     placeholder="UF"
@@ -243,7 +235,7 @@ export const PatientAddressForm = ({
                     autoCapitalize="characters"
                   />
                 </TextInput.Root>
-                
+
                 {errors.state && (
                   <Text className="text-angry-500 text-xs mt-1">{errors.state.message}</Text>
                 )}
