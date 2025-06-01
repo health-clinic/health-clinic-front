@@ -39,6 +39,7 @@ export type AppStackParamList = {
   PrescriptionList: undefined
   PrescriptionDetails: { prescription: Prescription }
   Settings: undefined
+  Profile: undefined
 }
 
 const exitRoutes = Config.exitRoutes
@@ -88,6 +89,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="PrescriptionDetails" component={Screens.PrescriptionDetailsScreen} />
 
       <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
+      <Stack.Screen name="Profile" component={Screens.ProfileScreen} />
     </Stack.Navigator>
   )
 })
