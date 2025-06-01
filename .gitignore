@@ -92,3 +92,5 @@ web-build/
 .yarn/*
 
 .cursor
+
+/dist

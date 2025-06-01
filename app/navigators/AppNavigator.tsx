@@ -36,6 +36,8 @@ export type AppStackParamList = {
   }
   AppointmentDetails: { appointment: Appointment }
   AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
+  PrescriptionList: undefined
+  PrescriptionDetails: { prescription: Prescription }
   Settings: undefined
   Profile: undefined
 }
@@ -82,6 +84,9 @@ const AppStack = observer(function AppStack() {
 
       <Stack.Screen name="AppointmentDetails" component={Screens.AppointmentDetailsScreen} />
       <Stack.Screen name="AppointmentList" component={Screens.AppointmentListScreen} />
+
+      <Stack.Screen name="PrescriptionList" component={Screens.PrescriptionListScreen} />
+      <Stack.Screen name="PrescriptionDetails" component={Screens.PrescriptionDetailsScreen} />
 
       <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
       <Stack.Screen name="Profile" component={Screens.ProfileScreen} />

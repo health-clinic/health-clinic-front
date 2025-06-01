@@ -9,7 +9,7 @@ import { createAppointmentApi } from "@/services/appointment/appointment.api"
 import { api } from "@/services/api"
 import { showErrorToast, showSuccessToast } from "@/components/toast"
 import { GeneralApiProblem } from "@/services/api/apiProblem"
-import { format, isAfter, isBefore } from "date-fns"
+import { format, isAfter, isBefore, isToday } from "date-fns"
 import { Link } from "@/components/Link"
 import tailwind from "./../../../../tailwind.config"
 import { Swipeable } from "@/components/Swipeable"
@@ -121,7 +121,6 @@ export const PatientContent: FC = (): ReactElement => {
         id: appointment.id,
         diagnoses: [],
         patient: appointment.patient.id,
-        prescriptions: [],
         professional: appointment.professional.id,
         unit: appointment.unit.id,
         complaints: appointment.complaints,
@@ -189,7 +188,12 @@ export const PatientContent: FC = (): ReactElement => {
   )
 
   const upcomingAppointments = useMemo(
-    () => appointments.filter((appointment) => isAfter(appointment.scheduledFor, now)),
+    () =>
+      appointments.filter((appointment) => {
+        console.log(appointment.scheduledFor)
+
+        return isToday(appointment.scheduledFor) || isAfter(appointment.scheduledFor, now)
+      }),
     [appointments, now],
   )
 
@@ -215,7 +219,11 @@ export const PatientContent: FC = (): ReactElement => {
           highlight
           onPress={() => navigation.navigate("SelectUnit")}
         />
-        <Action icon={Pill} label="Prescrições" />
+        <Action
+          icon={Pill}
+          label="Prescrições"
+          onPress={() => navigation.navigate("PrescriptionList")}
+        />
       </ScrollView>
 
       {nextUpcomingAppointment ? (

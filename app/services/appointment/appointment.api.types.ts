@@ -51,18 +51,15 @@ export type AppointmentStatus = "scheduled" | "cancelled" | "completed"
 
 export type Appointment = {
   id: number
-  unitId: number
-  professionalId: number
-  patientId: number
   status: AppointmentStatus
+  complaints: any[]
   scheduledFor: string
   scheduledAt: string
-  complaints: any[]
   createdAt: string
   updatedAt: string
-  unit: Unit
-  professional: Professional
   patient: Patient
+  professional: Professional
+  unit: Unit
 }
 
 export type AppointmentResponse = Appointment[]
