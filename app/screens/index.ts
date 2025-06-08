@@ -11,3 +11,5 @@ export * as MedicalRecord from "@/screens/MedicalRecord"
 export * as Common from "@/screens/Common"
 
 export * from "@/screens/ErrorScreen/ErrorBoundary"
+
+export * as Notification from "@/screens/Notification"

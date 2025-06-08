@@ -26,7 +26,10 @@ export const HomeHeader = (): ReactElement => {
         </View>
 
         <View className="flex-row items-center gap-4">
-          <TouchableOpacity className="relative">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Notification")}
+            className="relative"
+          >
             <Bell color={colors.neutral[900]} className="w-5 h-5" />
 
             <View className="w-2 h-2 rounded-full bg-red-500 absolute top-0 right-0" />

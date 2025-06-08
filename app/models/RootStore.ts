@@ -10,6 +10,7 @@ import { SpecialtyStore } from "@/models/Specialty"
 import { AppointmentStore } from "@/models/Appointment"
 import { UnitStore } from "@/models/Unit"
 import { PrescriptionStore } from "@/models/Prescription"
+import { NotificationStore } from "@/models/Notification"
 
 export const RootStoreModel = types.model("RootStore").props({
   loadingStore: types.optional(LoadingStore, { isLoading: false }),
@@ -20,6 +21,7 @@ export const RootStoreModel = types.model("RootStore").props({
   addressStore: types.optional(AddressStore, {}),
   administratorStore: types.optional(AdministratorStore, {}),
   appointmentStore: types.optional(AppointmentStore, {}),
+  notificationStore: types.optional(NotificationStore, {}),
   patientStore: types.optional(PatientStore, {}),
   prescriptionStore: types.optional(PrescriptionStore, {}),
   professionalStore: types.optional(ProfessionalStore, {}),
