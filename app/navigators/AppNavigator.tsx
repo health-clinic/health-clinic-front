@@ -41,6 +41,7 @@ export type PatientAppStackParamList = {
   PrescriptionDetails: { prescription: Prescription }
   Settings: undefined
   Profile: undefined
+  Notification: undefined
 }
 
 export type ProfessionalAppStackParamList = {
@@ -63,6 +64,7 @@ export type ProfessionalAppStackParamList = {
   PrescriptionDetails: { prescription: Prescription }
   Settings: undefined
   Profile: undefined
+  Notification: undefined
 }
 
 const exitRoutes = Config.exitRoutes
@@ -168,6 +170,7 @@ const PatientAppStack = observer(function PatientAppStack() {
         name="PrescriptionDetails"
         component={Screens.Prescriptions.Patient.PrescriptionDetailsScreen}
       />
+      <PatientStack.Screen name="Notification" component={Screens.Notification.NotificationScreen} />
     </PatientStack.Navigator>
   )
 })
@@ -229,6 +232,11 @@ const ProfessionalAppStack = observer(function ProfessionalAppStack() {
         name="CompleteCalendar"
         component={Screens.CompleteCalendar.Professional.CompleteCalendarScreen}
       />
+      <ProfessionalStack.Screen
+        name="PrescriptionDetails"
+        component={Screens.Prescriptions.Patient.PrescriptionDetailsScreen}
+      />
+      <ProfessionalStack.Screen name="Notification" component={Screens.Notification.NotificationScreen} />
     </ProfessionalStack.Navigator>
   )
 })
