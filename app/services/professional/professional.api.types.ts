@@ -1,6 +1,7 @@
+import { Patient } from "../appointment/appointment.api.types"
+
 export type Professional = {
   id: number
-  addressId: null
   address: null
   name: string
   email: string
@@ -11,3 +12,5 @@ export type Professional = {
 }
 
 export type ProfessionalResponse = Professional[]
+
+export type RecentPatientsResponse = Patient[]

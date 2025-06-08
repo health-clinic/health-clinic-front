@@ -54,21 +54,21 @@ export const colors = {
 
 export const shadows = {
   default: {
-    shadowColor: "rgba(63, 169, 245, 0.3)",
+    shadowColor: palette.primary500,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
   button: {
-    shadowColor: "rgba(63, 169, 245, 0.3)",
+    shadowColor: palette.primary500,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
   },
   input: {
-    shadowColor: "rgba(0, 0, 0, 0.3)",
+    shadowColor: palette.neutral900,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,

@@ -31,7 +31,7 @@ declare module "react-native" {
     className?: string
   }
 
-  interface TouchableOpacityProps {
+  interface TouchableOpacityProps extends ReactNative.TouchableOpacityProps {
     className?: string
   }
 

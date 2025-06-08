@@ -11,23 +11,29 @@ interface TabsItemProps extends TouchableOpacityProps {
 export const TabsItem: FC<TabsItemProps> = ({
   label,
   isSelected = false,
-  badgeCount,
+  badgeCount = 0,
   ...props
 }: TabsItemProps): ReactElement => {
   return (
     <TouchableOpacity
-      className={`px-6 py-3 rounded-full ${isSelected ? "bg-primary-500" : "bg-transparent"}`}
+      className={`px-2 py-1 rounded-full ${
+        isSelected
+          ? "bg-primary-500/20 border border-primary-500/30"
+          : "bg-transparent border border-neutral-300"
+      }`}
       activeOpacity={0.7}
       {...props}
     >
-      <View className="flex-row items-center">
-        <Text className={`text-lg font-medium ${isSelected ? "text-white" : "text-neutral-500"}`}>
+      <View className="flex-row gap-2 items-center">
+        <Text
+          className={`text-sm font-medium ${isSelected ? "text-primary-500" : "text-neutral-500"}`}
+        >
           {label}
         </Text>
 
-        {badgeCount !== undefined && badgeCount > 0 && (
-          <View className="ml-2 bg-blue-500 rounded-full px-2 py-0.5">
-            <Text className="text-xs text-white font-medium">{badgeCount}</Text>
+        {badgeCount > 0 && (
+          <View className="bg-primary-500/20 rounded-full px-2 py-0.5 border border-primary-500/30">
+            <Text className="text-xs text-primary-500 font-medium">{badgeCount}</Text>
           </View>
         )}
       </View>

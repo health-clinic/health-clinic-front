@@ -13,11 +13,11 @@ export const TabsRoot: FC<TabsRootProps> = ({
   ...props
 }: TabsRootProps): ReactElement => {
   return (
-    <View {...props} className={`px-4 pt-6 pb-4 ${className}`}>
+    <View {...props} className={`px-4 ${className}`}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
-        className="flex-row gap-2"
+        contentContainerClassName="flex-row gap-2"
       >
         {children}
       </ScrollView>
