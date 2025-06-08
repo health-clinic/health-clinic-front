@@ -1,14 +1,13 @@
-export * from "./Auth/RegisterScreen"
-export * from "./Auth/LoginScreen"
-export * from "@/screens/Auth/ForgotPasswordScreen/index"
-export * from "./HomeScreen"
-export * from "./ScheduleScreen"
-export * from "./Professional/AppointmentScreen"
-export * from "./AppointmentDetailsScreen"
-export * from "./SettingsScreen"
-export * from "./AppointmentListScreen"
-export * from "./PrescriptionListScreen"
-export * from "./PrescriptionDetailsScreen"
-export * from "./ProfileScreen"
+export * as Authentication from "@/screens/Authentication"
 
-export * from "./ErrorScreen/ErrorBoundary"
+export * as Home from "@/screens/Home"
+
+export * as Appointments from "@/screens/Appointments"
+export * as Schedule from "@/screens/Schedule"
+export * as Prescriptions from "@/screens/Prescriptions"
+export * as CompleteCalendar from "@/screens/CompleteCalendar"
+export * as MedicalRecord from "@/screens/MedicalRecord"
+
+export * as Common from "@/screens/Common"
+
+export * from "@/screens/ErrorScreen/ErrorBoundary"

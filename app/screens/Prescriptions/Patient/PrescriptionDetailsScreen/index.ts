@@ -1,0 +1,1 @@
+export { PrescriptionDetailsScreen } from "./PrescriptionDetailsScreen"

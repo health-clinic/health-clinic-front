@@ -1,3 +1,4 @@
+import React, { ComponentProps } from "react"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
@@ -5,28 +6,50 @@ import * as Screens from "@/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
-import { ComponentProps } from "react"
-import { UnitModel } from "@/models/Unit/unit.model"
-import { SpecialtyModel } from "@/models/Specialty/specialty.model"
+import { Specialty } from "@/models/Specialty/specialty.model"
 import { Professional } from "@/models/Professional"
 import { Appointment } from "@/models/Appointment"
 import { Diagnosis } from "@/models/Diagosis"
 import { Prescription } from "@/models/Prescription"
+import { useStores } from "@/models"
+import { Patient } from "@/models/Patient"
+import { Unit } from "@faker-js/faker"
 
 export type AppStackParamList = {
   Login: undefined
   Register: undefined
   ForgotPassword: undefined
+}
+
+export type PatientAppStackParamList = {
+  Login: undefined
+  Register: undefined
+  ForgotPassword: undefined
   Home: undefined
   SelectUnit: undefined
-  SelectSpecialty: { unit: typeof UnitModel }
-  SelectProfessional: { specialty: typeof SpecialtyModel; unit: typeof UnitModel }
+  SelectSpecialty: { unit: Unit }
+  SelectProfessional: { specialty: Specialty; unit: Unit }
   SelectDateTime: { appointmentId?: number; professional: Professional }
   ConfirmSchedule: {
     appointmentId?: number
     professional: Professional
     scheduledFor: string
   }
+  AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
+  AppointmentDetails: { appointment: Appointment }
+  PrescriptionList: undefined
+  PrescriptionDetails: { prescription: Prescription }
+  Settings: undefined
+  Profile: undefined
+}
+
+export type ProfessionalAppStackParamList = {
+  Login: undefined
+  Register: undefined
+  ForgotPassword: undefined
+  Home: undefined
+  CompleteCalendar: undefined
+  MedicalRecord: { patient: Patient }
   Appointment: { appointment: Appointment }
   ConfirmAppointment: {
     appointment: Appointment
@@ -34,8 +57,8 @@ export type AppStackParamList = {
     diagnoses: Diagnosis[]
     prescriptions: Prescription[]
   }
-  AppointmentDetails: { appointment: Appointment }
   AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
+  AppointmentDetails: { appointment: Appointment }
   PrescriptionList: undefined
   PrescriptionDetails: { prescription: Prescription }
   Settings: undefined
@@ -50,6 +73,8 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 >
 
 const Stack = createNativeStackNavigator<AppStackParamList>()
+const PatientStack = createNativeStackNavigator<PatientAppStackParamList>()
+const ProfessionalStack = createNativeStackNavigator<ProfessionalAppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
@@ -67,30 +92,144 @@ const AppStack = observer(function AppStack() {
       }}
       initialRouteName="Login"
     >
-      <Stack.Screen name="Login" component={Screens.Login.Screen} />
-      <Stack.Screen name="Register" component={Screens.Register.Screen} />
-      <Stack.Screen name="ForgotPassword" component={Screens.ForgotPassword.Screen} />
-
-      <Stack.Screen name="Home" component={Screens.HomeScreen} />
-
-      <Stack.Screen name="SelectUnit" component={Screens.SelectUnitScreen} />
-      <Stack.Screen name="SelectSpecialty" component={Screens.SelectSpecialtyScreen} />
-      <Stack.Screen name="SelectProfessional" component={Screens.SelectProfessionalScreen} />
-      <Stack.Screen name="SelectDateTime" component={Screens.SelectDateTimeScreen} />
-      <Stack.Screen name="ConfirmSchedule" component={Screens.ConfirmScheduleScreen} />
-
-      <Stack.Screen name="Appointment" component={Screens.AppointmentScreen} />
-      <Stack.Screen name="ConfirmAppointment" component={Screens.ConfirmAppointmentScreen} />
-
-      <Stack.Screen name="AppointmentDetails" component={Screens.AppointmentDetailsScreen} />
-      <Stack.Screen name="AppointmentList" component={Screens.AppointmentListScreen} />
-
-      <Stack.Screen name="PrescriptionList" component={Screens.PrescriptionListScreen} />
-      <Stack.Screen name="PrescriptionDetails" component={Screens.PrescriptionDetailsScreen} />
-
-      <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
-      <Stack.Screen name="Profile" component={Screens.ProfileScreen} />
+      <Stack.Screen name="Login" component={Screens.Authentication.Login.Screen} />
+      <Stack.Screen name="Register" component={Screens.Authentication.Register.Screen} />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={Screens.Authentication.ForgotPassword.Screen}
+      />
     </Stack.Navigator>
+  )
+})
+
+const PatientAppStack = observer(function PatientAppStack() {
+  const {
+    theme: { colors },
+  } = useAppTheme()
+
+  const { authenticationStore } = useStores()
+
+  return (
+    <PatientStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        navigationBarColor: colors.background,
+        contentStyle: {
+          backgroundColor: colors.background,
+        },
+      }}
+      initialRouteName={authenticationStore.isAuthenticated ? "Home" : "Login"}
+    >
+      <PatientStack.Screen name="Login" component={Screens.Authentication.Login.Screen} />
+      <PatientStack.Screen name="Register" component={Screens.Authentication.Register.Screen} />
+      <PatientStack.Screen
+        name="ForgotPassword"
+        component={Screens.Authentication.ForgotPassword.Screen}
+      />
+
+      <PatientStack.Screen
+        name="AppointmentList"
+        component={Screens.Appointments.Patient.AppointmentListScreen}
+      />
+
+      <PatientStack.Screen name="Settings" component={Screens.Common.SettingsScreen} />
+      <PatientStack.Screen name="Profile" component={Screens.Common.ProfileScreen} />
+
+      <PatientStack.Screen name="Home" component={Screens.Home.Patient.HomeScreen} />
+      <PatientStack.Screen
+        name="SelectUnit"
+        component={Screens.Schedule.Patient.SelectUnitScreen}
+      />
+      <PatientStack.Screen
+        name="SelectSpecialty"
+        component={Screens.Schedule.Patient.SelectSpecialtyScreen}
+      />
+      <PatientStack.Screen
+        name="SelectProfessional"
+        component={Screens.Schedule.Patient.SelectProfessionalScreen}
+      />
+      <PatientStack.Screen
+        name="SelectDateTime"
+        component={Screens.Schedule.Patient.SelectDateTimeScreen}
+      />
+      <PatientStack.Screen
+        name="ConfirmSchedule"
+        component={Screens.Schedule.Patient.ConfirmScheduleScreen}
+      />
+      <PatientStack.Screen
+        name="AppointmentDetails"
+        component={Screens.Appointments.Patient.AppointmentDetailsScreen}
+      />
+      <PatientStack.Screen
+        name="PrescriptionList"
+        component={Screens.Prescriptions.Patient.PrescriptionListScreen}
+      />
+      <PatientStack.Screen
+        name="PrescriptionDetails"
+        component={Screens.Prescriptions.Patient.PrescriptionDetailsScreen}
+      />
+    </PatientStack.Navigator>
+  )
+})
+
+const ProfessionalAppStack = observer(function ProfessionalAppStack() {
+  const {
+    theme: { colors },
+  } = useAppTheme()
+
+  const { authenticationStore } = useStores()
+
+  return (
+    <ProfessionalStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        navigationBarColor: colors.background,
+        contentStyle: {
+          backgroundColor: colors.background,
+        },
+      }}
+      initialRouteName={authenticationStore.isAuthenticated ? "Home" : "Login"}
+    >
+      <ProfessionalStack.Screen name="Login" component={Screens.Authentication.Login.Screen} />
+      <ProfessionalStack.Screen
+        name="Register"
+        component={Screens.Authentication.Register.Screen}
+      />
+      <ProfessionalStack.Screen
+        name="ForgotPassword"
+        component={Screens.Authentication.ForgotPassword.Screen}
+      />
+
+      <ProfessionalStack.Screen
+        name="AppointmentList"
+        component={Screens.Appointments.Patient.AppointmentListScreen}
+      />
+
+      <ProfessionalStack.Screen name="Settings" component={Screens.Common.SettingsScreen} />
+      <ProfessionalStack.Screen name="Profile" component={Screens.Common.ProfileScreen} />
+
+      <ProfessionalStack.Screen name="Home" component={Screens.Home.Professional.HomeScreen} />
+      <ProfessionalStack.Screen
+        name="Appointment"
+        component={Screens.Appointments.Professional.AppointmentScreen}
+      />
+      <ProfessionalStack.Screen
+        name="ConfirmAppointment"
+        component={Screens.Appointments.Professional.ConfirmAppointmentScreen}
+      />
+      <ProfessionalStack.Screen
+        name="AppointmentDetails"
+        component={Screens.Appointments.Professional.AppointmentDetailsScreen}
+      />
+      <ProfessionalStack.Screen
+        name="MedicalRecord"
+        component={Screens.MedicalRecord.Professional.MedicalRecordScreen}
+      />
+      <ProfessionalStack.Screen
+        name="CompleteCalendar"
+        component={Screens.CompleteCalendar.Professional.CompleteCalendarScreen}
+      />
+    </ProfessionalStack.Navigator>
   )
 })
 
@@ -101,12 +240,20 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
   const { themeScheme, navigationTheme, setThemeContextOverride, ThemeProvider } =
     useThemeProvider()
 
+  const { authenticationStore, userStore } = useStores()
+
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
 
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme} {...props}>
-        <AppStack />
+        {!authenticationStore.isAuthenticated ? (
+          <AppStack />
+        ) : userStore.user?.isPatient() ? (
+          <PatientAppStack />
+        ) : (
+          <ProfessionalAppStack />
+        )}
       </NavigationContainer>
     </ThemeProvider>
   )

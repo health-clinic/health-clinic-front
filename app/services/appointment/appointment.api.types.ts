@@ -1,3 +1,5 @@
+import { Professional } from "../professional/professional.api.types"
+
 export type Address = {
   id: number
   zipCode: string
@@ -21,21 +23,8 @@ export type Unit = {
   address: Address
 }
 
-export type Professional = {
-  id: number
-  addressId: null
-  address: null
-  name: string
-  email: string
-  role: "professional"
-  specialty: string
-  createdAt: string
-  updatedAt: string
-}
-
 export type Patient = {
   id: number
-  addressId: number
   address: Address
   name: string
   email: string
@@ -43,6 +32,7 @@ export type Patient = {
   phone: string
   birthdate: string
   role: "patient"
+  lastVisit: string
   createdAt: string
   updatedAt: string
 }
