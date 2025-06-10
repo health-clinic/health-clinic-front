@@ -2,7 +2,7 @@ import { FC, ReactElement, useEffect, useState } from "react"
 import { ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { AppStackScreenProps } from "@/navigators"
 import { useStores } from "@/models"
-import { ChevronLeft } from "lucide-react-native"
+import { ChevronLeft, Clock } from "lucide-react-native"
 import { createNotificationApi } from "@/services/notification/notification.api"
 import { api } from "@/services/api"
 import { showErrorToast } from "@/components/toast"
@@ -88,22 +88,39 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
     }
   }
 
-  const readAll = async (): Promise<void> => {
+  const markAsRead = async (notifications: number | number[]): Promise<void> => {
     loadingStore.setLoading(true)
 
+    if (!Array.isArray(notifications)) notifications = [notifications]
+
     try {
-      const response = await createNotificationApi(api).markAsRead(
-        notificationStore.sortedNotifications.map((notification) => notification.id),
+      const response = await createNotificationApi(api).read(notifications)
+      if (response.kind !== "ok") {
+        showErrorToast(response.data?.error)
+
+        return
+      }
+
+      // Update only the notifications that were marked as read
+      const updatedNotifications = response.notifications
+      setNotifications((currentNotifications) =>
+        currentNotifications.map((notification) => {
+          const updatedNotification = updatedNotifications.find((n) => n.id === notification.id)
+          if (updatedNotification) {
+            return notificationStore.set(notification.id, {
+              id: notification.id,
+              user: notification.user.id,
+              title: notification.title,
+              content: notification.content,
+              metadata: notification.metadata,
+              readAt: new Date(updatedNotification.readAt),
+              createdAt: notification.createdAt,
+              updatedAt: notification.updatedAt,
+            })
+          }
+          return notification
+        }),
       )
-      if (response.kind !== "ok") {
-        showErrorToast(response.data?.error)
-
-        return
-      }
-
-      notificationStore.sortedNotifications.forEach((notification) => {
-        notification.readAt = new Date()
-      })
     } catch (error) {
       console.error(error)
 
@@ -113,26 +130,7 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
     }
   }
 
-  const read = async (id: number): Promise<void> => {
-    loadingStore.setLoading(true)
-
-    try {
-      const response = await createNotificationApi(api).markAsRead(id)
-      if (response.kind !== "ok") {
-        showErrorToast(response.data?.error)
-
-        return
-      }
-
-      notificationStore.markAsRead(id)
-    } catch (error) {
-      console.error(error)
-
-      showErrorToast("Ocorreu um erro inesperado")
-    } finally {
-      loadingStore.setLoading(false)
-    }
-  }
+  const unreadNotifications = notifications.filter((notification) => !notification.readAt)
 
   useEffect(() => {
     fetchNotifications()
@@ -141,18 +139,20 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
   return (
     <View className="flex-1 bg-neutral-100">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-4">
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          className="h-9 w-9 items-center justify-center"
-        >
-          <ChevronLeft size={24} color={colors.neutral[800]} />
-        </TouchableOpacity>
-
-        <Text className="text-neutral-800 text-lg font-semibold flex-1">Notificações</Text>
-
-        {notificationStore.unreadCount > 0 && (
+        <View className="flex-row items-center gap-4 flex-1">
           <TouchableOpacity
-            onPress={readAll}
+            onPress={() => navigation.goBack()}
+            className="h-9 w-9 items-center justify-center"
+          >
+            <ChevronLeft size={24} color={colors.neutral[800]} />
+          </TouchableOpacity>
+
+          <Text className="text-neutral-800 text-lg font-semibold">Notificações</Text>
+        </View>
+
+        {unreadNotifications.length > 0 && (
+          <TouchableOpacity
+            onPress={() => markAsRead(unreadNotifications.map((notification) => notification.id))}
             className="bg-primary-500/20 px-3 py-1 rounded-full border border-primary-500/30"
           >
             <Text className="text-primary-500 text-sm font-medium">Marcar todas como lidas</Text>
@@ -160,28 +160,45 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
         )}
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="flex-1 gap-4 p-4">
-          {notifications.length > 0 ? (
-            <View className="flex-col gap-4">
-              {notifications.map((notification) => (
-                <TouchableOpacity
-                  key={notification.id}
-                  className={`p-4 rounded-2xl border ${
-                    notification.readAt
-                      ? "bg-transparent border-neutral-300"
-                      : "bg-primary-500/20 border-primary-500/30"
-                  }`}
-                  onPress={() => read(notification.id)}
-                >
-                  <View className="flex-row items-center justify-between">
+      <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
+        {notifications.length > 0 ? (
+          <View className="flex-col gap-4">
+            {notifications.map((notification) => (
+              <TouchableOpacity
+                key={notification.id}
+                className={`p-4 rounded-2xl border ${
+                  notification.readAt
+                    ? "bg-transparent border-neutral-500"
+                    : "bg-primary-500/20 border-primary-500/30"
+                }`}
+                onPress={() => !notification.readAt && markAsRead(notification.id)}
+                disabled={!!notification.readAt}
+              >
+                <View className="flex-col gap-2">
+                  <View className="flex-row items-center gap-2">
                     <Text
-                      className={`text-base font-medium ${
-                        notification.readAt ? "text-neutral-500" : "text-primary-500"
+                      className={`flex-1 text-base font-medium ${
+                        notification.readAt ? "text-neutral-600" : "text-primary-500"
                       }`}
                     >
                       {notification.title}
                     </Text>
+
+                    {!notification.readAt && (
+                      <View className="h-2 w-2 rounded-full bg-primary-500" />
+                    )}
+                  </View>
+
+                  <Text
+                    className={`text-sm ${
+                      notification.readAt ? "text-neutral-500" : "text-neutral-700"
+                    }`}
+                  >
+                    {notification.content}
+                  </Text>
+
+                  <View className="flex-row items-center gap-2">
+                    <Clock size={14} color={colors.neutral[500]} />
 
                     <Text className="text-xs text-neutral-500">
                       {format(notification.createdAt, "dd 'de' MMMM 'às' HH:mm", {
@@ -189,27 +206,28 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
                       })}
                     </Text>
                   </View>
-
-                  <Text className="text-sm text-neutral-500 pt-2">{notification.content}</Text>
-                </TouchableOpacity>
-              ))}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        ) : (
+          <View className="flex-1 p-4 gap-4 border border-neutral-500 rounded-2xl">
+            <View className="w-full h-0.5 bg-neutral-700">
+              <View className="w-0 h-full bg-primary-500" />
             </View>
-          ) : (
-            <View className="gap-4 p-4 border border-neutral-500 rounded-2xl">
-              <View className="w-full h-0.5 bg-neutral-700">
-                <View className="w-0 h-full bg-primary-500" />
-              </View>
 
+            <View className="flex-col gap-2">
               <Text className="text-neutral-800 font-medium text-base text-center">
                 Nenhuma notificação
               </Text>
 
               <Text className="text-neutral-600 text-sm text-center">
-                Você não possui notificações no momento.
+                Você não possui notificações no momento. Quando receber uma notificação, ela
+                aparecerá aqui.
               </Text>
             </View>
-          )}
-        </View>
+          </View>
+        )}
       </ScrollView>
     </View>
   )
