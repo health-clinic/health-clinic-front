@@ -7,9 +7,11 @@ import tailwind from "./../../../tailwind.config"
 import { useNavigation } from "@react-navigation/native"
 
 export const HomeHeader = (): ReactElement => {
-  const { user } = useStores().userStore as { user: User }
+  const { notificationStore, userStore } = useStores()
+  const { user } = userStore as { user: User }
 
   const navigation = useNavigation()
+
   const colors = tailwind.theme.extend.colors
 
   return (
@@ -28,11 +30,13 @@ export const HomeHeader = (): ReactElement => {
         <View className="flex-row items-center gap-4">
           <TouchableOpacity
             onPress={() => navigation.navigate("Notification")}
-            className="relative"
+            className="relative h-9 w-9 items-center justify-center"
           >
-            <Bell color={colors.neutral[900]} className="w-5 h-5" />
+            <Bell size={24} color={colors.neutral[900]} />
 
-            <View className="w-2 h-2 rounded-full bg-red-500 absolute top-0 right-0" />
+            {notificationStore.unreadCount > 0 && (
+              <View className="h-2.5 w-2.5 rounded-full bg-primary-500 absolute top-1.5 right-1.5" />
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

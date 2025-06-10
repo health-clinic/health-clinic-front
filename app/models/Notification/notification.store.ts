@@ -1,4 +1,4 @@
-import { Instance, types } from "mobx-state-tree"
+import { applySnapshot, Instance, types } from "mobx-state-tree"
 import { NotificationModel, NotificationSnapshotIn } from "./notification.model"
 
 export const NotificationStore = types
@@ -8,43 +8,23 @@ export const NotificationStore = types
   })
   .views((store) => ({
     get unreadCount() {
-      return Array.from(store.items.values()).filter((notification) => !notification.isRead).length
-    },
-
-    get sortedNotifications() {
-      return Array.from(store.items.values()).sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-      )
+      return Array.from(store.items.values())
+        .filter((notification) => !notification.readAt)
+        .length
     },
   }))
   .actions((store) => ({
-    set(id: number, notification: NotificationSnapshotIn): Instance<typeof NotificationModel> {
-      if (store.items.has(id)) return store.items.get(id)!
+    set(id: number, attributes: NotificationSnapshotIn): Instance<typeof NotificationModel> {
+      if (store.items.has(id)) {
+        const notification = store.items.get(id)!
+        applySnapshot(notification, attributes)
 
-      const createdNotification = NotificationModel.create(notification)
-      store.items.set(id, createdNotification)
-
-      return createdNotification
-    },
-
-    markAsRead(id: number) {
-      const notification = store.items.get(id)
-      if (notification) {
-        notification.setProp("isRead", true)
+        return notification
       }
-    },
 
-    markAllAsRead() {
-      store.items.forEach((notification) => {
-        notification.setProp("isRead", true)
-      })
-    },
+      const notification = NotificationModel.create(attributes)
+      store.items.set(id, notification)
 
-    delete(id: number) {
-      store.items.delete(id.toString())
-    },
-
-    clear() {
-      store.items.clear()
+      return notification
     },
   })) 

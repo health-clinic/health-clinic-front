@@ -1,5 +1,4 @@
 export default {
   ADDRESS_API_URL: "https://viacep.com.br",
-  API_URL: "http://192.168.100.4:3001/",
-  // API_URL: "http://3.80.134.52:3001",
+  API_URL: "http://192.168.100.6:3001/",
 }

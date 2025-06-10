@@ -91,6 +91,7 @@ const AppStack = observer(function AppStack() {
         contentStyle: {
           backgroundColor: colors.background,
         },
+        animation: "slide_from_right",
       }}
       initialRouteName="Login"
     >
@@ -119,6 +120,7 @@ const PatientAppStack = observer(function PatientAppStack() {
         contentStyle: {
           backgroundColor: colors.background,
         },
+        animation: "slide_from_right",
       }}
       initialRouteName={authenticationStore.isAuthenticated ? "Home" : "Login"}
     >
