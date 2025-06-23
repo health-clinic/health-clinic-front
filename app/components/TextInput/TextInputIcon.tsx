@@ -14,7 +14,7 @@ export const TextInputIcon = ({ icon: Icon, hasError }: InputIconProps) => {
 
   return (
     <View className="w-6 h-6 justify-center items-center">
-      <Icon color={color} />
+      <Icon color={color} size={20} />
     </View>
   )
 }

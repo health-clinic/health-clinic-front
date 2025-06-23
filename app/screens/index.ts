@@ -13,3 +13,7 @@ export * as Common from "@/screens/Common"
 export * from "@/screens/ErrorScreen/ErrorBoundary"
 
 export * as Notification from "@/screens/Notification"
+
+export * as Units from "@/screens/Units"
+export * as Professionals from "@/screens/Professionals"
+export * as Patients from "@/screens/Patients"

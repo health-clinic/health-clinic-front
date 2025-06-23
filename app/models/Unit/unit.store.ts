@@ -1,17 +1,27 @@
-import { types } from "mobx-state-tree"
+import { applySnapshot, types } from "mobx-state-tree"
 import { UnitModel, UnitSnapshotIn } from "@/models/Unit/unit.model"
 
 export const UnitStore = types
   .model("UnitStore")
   .props({ items: types.map(UnitModel) })
+  .views((store) => ({
+    get total() {
+      return store.items.size
+    },
+  }))
   .actions((store) => ({
-    set(id: number, unit: UnitSnapshotIn) {
-      if (store.items.has(id)) return store.items.get(id)!
+    set(id: number, attributes: UnitSnapshotIn) {
+      if (store.items.has(id)) {
+        const unit = store.items.get(id)!
+        applySnapshot(unit, attributes)
 
-      const createdUnit = UnitModel.create(unit)
-      store.items.set(id, createdUnit)
+        return unit
+      }
 
-      return createdUnit
+      const unit = UnitModel.create(attributes)
+      store.items.set(id, unit)
+
+      return unit
     },
 
     delete(id: string) {
