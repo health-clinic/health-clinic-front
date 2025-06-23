@@ -1,3 +1,4 @@
+import { Patient } from "../patient/patient.api.types"
 import { Professional } from "../professional/professional.api.types"
 
 export type Address = {
@@ -21,20 +22,6 @@ export type Unit = {
   createdAt: string
   updatedAt: string
   address: Address
-}
-
-export type Patient = {
-  id: number
-  address: Address
-  name: string
-  email: string
-  document: string
-  phone: string
-  birthdate: string
-  role: "patient"
-  lastVisit: string
-  createdAt: string
-  updatedAt: string
 }
 
 export type AppointmentStatus = "scheduled" | "cancelled" | "completed"

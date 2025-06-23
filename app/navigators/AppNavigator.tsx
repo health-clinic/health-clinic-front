@@ -13,7 +13,7 @@ import { Diagnosis } from "@/models/Diagosis"
 import { Prescription } from "@/models/Prescription"
 import { useStores } from "@/models"
 import { Patient } from "@/models/Patient"
-import { Unit } from "@faker-js/faker"
+import { Unit } from "@/models/Unit"
 
 export type AppStackParamList = {
   Login: undefined
@@ -44,6 +44,37 @@ export type PatientAppStackParamList = {
   Notification: undefined
 }
 
+export type AdministratorAppStackParamList = {
+  Login: undefined
+  Register: undefined
+  ForgotPassword: undefined
+  Home: undefined
+  UnitList: undefined
+  UnitRegister: { unit?: Unit }
+  UnitDetails: { unit: Unit }
+  ProfessionalList: undefined
+  ProfessionalDetails: { professional: Professional }
+  Patients: undefined
+  PatientDetails: { patient: Patient }
+  Appointments: undefined
+  AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
+  AppointmentDetails: { appointment: Appointment }
+  Settings: undefined
+  Profile: undefined
+  Notification: undefined
+}
+
+export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
+  AppStackParamList,
+  T
+>
+
+export type AdministratorAppStackScreenProps<T extends keyof AdministratorAppStackParamList> =
+  NativeStackScreenProps<AdministratorAppStackParamList, T>
+
+export type PatientAppStackScreenProps<T extends keyof PatientAppStackParamList> =
+  NativeStackScreenProps<PatientAppStackParamList, T>
+
 export type ProfessionalAppStackParamList = {
   Login: undefined
   Register: undefined
@@ -67,14 +98,13 @@ export type ProfessionalAppStackParamList = {
   Notification: undefined
 }
 
+export type ProfessionalAppStackScreenProps<T extends keyof ProfessionalAppStackParamList> =
+  NativeStackScreenProps<ProfessionalAppStackParamList, T>
+
 const exitRoutes = Config.exitRoutes
 
-export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
-  AppStackParamList,
-  T
->
-
 const Stack = createNativeStackNavigator<AppStackParamList>()
+const AdministratorStack = createNativeStackNavigator<AdministratorAppStackParamList>()
 const PatientStack = createNativeStackNavigator<PatientAppStackParamList>()
 const ProfessionalStack = createNativeStackNavigator<ProfessionalAppStackParamList>()
 
@@ -102,6 +132,71 @@ const AppStack = observer(function AppStack() {
         component={Screens.Authentication.ForgotPassword.Screen}
       />
     </Stack.Navigator>
+  )
+})
+
+const AdministratorAppStack = observer(function AdministratorAppStack() {
+  const {
+    theme: { colors },
+  } = useAppTheme()
+
+  const { authenticationStore } = useStores()
+
+  return (
+    <AdministratorStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        navigationBarColor: colors.background,
+        contentStyle: {
+          backgroundColor: colors.background,
+        },
+      }}
+      initialRouteName={authenticationStore.isAuthenticated ? "Home" : "Login"}
+    >
+      <AdministratorStack.Screen name="Login" component={Screens.Authentication.Login.Screen} />
+      <AdministratorStack.Screen
+        name="Register"
+        component={Screens.Authentication.Register.Screen}
+      />
+      <AdministratorStack.Screen
+        name="ForgotPassword"
+        component={Screens.Authentication.ForgotPassword.Screen}
+      />
+
+      <AdministratorStack.Screen
+        name="AppointmentList"
+        component={Screens.Appointments.Patient.AppointmentListScreen}
+      />
+
+      <AdministratorStack.Screen
+        name="Notification"
+        component={Screens.Notification.NotificationScreen}
+      />
+      <AdministratorStack.Screen name="Profile" component={Screens.Common.ProfileScreen} />
+      <AdministratorStack.Screen name="Settings" component={Screens.Common.SettingsScreen} />
+
+      <AdministratorStack.Screen name="Home" component={Screens.Home.Administrator.HomeScreen} />
+
+      <AdministratorStack.Screen name="UnitList" component={Screens.Units.UnitListScreen} />
+      <AdministratorStack.Screen name="UnitRegister" component={Screens.Units.Register.Screen} />
+      <AdministratorStack.Screen name="UnitDetails" component={Screens.Units.UnitDetailsScreen} />
+      <AdministratorStack.Screen
+        name="ProfessionalList"
+        component={Screens.Professionals.ProfessionalListScreen}
+      />
+      <AdministratorStack.Screen
+        name="ProfessionalDetails"
+        component={Screens.Professionals.ProfessionalDetailsScreen}
+      />
+      <AdministratorStack.Screen
+        name="Patients"
+        component={Screens.Patients.Administrator.PatientListScreen}
+      />
+      <AdministratorStack.Screen
+        name="PatientDetails"
+        component={Screens.Patients.Administrator.PatientDetailsScreen}
+      />
+    </AdministratorStack.Navigator>
   )
 })
 
@@ -172,7 +267,10 @@ const PatientAppStack = observer(function PatientAppStack() {
         name="PrescriptionDetails"
         component={Screens.Prescriptions.Patient.PrescriptionDetailsScreen}
       />
-      <PatientStack.Screen name="Notification" component={Screens.Notification.NotificationScreen} />
+      <PatientStack.Screen
+        name="Notification"
+        component={Screens.Notification.NotificationScreen}
+      />
     </PatientStack.Navigator>
   )
 })
@@ -238,7 +336,10 @@ const ProfessionalAppStack = observer(function ProfessionalAppStack() {
         name="PrescriptionDetails"
         component={Screens.Prescriptions.Patient.PrescriptionDetailsScreen}
       />
-      <ProfessionalStack.Screen name="Notification" component={Screens.Notification.NotificationScreen} />
+      <ProfessionalStack.Screen
+        name="Notification"
+        component={Screens.Notification.NotificationScreen}
+      />
     </ProfessionalStack.Navigator>
   )
 })
@@ -259,6 +360,8 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
       <NavigationContainer ref={navigationRef} theme={navigationTheme} {...props}>
         {!authenticationStore.isAuthenticated ? (
           <AppStack />
+        ) : userStore.user?.isAdministrator() ? (
+          <AdministratorAppStack />
         ) : userStore.user?.isPatient() ? (
           <PatientAppStack />
         ) : (

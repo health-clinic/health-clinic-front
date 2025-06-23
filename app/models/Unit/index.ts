@@ -1,3 +1,7 @@
 export { UnitModel } from "./unit.model"
 export type { Unit, UnitSnapshotIn } from "./unit.model"
 export { UnitStore } from "./unit.store"
+export { UnitScheduleModel } from "./unit-schedule.model"
+export type { UnitSchedule, UnitScheduleSnapshotIn } from "./unit-schedule.model"
+export { UnitScheduleStore } from "./unit-schedule.store"
+export type { UnitScheduleStoreInstance, UnitScheduleStoreSnapshot } from "./unit-schedule.store"

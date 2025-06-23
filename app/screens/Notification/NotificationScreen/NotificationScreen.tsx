@@ -1,19 +1,18 @@
 import { FC, ReactElement, useEffect, useState } from "react"
 import { ScrollView, Text, TouchableOpacity, View } from "react-native"
-import { AppStackScreenProps } from "@/navigators"
+import { AdministratorAppStackScreenProps } from "@/navigators"
 import { useStores } from "@/models"
-import { ChevronLeft, Clock } from "lucide-react-native"
+import { ChevronLeft } from "lucide-react-native"
 import { createNotificationApi } from "@/services/notification/notification.api"
 import { api } from "@/services/api"
 import { showErrorToast } from "@/components/toast"
-import { format } from "date-fns"
-import { ptBR } from "date-fns/locale"
+import { formatRelativeDate } from "@/utils/formatters"
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
 import { Notification } from "@/models/Notification"
 import { NotificationResponse } from "@/services/notification/notification.api.types"
 
-interface NotificationScreenProps extends AppStackScreenProps<"Notification"> {}
+interface NotificationScreenProps extends AdministratorAppStackScreenProps<"Notification"> {}
 
 export const NotificationScreen: FC<NotificationScreenProps> = ({
   navigation,
@@ -178,7 +177,7 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
                   <View className="flex-row items-center gap-2">
                     <Text
                       className={`flex-1 text-base font-medium ${
-                        notification.readAt ? "text-neutral-600" : "text-primary-500"
+                        notification.readAt ? "text-neutral-900" : "text-primary-500"
                       }`}
                     >
                       {notification.title}
@@ -189,21 +188,13 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
                     )}
                   </View>
 
-                  <Text
-                    className={`text-sm ${
-                      notification.readAt ? "text-neutral-500" : "text-neutral-700"
-                    }`}
-                  >
+                  <Text className="text-sm text-neutral-700">
                     {notification.content}
                   </Text>
 
                   <View className="flex-row items-center gap-2">
-                    <Clock size={14} color={colors.neutral[500]} />
-
-                    <Text className="text-xs text-neutral-500">
-                      {format(notification.createdAt, "dd 'de' MMMM 'às' HH:mm", {
-                        locale: ptBR,
-                      })}
+                    <Text className="text-xs text-neutral-600">
+                      {formatRelativeDate(notification.createdAt)}
                     </Text>
                   </View>
                 </View>

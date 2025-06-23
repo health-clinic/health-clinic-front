@@ -4,6 +4,11 @@ import { ProfessionalModel, ProfessionalSnapshotIn } from "@/models/Professional
 export const ProfessionalStore = types
   .model("ProfessionalStore")
   .props({ items: types.map(ProfessionalModel) })
+  .views((store) => ({
+    get total() {
+      return store.items.size
+    },
+  }))
   .actions((store) => ({
     set(id: number, professional: ProfessionalSnapshotIn) {
       if (store.items.has(id)) return store.items.get(id)!

@@ -3,7 +3,7 @@ import { GeneralApiProblem, getGeneralApiProblem } from "@/services/api/apiProbl
 import { ApiResponse } from "apisauce"
 import { UnitSnapshotIn } from "@/models/Unit"
 
-interface CreateUnitAddress {
+interface Address {
   zip_code: string
   state: string
   city: string
@@ -12,17 +12,33 @@ interface CreateUnitAddress {
   number: number
 }
 
-interface CreateUnitData {
-  name: string
-  phone: string
-  distance?: string
-  address: CreateUnitAddress
+interface UnitSchedule {
+  day_of_week: number // 0 = Sunday, 6 = Saturday
+  opening: string
+  closing: string
 }
 
-interface UpdateUnitData {
+interface ProfessionalSchedule {
+  professional_id: number
+  day_of_week: number // 0 = Sunday, 6 = Saturday
+  start: string
+  end: string
+}
+
+export interface CreateUnitData {
+  name: string
+  phone: string
+  address: Address
+  schedules: UnitSchedule[]
+  professional_schedules?: ProfessionalSchedule[]
+}
+
+export interface UpdateUnitData {
   name?: string
-  address_id?: number
-  distance?: string
+  phone?: string
+  address?: Address
+  schedules: UnitSchedule[]
+  professional_schedules?: ProfessionalSchedule[]
 }
 
 export const createUnitApi = (api: Api) => {
@@ -85,6 +101,7 @@ export const createUnitApi = (api: Api) => {
       data: CreateUnitData,
     ): Promise<{ kind: "ok"; unit: UnitSnapshotIn } | GeneralApiProblem> => {
       const response: ApiResponse<any> = await api.apisauce.post("api/v1/units", data)
+      console.log(response)
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) {

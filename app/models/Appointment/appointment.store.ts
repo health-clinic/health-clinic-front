@@ -4,6 +4,11 @@ import { AppointmentModel, AppointmentSnapshotIn } from "@/models/Appointment"
 export const AppointmentStore = types
   .model("AppointmentStore")
   .props({ items: types.map(AppointmentModel) })
+  .views((store) => ({
+    get total() {
+      return store.items.size
+    },
+  }))
   .actions((store) => ({
     set(id: number, appointment: AppointmentSnapshotIn): Instance<typeof AppointmentModel> {
       if (store.items.has(id)) return store.items.get(id)!

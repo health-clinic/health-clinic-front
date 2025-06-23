@@ -4,6 +4,11 @@ import { PatientModel, PatientSnapshotIn } from "@/models/Patient"
 export const PatientStore = types
   .model("PatientStore")
   .props({ items: types.map(PatientModel) })
+  .views((store) => ({
+    get total() {
+      return store.items.size
+    },
+  }))
   .actions((store) => ({
     set(id: number, patient: PatientSnapshotIn): Instance<typeof PatientModel> {
       if (store.items.has(id)) return store.items.get(id)!

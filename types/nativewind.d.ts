@@ -10,6 +10,7 @@ declare module "react-native" {
   export const ScrollView: ReactNative.ComponentClass<ScrollViewProps>
   export const TouchableOpacity: ReactNative.ComponentClass<TouchableOpacityProps>
   export const Pressable: ReactNative.ComponentClass<PressableProps>
+  export const ActivityIndicator: ReactNative.ComponentClass<ActivityIndicatorProps>
 
   interface ViewProps {
     className?: string
@@ -36,6 +37,10 @@ declare module "react-native" {
   }
 
   interface PressableProps {
+    className?: string
+  }
+
+  interface ActivityIndicatorProps extends ReactNative.ActivityIndicatorProps {
     className?: string
   }
 }

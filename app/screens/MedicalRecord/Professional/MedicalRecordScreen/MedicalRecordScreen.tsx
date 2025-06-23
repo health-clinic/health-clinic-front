@@ -179,7 +179,7 @@ export const MedicalRecordScreen: FC<MedicalRecordScreenProps> = ({
 
   return (
     <View className="flex-1 bg-neutral-100">
-      <View className="bg-neutral-200 p-4 flex-row items-center gap-4">
+      <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className="h-9 w-9 items-center justify-center"
@@ -187,7 +187,7 @@ export const MedicalRecordScreen: FC<MedicalRecordScreenProps> = ({
           <ChevronLeft size={24} color={colors.neutral[800]} />
         </TouchableOpacity>
 
-        <Text className="text-neutral-800 text-lg font-semibold flex-1">Prontuário</Text>
+        <Text className="flex-1 text-neutral-800 text-lg font-semibold">Prontuário</Text>
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>

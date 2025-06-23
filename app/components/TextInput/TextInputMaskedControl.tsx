@@ -10,7 +10,7 @@ interface TextInputMaskedControlProps extends MaskedTextInputProps {
 const defaultStyles = StyleSheet.create({
   maskedInput: {
     flex: 1,
-    fontSize: 18,
+    fontSize: 16,
     color: tailwindConfig.theme.extend.colors.neutral[900],
     backgroundColor: "transparent",
     fontFamily: "Inter-Medium",
