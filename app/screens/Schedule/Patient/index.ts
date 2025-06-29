@@ -1,5 +1,1 @@
-export { SelectUnitScreen } from "./ScheduleScreen/SelectUnitScreen/SelectUnitScreen"
-export { SelectSpecialtyScreen } from "./ScheduleScreen/SelectSpecialtyScreen/SelectSpecialtyScreen"
-export { SelectProfessionalScreen } from "./ScheduleScreen/SelectProfessionalScreen/SelectProfessionalScreen"
-export { SelectDateTimeScreen } from "./ScheduleScreen/SelectDateTimeScreen/SelectDateTimeScreen"
-export { ConfirmScheduleScreen } from "./ScheduleScreen/ConfirmScheduleScreen/ConfirmScheduleScreen"
+export * as Schedule from "./ScheduleScreen"

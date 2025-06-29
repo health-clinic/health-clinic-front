@@ -1,5 +1,5 @@
 import { Api } from "../api"
-import { RegisterPayload } from "@/screens/Authentication/RegisterScreen/RegisterForm"
+import { RegisterPayload } from "@/screens/Authentication/UserRegisterScreen/RegisterForm"
 import { GeneralApiProblem, getGeneralApiProblem } from "@/services/api/apiProblem"
 import { ApiResponse } from "apisauce"
 import { AuthPayload, AuthSession } from "@/services/authentication/authentication.api.types"

@@ -49,20 +49,20 @@ export const UnitRegisterForm: FC<UnitRegisterFormProps> = ({
   unit,
 }: UnitRegisterFormProps): ReactElement => {
   const [currentStep, setCurrentStep] = useState(1)
-  
+
   const getInitialFormData = (): ExtendedCreateUnitData => {
     if (!unit) return {}
-    
+
     const dayNames = [
       "Domingo",
-      "Segunda-feira", 
+      "Segunda-feira",
       "Terça-feira",
       "Quarta-feira",
       "Quinta-feira",
       "Sexta-feira",
       "Sábado",
     ]
-    
+
     return {
       name: unit.name,
       phone: unit.phone,
@@ -86,7 +86,7 @@ export const UnitRegisterForm: FC<UnitRegisterFormProps> = ({
       professionals: [],
     }
   }
-  
+
   const [formData, setFormData] = useState<ExtendedCreateUnitData>(getInitialFormData())
 
   const handleNext = useCallback((data: any) => {

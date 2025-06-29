@@ -6,9 +6,9 @@ export interface Notification {
   title: string
   content: string
   metadata: string
-  readAt: string
+  readAt: string | null
   createdAt: string
   updatedAt: string
 }
 
-export type NotificationResponse = Notification[] 
+export type NotificationResponse = Notification[]

@@ -54,11 +54,11 @@ export const ReviewScreen: FC<ReviewScreenProps> = ({
   return (
     <View className="flex-1 gap-4">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
-          <TouchableOpacity onPress={onBack} className="h-9 w-9 items-center justify-center">
-            <ChevronLeft size={24} color={colors.neutral[800]} />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={onBack} className="h-9 w-9 items-center justify-center">
+          <ChevronLeft size={24} color={colors.neutral[800]} />
+        </TouchableOpacity>
 
-          <Text className="text-neutral-800 text-lg font-semibold">Nova unidade</Text>
+        <Text className="text-neutral-800 text-lg font-semibold">Nova unidade</Text>
       </View>
 
       <View className="flex-row items-center justify-center">
@@ -119,13 +119,13 @@ export const ReviewScreen: FC<ReviewScreenProps> = ({
             <Text className="text-white font-medium ml-2">Informações básicas</Text>
           </View>
 
-          <View className="mb-3">
+          <View>
             <Text className="text-gray-400 text-xs">Nome</Text>
 
             <Text className="text-white text-base">{formData.name || "-"}</Text>
           </View>
 
-          <View className="mb-3">
+          <View>
             <Text className="text-gray-400 text-xs">Telefone</Text>
 
             <Text className="text-white text-base">{formData.phone || "-"}</Text>
@@ -140,37 +140,37 @@ export const ReviewScreen: FC<ReviewScreenProps> = ({
               <Text className="text-white font-medium ml-2">Endereço</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">CEP</Text>
 
               <Text className="text-white text-base">{formData.address.zipCode || "-"}</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">Rua</Text>
 
               <Text className="text-white text-base">{formData.address.street || "-"}</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">Número</Text>
 
               <Text className="text-white text-base">{formData.address.number || "-"}</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">Bairro</Text>
 
               <Text className="text-white text-base">{formData.address.district || "-"}</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">Cidade</Text>
 
               <Text className="text-white text-base">{formData.address.city || "-"}</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">Estado</Text>
 
               <Text className="text-white text-base">{formData.address.state || "-"}</Text>
@@ -186,7 +186,7 @@ export const ReviewScreen: FC<ReviewScreenProps> = ({
               <Text className="text-white font-medium ml-2">Horários de funcionamento</Text>
             </View>
 
-            <View className="mb-3">
+            <View>
               <Text className="text-gray-400 text-xs">Horários da unidade</Text>
 
               {(() => {
@@ -252,8 +252,8 @@ export const ReviewScreen: FC<ReviewScreenProps> = ({
                     )}
                   </View>
                 ))}
-          </View>
-        )}
+            </View>
+          )}
       </ScrollView>
 
       <View className="flex-row gap-2 px-4 pb-4">

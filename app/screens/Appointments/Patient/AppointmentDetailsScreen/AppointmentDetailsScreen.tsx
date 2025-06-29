@@ -1,14 +1,16 @@
 import { AppStackScreenProps } from "@/navigators"
 import { FC, ReactElement } from "react"
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native"
-import { Calendar, ChevronLeft, Clock, Info, MapPin } from "lucide-react-native"
+import { Calendar, ChevronLeft, Clock, Info, MapPin, UserIcon } from "lucide-react-native"
 import { createAppointmentApi } from "@/services/appointment/appointment.api"
 import { api } from "@/services/api"
 import { showErrorToast, showSuccessToast } from "@/components/toast"
 import { useStores } from "@/models"
+// @ts-ignore
 import tailwind from "./../../../../../tailwind.config"
 import { format } from "date-fns"
 import { Appointment } from "@/models/Appointment"
+import { toZonedDate } from "@/utils/date/convert"
 
 interface AppointmentDetailsScreenProps extends AppStackScreenProps<"AppointmentDetails"> {}
 
@@ -21,7 +23,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailsScreenProps> = ({
 
   const colors = tailwind.theme.extend.colors
 
-  const isUpcoming = new Date(appointment.scheduledFor) > new Date()
+  const isUpcoming = toZonedDate(appointment.scheduledFor) > toZonedDate(new Date())
 
   const cancelAppointment = async (): Promise<void> => {
     loadingStore.setLoading(true)
@@ -44,10 +46,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailsScreenProps> = ({
   }
 
   const reschedule: () => void = (): void => {
-    navigation.navigate("SelectDateTime", {
-      appointmentId: appointment.id,
-      professional: appointment.professional,
-    })
+    navigation.navigate("AppointmentSchedule", { appointment })
   }
 
   return (
@@ -70,10 +69,17 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailsScreenProps> = ({
           <View className="p-4">
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center justify-center">
-                <Image
-                  source={appointment.professional.user.avatar}
-                  className="w-12 h-12 rounded-full border border-neutral-400 mr-3"
-                />
+                <View className="w-12 h-12 rounded-full bg-neutral-300 items-center justify-center mr-3">
+                  {appointment.professional.user?.avatar ? (
+                    <Image
+                      source={{ uri: appointment.professional.user.avatar }}
+                      className="w-12 h-12 rounded-full"
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <UserIcon size={24} color={colors.neutral[500]} />
+                  )}
+                </View>
 
                 <View>
                   <Text className="text-neutral-900 font-semibold text-lg">
@@ -89,7 +95,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailsScreenProps> = ({
               <View className="mt-2 flex-row items-center">
                 <View className="bg-primary-500 px-4 py-2 rounded-full">
                   <Text className="text-neutral-900 font-medium">
-                    {appointment.status === "pending" && "Agendada"}
+                    {appointment.status === "scheduled" && "Agendada"}
                     {appointment.status === "completed" && "Concluída"}
                     {appointment.status === "canceled" && "Cancelada"}
                   </Text>
@@ -120,7 +126,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailsScreenProps> = ({
                 <MapPin size={16} color="#60A5FA" className="mr-2" />
 
                 <Text className="text-white text-sm">
-                  <Text className="text-zinc-400">{appointment.professional.unit.name}</Text>
+                  <Text className="text-zinc-400">{appointment.unit.name}</Text>
                 </Text>
               </View>
             </View>
@@ -139,7 +145,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailsScreenProps> = ({
         </View>
       </ScrollView>
 
-      {isUpcoming && appointment.status === "pending" && (
+      {isUpcoming && appointment.status === "scheduled" && (
         <View className="gap-2 px-4 pb-4">
           <TouchableOpacity className="bg-primary-500 p-4 rounded-xl" onPress={reschedule}>
             <Text className="text-white font-semibold text-center">Reagendar consulta</Text>

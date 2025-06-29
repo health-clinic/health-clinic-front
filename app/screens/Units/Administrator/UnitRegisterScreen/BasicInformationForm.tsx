@@ -97,7 +97,7 @@ export const BasicInformationForm: FC<BasicInformationFormProps> = ({
           </View>
         </View>
 
-        <View className="flex-row items-center gap-3 mt-4">
+        <View className="flex-row items-center gap-2">
           <Building2 size={24} color={colors.primary[600]} />
 
           <Text className="text-neutral-800 text-lg font-bold">Informações básicas</Text>

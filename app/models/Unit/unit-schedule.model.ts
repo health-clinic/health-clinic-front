@@ -16,4 +16,4 @@ export const UnitScheduleModel = types
 
 export interface UnitSchedule extends Instance<typeof UnitScheduleModel> {}
 
-export interface UnitScheduleSnapshotIn extends SnapshotIn<typeof UnitScheduleModel> {} 
+export interface UnitScheduleSnapshotIn extends SnapshotIn<typeof UnitScheduleModel> {}

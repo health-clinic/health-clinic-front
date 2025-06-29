@@ -1,4 +1,4 @@
-import { types } from "mobx-state-tree"
+import { applySnapshot, types } from "mobx-state-tree"
 import { ProfessionalModel, ProfessionalSnapshotIn } from "@/models/Professional"
 
 export const ProfessionalStore = types
@@ -10,13 +10,18 @@ export const ProfessionalStore = types
     },
   }))
   .actions((store) => ({
-    set(id: number, professional: ProfessionalSnapshotIn) {
-      if (store.items.has(id)) return store.items.get(id)!
+    set(id: number, attributes: ProfessionalSnapshotIn) {
+      if (store.items.has(id)) {
+        const professional = store.items.get(id)!
+        applySnapshot(professional, attributes)
 
-      const createdProfessional = ProfessionalModel.create(professional)
-      store.items.set(id, createdProfessional)
+        return professional
+      }
 
-      return createdProfessional
+      const professional = ProfessionalModel.create(attributes)
+      store.items.set(id, professional)
+
+      return professional
     },
 
     delete(id: string) {

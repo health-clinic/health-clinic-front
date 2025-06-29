@@ -1,12 +1,11 @@
-import React, { ComponentProps } from "react"
-import { NavigationContainer } from "@react-navigation/native"
+import { ComponentProps, useEffect, useState } from "react"
+import { CommonActions, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import * as Screens from "@/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme"
-import { Specialty } from "@/models/Specialty/specialty.model"
 import { Professional } from "@/models/Professional"
 import { Appointment } from "@/models/Appointment"
 import { Diagnosis } from "@/models/Diagosis"
@@ -14,39 +13,17 @@ import { Prescription } from "@/models/Prescription"
 import { useStores } from "@/models"
 import { Patient } from "@/models/Patient"
 import { Unit } from "@/models/Unit"
+import { User } from "@/models/User"
 
 export type AppStackParamList = {
   Login: undefined
-  Register: undefined
+  Register: { user?: User } | undefined
   ForgotPassword: undefined
-}
-
-export type PatientAppStackParamList = {
-  Login: undefined
-  Register: undefined
-  ForgotPassword: undefined
-  Home: undefined
-  SelectUnit: undefined
-  SelectSpecialty: { unit: Unit }
-  SelectProfessional: { specialty: Specialty; unit: Unit }
-  SelectDateTime: { appointmentId?: number; professional: Professional }
-  ConfirmSchedule: {
-    appointmentId?: number
-    professional: Professional
-    scheduledFor: string
-  }
-  AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
-  AppointmentDetails: { appointment: Appointment }
-  PrescriptionList: undefined
-  PrescriptionDetails: { prescription: Prescription }
-  Settings: undefined
-  Profile: undefined
-  Notification: undefined
 }
 
 export type AdministratorAppStackParamList = {
   Login: undefined
-  Register: undefined
+  Register: { user?: User } | undefined
   ForgotPassword: undefined
   Home: undefined
   UnitList: undefined
@@ -64,20 +41,24 @@ export type AdministratorAppStackParamList = {
   Notification: undefined
 }
 
-export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
-  AppStackParamList,
-  T
->
-
-export type AdministratorAppStackScreenProps<T extends keyof AdministratorAppStackParamList> =
-  NativeStackScreenProps<AdministratorAppStackParamList, T>
-
-export type PatientAppStackScreenProps<T extends keyof PatientAppStackParamList> =
-  NativeStackScreenProps<PatientAppStackParamList, T>
+export type PatientAppStackParamList = {
+  Login: undefined
+  Register: { user?: User } | undefined
+  ForgotPassword: undefined
+  Home: undefined
+  AppointmentSchedule: { appointment?: Appointment }
+  AppointmentList: { type: "upcoming" | "history"; appointments: Appointment[] }
+  AppointmentDetails: { appointment: Appointment }
+  PrescriptionList: undefined
+  PrescriptionDetails: { prescription: Prescription }
+  Settings: undefined
+  Profile: undefined
+  Notification: undefined
+}
 
 export type ProfessionalAppStackParamList = {
   Login: undefined
-  Register: undefined
+  Register: { user?: User } | undefined
   ForgotPassword: undefined
   Home: undefined
   CompleteCalendar: undefined
@@ -97,6 +78,17 @@ export type ProfessionalAppStackParamList = {
   Profile: undefined
   Notification: undefined
 }
+
+export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
+  AppStackParamList,
+  T
+>
+
+export type AdministratorAppStackScreenProps<T extends keyof AdministratorAppStackParamList> =
+  NativeStackScreenProps<AdministratorAppStackParamList, T>
+
+export type PatientAppStackScreenProps<T extends keyof PatientAppStackParamList> =
+  NativeStackScreenProps<PatientAppStackParamList, T>
 
 export type ProfessionalAppStackScreenProps<T extends keyof ProfessionalAppStackParamList> =
   NativeStackScreenProps<ProfessionalAppStackParamList, T>
@@ -226,39 +218,24 @@ const PatientAppStack = observer(function PatientAppStack() {
         component={Screens.Authentication.ForgotPassword.Screen}
       />
 
-      <PatientStack.Screen
-        name="AppointmentList"
-        component={Screens.Appointments.Patient.AppointmentListScreen}
-      />
-
       <PatientStack.Screen name="Settings" component={Screens.Common.SettingsScreen} />
       <PatientStack.Screen name="Profile" component={Screens.Common.ProfileScreen} />
 
       <PatientStack.Screen name="Home" component={Screens.Home.Patient.HomeScreen} />
+
       <PatientStack.Screen
-        name="SelectUnit"
-        component={Screens.Schedule.Patient.SelectUnitScreen}
+        name="AppointmentSchedule"
+        component={Screens.Appointments.Patient.AppointmentSchedule.Screen}
       />
       <PatientStack.Screen
-        name="SelectSpecialty"
-        component={Screens.Schedule.Patient.SelectSpecialtyScreen}
-      />
-      <PatientStack.Screen
-        name="SelectProfessional"
-        component={Screens.Schedule.Patient.SelectProfessionalScreen}
-      />
-      <PatientStack.Screen
-        name="SelectDateTime"
-        component={Screens.Schedule.Patient.SelectDateTimeScreen}
-      />
-      <PatientStack.Screen
-        name="ConfirmSchedule"
-        component={Screens.Schedule.Patient.ConfirmScheduleScreen}
+        name="AppointmentList"
+        component={Screens.Appointments.Patient.AppointmentListScreen}
       />
       <PatientStack.Screen
         name="AppointmentDetails"
         component={Screens.Appointments.Patient.AppointmentDetailsScreen}
       />
+
       <PatientStack.Screen
         name="PrescriptionList"
         component={Screens.Prescriptions.Patient.PrescriptionListScreen}
@@ -353,11 +330,29 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
 
   const { authenticationStore, userStore } = useStores()
 
+  const [isNavigationReady, setIsNavigationReady] = useState(false)
+
+  useEffect(() => {
+    if (isNavigationReady && authenticationStore.isAuthenticated && userStore.user) {
+      navigationRef.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        }),
+      )
+    }
+  }, [isNavigationReady, authenticationStore.isAuthenticated, userStore.user])
+
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
 
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
-      <NavigationContainer ref={navigationRef} theme={navigationTheme} {...props}>
+      <NavigationContainer
+        ref={navigationRef}
+        theme={navigationTheme}
+        onReady={() => setIsNavigationReady(true)}
+        {...props}
+      >
         {!authenticationStore.isAuthenticated ? (
           <AppStack />
         ) : userStore.user?.isAdministrator() ? (

@@ -61,7 +61,7 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
         readAt: notification.readAt ? new Date(notification.readAt) : null,
         title: notification.title,
         content: notification.content,
-        metadata: notification.metadata,
+        metadata: JSON.stringify(notification.metadata),
       })
     })
   }
@@ -70,7 +70,7 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
     loadingStore.setLoading(true)
 
     try {
-      const response = await createNotificationApi(api).findAll()
+      const response = await createNotificationApi(api).findAll(Number(userStore.user?.id))
       if (response.kind !== "ok") {
         showErrorToast(response.data?.error)
 
@@ -112,7 +112,7 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
               title: notification.title,
               content: notification.content,
               metadata: notification.metadata,
-              readAt: new Date(updatedNotification.readAt),
+              readAt: updatedNotification.readAt ? new Date(updatedNotification.readAt) : null,
               createdAt: notification.createdAt,
               updatedAt: notification.updatedAt,
             })
@@ -188,9 +188,7 @@ export const NotificationScreen: FC<NotificationScreenProps> = ({
                     )}
                   </View>
 
-                  <Text className="text-sm text-neutral-700">
-                    {notification.content}
-                  </Text>
+                  <Text className="text-sm text-neutral-700">{notification.content}</Text>
 
                   <View className="flex-row items-center gap-2">
                     <Text className="text-xs text-neutral-600">

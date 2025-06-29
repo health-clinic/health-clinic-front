@@ -31,4 +31,4 @@ export const createPatientApi = (api: Api) => {
       }
     },
   }
-} 
+}

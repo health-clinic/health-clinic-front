@@ -8,9 +8,7 @@ export const NotificationStore = types
   })
   .views((store) => ({
     get unreadCount() {
-      return Array.from(store.items.values())
-        .filter((notification) => !notification.readAt)
-        .length
+      return Array.from(store.items.values()).filter((notification) => !notification.readAt).length
     },
   }))
   .actions((store) => ({
@@ -27,4 +25,4 @@ export const NotificationStore = types
 
       return notification
     },
-  })) 
+  }))

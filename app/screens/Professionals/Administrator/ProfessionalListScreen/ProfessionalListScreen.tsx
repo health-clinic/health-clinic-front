@@ -31,9 +31,6 @@ export const ProfessionalListScreen: FC<ProfessionalListScreenProps> = ({
 
   const toProfessional = (data: ProfessionalResponse): Professional[] => {
     return data.map((professional) => {
-      console.log(professional)
-
-      // Store user data
       userStore.set(professional.id, {
         id: professional.id,
         address: null,

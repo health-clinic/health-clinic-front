@@ -1,5 +1,5 @@
-import { getRoot, types } from "mobx-state-tree"
-import { UserModel, UserSnapshotIn } from "@/models/User"
+import { applySnapshot, getRoot, types } from "mobx-state-tree"
+import { User as Entity, UserModel, UserSnapshotIn } from "@/models/User"
 import { RootStore } from "@/models"
 import { User } from "@/services/authentication/authentication.api.types"
 
@@ -32,17 +32,13 @@ export const UserStore = types
         })
       }
 
-      const safeUser = {
+      this.set(user.id, {
         ...user,
         address: user.address?.id,
-        birthdate: new Date(user.birthdate),
+        birthdate: user.birthdate ? new Date(user.birthdate) : null,
         createdAt: new Date(user.createdAt),
         updatedAt: new Date(user.updatedAt),
-      }
-
-      if (!store.items.has(user.id)) {
-        store.items.set(user.id, UserModel.create(safeUser))
-      }
+      })
 
       store.userId = user.id
     },
@@ -57,9 +53,17 @@ export const UserStore = types
       store.userId = undefined
     },
 
-    set(id: number, user: UserSnapshotIn) {
-      if (!store.items.has(id)) {
-        store.items.set(id, UserModel.create(user))
+    set(id: number, attributes: UserSnapshotIn): Entity {
+      if (store.items.has(id)) {
+        const user = store.items.get(id)!
+        applySnapshot(user, attributes)
+
+        return user
       }
+
+      const user = UserModel.create(attributes)
+      store.items.set(id, user)
+
+      return user
     },
   }))

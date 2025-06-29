@@ -101,7 +101,6 @@ export const createUnitApi = (api: Api) => {
       data: CreateUnitData,
     ): Promise<{ kind: "ok"; unit: UnitSnapshotIn } | GeneralApiProblem> => {
       const response: ApiResponse<any> = await api.apisauce.post("api/v1/units", data)
-      console.log(response)
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) {

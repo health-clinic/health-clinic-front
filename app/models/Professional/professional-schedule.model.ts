@@ -21,11 +21,11 @@ export const ProfessionalScheduleModel = types
     get professional() {
       try {
         const rootStore = getRoot(self) as RootStoreType
-        
+
         if (!rootStore?.professionalStore?.items) {
           return null
         }
-        
+
         return rootStore.professionalStore.items.get(String(self.professionalId)) || null
       } catch (error) {
         console.warn("Error accessing professional from schedule:", error)
@@ -37,4 +37,5 @@ export const ProfessionalScheduleModel = types
 
 export interface ProfessionalSchedule extends Instance<typeof ProfessionalScheduleModel> {}
 
-export interface ProfessionalScheduleSnapshotIn extends SnapshotIn<typeof ProfessionalScheduleModel> {} 
+export interface ProfessionalScheduleSnapshotIn
+  extends SnapshotIn<typeof ProfessionalScheduleModel> {}

@@ -17,4 +17,4 @@ export const NotificationModel = types
   .actions(withSetPropAction)
 
 export interface Notification extends Instance<typeof NotificationModel> {}
-export interface NotificationSnapshotIn extends SnapshotIn<typeof NotificationModel> {} 
+export interface NotificationSnapshotIn extends SnapshotIn<typeof NotificationModel> {}

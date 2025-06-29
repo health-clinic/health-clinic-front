@@ -39,7 +39,7 @@ export type Unit = {
   updatedAt: string
   address: Address
   schedules?: UnitSchedule[]
-  professionalSchedules?: ProfessionalSchedule[]  
+  professionalSchedules?: ProfessionalSchedule[]
 }
 
 export type UnitResponse = Unit[]

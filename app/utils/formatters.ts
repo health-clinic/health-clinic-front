@@ -48,7 +48,7 @@ export function formatRelativeDate(date: Date): string {
       .replace("segundo", "segundo")
       .replace("minuto", "minuto")
       .replace("hora", "hora")
-    
+
     return `Há ${distance}`
   }
 

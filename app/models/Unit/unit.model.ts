@@ -12,7 +12,10 @@ export const UnitModel = types
     name: types.string,
     phone: types.string,
     schedules: types.optional(types.array(types.reference(UnitScheduleModel)), []),
-    professionalSchedules: types.optional(types.array(types.reference(ProfessionalScheduleModel)), []),
+    professionalSchedules: types.optional(
+      types.array(types.reference(ProfessionalScheduleModel)),
+      [],
+    ),
     createdAt: types.Date,
     updatedAt: types.Date,
   })

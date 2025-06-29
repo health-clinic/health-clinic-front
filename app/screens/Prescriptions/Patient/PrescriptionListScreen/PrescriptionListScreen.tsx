@@ -7,12 +7,11 @@ import { api } from "@/services/api"
 import { showErrorToast } from "@/components/toast"
 import { useStores } from "@/models"
 import { Prescription } from "@/models/Prescription"
-import { PrescriptionModel } from "@/models/Prescription"
 import { Prescription as PrescriptionAPI } from "@/services/prescription/prescription.api.types"
 import { Tabs } from "@/components/Tabs"
 import { isAfter, isWithinInterval, addDays, format } from "date-fns"
-import { PrescriptionCard } from "./PrescriptionCard"
 import { Pill, Calendar } from "lucide-react-native"
+import { ptBR } from "date-fns/locale"
 
 type PrescriptionListScreenProps = AppStackScreenProps<"PrescriptionList">
 
@@ -39,6 +38,7 @@ export const PrescriptionListScreen: FC<PrescriptionListScreenProps> = ({
   const [selectedTabId, setSelectedTabId] = useState<"active" | "expired">("active")
 
   const toPrescriptions = (data: PrescriptionAPI[]): Prescription[] => {
+    console.log(data)
     return data.map((prescription) => {
       addressStore.set(prescription.appointment.patient.address.id, {
         id: prescription.appointment.patient.address.id,
@@ -118,7 +118,6 @@ export const PrescriptionListScreen: FC<PrescriptionListScreenProps> = ({
         address: prescription.appointment.unit.address.id,
         name: prescription.appointment.unit.name,
         phone: prescription.appointment.unit.phone,
-        distance: prescription.appointment.unit.distance || "",
         createdAt: new Date(prescription.appointment.unit.createdAt),
         updatedAt: new Date(prescription.appointment.unit.updatedAt),
       })

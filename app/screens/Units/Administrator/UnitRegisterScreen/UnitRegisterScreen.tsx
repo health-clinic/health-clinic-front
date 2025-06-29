@@ -151,9 +151,8 @@ export const UnitRegisterScreen: FC<RegisterScreenProps> = ({
     try {
       let response
       if (unit) {
-        // Update existing unit
         const apiData = transformFormDataForUpdate(formData)
-        console.log("Transformed data for update:", JSON.stringify(apiData, null, 2))
+
         response = await createUnitApi(api).update(unit.id, apiData)
         if (response.kind !== "ok") {
           showErrorToast(response.data?.error || "Erro ao atualizar unidade")
@@ -161,9 +160,7 @@ export const UnitRegisterScreen: FC<RegisterScreenProps> = ({
         }
         showSuccessToast("Unidade atualizada com sucesso!")
       } else {
-        // Create new unit
         const apiData = transformFormDataForCreate(formData)
-        console.log("Transformed data for create:", JSON.stringify(apiData, null, 2))
         response = await createUnitApi(api).create(apiData)
         if (response.kind !== "ok") {
           showErrorToast(response.data?.error || "Erro ao criar unidade")

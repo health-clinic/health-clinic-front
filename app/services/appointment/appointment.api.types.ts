@@ -18,7 +18,6 @@ export type Unit = {
   addressId: number
   name: string
   phone: string
-  distance?: string
   createdAt: string
   updatedAt: string
   address: Address

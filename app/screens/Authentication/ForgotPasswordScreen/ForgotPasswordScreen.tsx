@@ -36,9 +36,7 @@ export const ForgotPasswordScreen = ({ navigation }: ForgotPasswordScreenProps) 
   }
 
   return (
-    <View className="flex-1 justify-center p-6">
-      <AuthHeader />
-
+    <View className="flex-1 bg-neutral-100">
       <ForgotPassword.Form.Root onSubmit={resetPassword} />
     </View>
   )

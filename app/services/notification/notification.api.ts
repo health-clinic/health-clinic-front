@@ -6,11 +6,13 @@ import { NotificationSnapshotIn } from "@/models/Notification"
 
 export const createNotificationApi = (api: Api) => {
   return {
-    findAll: async (): Promise<
-      { kind: "ok"; notifications: NotificationSnapshotIn[] } | GeneralApiProblem
-    > => {
-      const response: ApiResponse<NotificationResponse> =
-        await api.apisauce.get("api/v1/notifications")
+    findAll: async (
+      userId: number,
+    ): Promise<{ kind: "ok"; notifications: NotificationResponse } | GeneralApiProblem> => {
+      const response: ApiResponse<NotificationResponse> = await api.apisauce.get(
+        `api/v1/notifications/`,
+        { user_id: userId },
+      )
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) {

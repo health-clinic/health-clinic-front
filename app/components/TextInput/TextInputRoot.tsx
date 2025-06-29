@@ -19,7 +19,7 @@ export const TextInputRoot = ({ children, hasError, className, ...props }: Input
   return (
     <View
       className={cn(
-        `flex-row items-center gap-2 h-14 rounded-xl border bg-neutral-200 px-4 ${borderColor}`,
+        `flex-row items-center gap-2 h-14 rounded-xl border bg-transparent px-4 ${borderColor}`,
         className,
       )}
       {...props}

@@ -1,12 +1,15 @@
 import { FC, ReactElement } from "react"
-import { Pressable, ScrollView, Text, View, Image } from "react-native"
+import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { AppStackScreenProps } from "@/navigators"
 import { useStores } from "@/models"
-import { ChevronRight, LogOut, Settings, User as UserIcon } from "lucide-react-native"
-import { format } from "date-fns"
+import { ChevronRight, LogOut, Pencil, User as UserIcon } from "lucide-react-native"
 import { User } from "@/models/User"
 import { formatDocument, formatPhone } from "@/utils/formatters"
-import { NavigationBar, RoleType } from "@/screens/Common/NavigationBar"
+import { NavigationBar } from "@/screens/Common/NavigationBar"
+import { toZonedDate } from "@/utils/date/convert"
+import { format } from "date-fns/format"
+// @ts-ignore
+import tailwind from "./../../../../tailwind.config"
 
 interface ProfileScreenProps extends AppStackScreenProps<"Profile"> {}
 
@@ -16,12 +19,12 @@ export const ProfileScreen: FC<ProfileScreenProps> = ({
   const { authenticationStore, userStore } = useStores()
   const { user } = userStore as { user: User }
 
+  const colors = tailwind.theme.extend.colors
+
   const logout = () => {
     authenticationStore.logout()
     navigation.navigate("Login")
   }
-
-  const userRole = user.role.toUpperCase() as RoleType
 
   return (
     <View className="flex-1 bg-neutral-100">
@@ -54,7 +57,9 @@ export const ProfileScreen: FC<ProfileScreenProps> = ({
                 <View>
                   <Text className="text-neutral-600 text-sm">Data de Nascimento</Text>
                   <Text className="text-neutral-900 text-base">
-                    {user?.birthdate ? format(user.birthdate, "dd/MM/yyyy") : "Não informado"}
+                    {user?.birthdate
+                      ? format(toZonedDate(user.birthdate), "dd/MM/yyyy")
+                      : "Não informado"}
                   </Text>
                 </View>
               </View>
@@ -83,22 +88,11 @@ export const ProfileScreen: FC<ProfileScreenProps> = ({
             <View className="bg-transparent border border-neutral-500 rounded-2xl overflow-hidden">
               <Pressable
                 className="p-4 flex-row items-center justify-between active:bg-neutral-300"
-                onPress={() => navigation.navigate("Settings")}
-              >
-                <View className="flex-row items-center gap-3">
-                  <Settings size={20} color="#8A8A8A" />
-                  <Text className="text-neutral-900 text-base">Configurações</Text>
-                </View>
-
-                <ChevronRight size={20} color="#8A8A8A" />
-              </Pressable>
-
-              <Pressable
-                className="p-4 flex-row items-center justify-between border-t border-neutral-500 active:bg-neutral-300"
                 onPress={logout}
               >
                 <View className="flex-row items-center gap-3">
                   <LogOut size={20} color="#8A8A8A" />
+
                   <Text className="text-neutral-900 text-base">Sair</Text>
                 </View>
 
@@ -109,7 +103,14 @@ export const ProfileScreen: FC<ProfileScreenProps> = ({
         </View>
       </ScrollView>
 
-      <NavigationBar role={userRole} />
+      <NavigationBar />
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Register", { user })}
+        className="absolute bottom-24 right-6 bg-primary-500 h-14 w-14 rounded-full items-center justify-center shadow-lg active:opacity-70"
+      >
+        <Pencil size={24} color={colors.neutral[900]} />
+      </TouchableOpacity>
     </View>
   )
 }

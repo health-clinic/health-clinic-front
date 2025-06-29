@@ -11,8 +11,7 @@ interface CreateData {
 }
 
 interface UpdateData {
-  date?: string
-  time?: string
+  scheduled_for: string
 }
 
 interface FiltersData {
