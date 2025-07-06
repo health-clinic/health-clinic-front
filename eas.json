@@ -27,7 +27,7 @@
       "extends": "production",
       "distribution": "internal",
       "env": {
-        "API_URL": "https://api.health-clinic.yourdomain.com"
+        "API_URL": "http://44.204.142.225:3001"
       },
       "ios": { "simulator": true },
       "android": { "buildType": "apk" }
