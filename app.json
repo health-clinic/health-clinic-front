@@ -31,7 +31,8 @@
         "INTERNET"
       ],
       "config": {
-        "usesCleartextTraffic": true
+        "usesCleartextTraffic": true,
+        "networkSecurityConfig": "./network_security_config.xml"
       }
     },
     "ios": {},

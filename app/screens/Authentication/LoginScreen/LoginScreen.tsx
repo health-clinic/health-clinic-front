@@ -1,5 +1,5 @@
-import { FC, ReactElement } from "react"
-import { View } from "react-native"
+import { FC, ReactElement, useEffect } from "react"
+import { Alert, View } from "react-native"
 import { observer } from "mobx-react-lite"
 import { AppStackScreenProps } from "@/navigators"
 import { createAuthenticationApi } from "@/services/authentication/authentication.api"
