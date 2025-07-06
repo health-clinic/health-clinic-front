@@ -26,6 +26,9 @@
     "preview": {
       "extends": "production",
       "distribution": "internal",
+      "env": {
+        "API_URL": "https://api.health-clinic.yourdomain.com"
+      },
       "ios": { "simulator": true },
       "android": { "buildType": "apk" }
     },
