@@ -16,7 +16,9 @@
     },
     "newArchEnabled": true,
     "jsEngine": "hermes",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.healthclinicfront",
@@ -24,7 +26,13 @@
         "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
         "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
       },
-      "allowBackup": false
+      "allowBackup": false,
+      "permissions": [
+        "INTERNET"
+      ],
+      "config": {
+        "usesCleartextTraffic": true
+      }
     },
     "ios": {},
     "plugins": [
