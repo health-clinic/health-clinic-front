@@ -285,7 +285,10 @@ export const PatientAddressForm = ({
           <Text className="text-base font-bold text-primary-600">Voltar</Text>
         </Button>
 
-        <Button onPress={handleSubmit((data) => onNext(data), onError)} className="flex-1">
+        <Button
+          onPress={handleSubmit((data) => onNext({ ...data, zip_code: data.zipCode }), onError)}
+          className="flex-1"
+        >
           <Text className="text-base font-bold text-neutral-900">Próximo</Text>
         </Button>
       </View>

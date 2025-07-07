@@ -1,5 +1,6 @@
 {
   "cli": {
+    "appVersionSource": "remote",
     "version": ">= 3.15.1"
   },
   "build": {
@@ -26,15 +27,18 @@
     "preview": {
       "extends": "production",
       "distribution": "internal",
-      "env": {
-        "API_URL": "http://44.204.142.225:3001"
+      "ios": {
+        "simulator": true
       },
-      "ios": { "simulator": true },
-      "android": { "buildType": "apk" }
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview:device": {
       "extends": "preview",
-      "ios": { "simulator": false }
+      "ios": {
+        "simulator": false
+      }
     },
     "production": {},
     "debug:offline": {

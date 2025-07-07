@@ -1,17 +1,14 @@
 import { FC, ReactElement } from "react"
-import { Text, View } from "react-native"
+import { View } from "react-native"
 import { AppStackScreenProps } from "@/navigators"
 import { createAuthenticationApi } from "@/services/authentication/authentication.api"
 import { api } from "@/services/api"
 import { useStores } from "@/models"
-import { AuthHeader } from "@/components/AuthHeader"
 import { Register } from "@/screens/Authentication"
-import { Link } from "@/components/Link"
-import { showErrorToast, showSuccessToast } from "@/components/toast"
+import { showErrorToast } from "@/components/toast"
 import { RegisterPayload } from "@/screens/Authentication/UserRegisterScreen/RegisterForm"
 import { AuthSession } from "@/services/authentication/authentication.api.types"
 import { GeneralApiProblem } from "@/services/api/apiProblem"
-import { User } from "@/models/User"
 
 interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 
@@ -36,6 +33,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = ({
           await createAuthenticationApi(api).register(formData)
         if (response.kind !== "ok") {
           showErrorToast(response.data?.error || "Erro ao criar conta")
+
           return
         }
 

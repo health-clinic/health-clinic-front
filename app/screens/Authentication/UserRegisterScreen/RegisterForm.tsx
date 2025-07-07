@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react"
+import { ReactElement, useState } from "react"
 import { SelectUserRoleForm } from "@/screens/Authentication/UserRegisterScreen/SelectUserRoleForm"
 import { BasicInformationForm } from "@/screens/Authentication/UserRegisterScreen/BasicInformationForm"
 import { PatientDetailsForm } from "@/screens/Authentication/UserRegisterScreen/PatientDetailsForm"
