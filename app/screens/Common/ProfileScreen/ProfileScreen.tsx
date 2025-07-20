@@ -6,8 +6,7 @@ import { ChevronRight, LogOut, Pencil, User as UserIcon } from "lucide-react-nat
 import { User } from "@/models/User"
 import { formatDocument, formatPhone } from "@/utils/formatters"
 import { NavigationBar } from "@/screens/Common/NavigationBar"
-import { toZonedDate } from "@/utils/date/convert"
-import { format } from "date-fns/format"
+import { toZonedDateString } from "@/utils/date/convert"
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
 
@@ -57,9 +56,7 @@ export const ProfileScreen: FC<ProfileScreenProps> = ({
                 <View>
                   <Text className="text-neutral-600 text-sm">Data de Nascimento</Text>
                   <Text className="text-neutral-900 text-base">
-                    {user?.birthdate
-                      ? format(toZonedDate(user.birthdate), "dd/MM/yyyy")
-                      : "Não informado"}
+                    {user?.birthdate ? toZonedDateString(user.birthdate) : "Não informado"}
                   </Text>
                 </View>
               </View>

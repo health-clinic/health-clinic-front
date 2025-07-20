@@ -16,6 +16,7 @@ import { formatCNS, formatDocument, formatPhone } from "@/utils/formatters"
 // @ts-ignore
 import tailwind from "./../../../../../tailwind.config"
 import { Patient } from "@/models/Patient"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface PatientDetailsScreenProps extends AdministratorAppStackScreenProps<"PatientDetails"> {}
 
@@ -64,7 +65,7 @@ export const PatientDetailsScreen: FC<PatientDetailsScreenProps> = ({
 
                     <Text className="text-neutral-600 text-sm">
                       {patient.user?.birthdate
-                        ? format(patient.user.birthdate, "dd/MM/yyyy")
+                        ? toZonedDateString(patient.user.birthdate)
                         : "Data não informada"}
                     </Text>
                   </View>
@@ -148,7 +149,8 @@ export const PatientDetailsScreen: FC<PatientDetailsScreenProps> = ({
                         <Calendar size={12} color={colors.neutral[600]} />
 
                         <Text className="text-neutral-600 text-xs">
-                          Última atualização: {format(patient.updatedAt, "dd/MM/yyyy 'às' HH:mm")}
+                          Última atualização: {toZonedDateString(patient.updatedAt)} às{" "}
+                          {format(patient.updatedAt, "HH:mm")}
                         </Text>
                       </View>
                     </View>

@@ -8,15 +8,17 @@ import { Button } from "@/components/Button"
 import { TextInput } from "@/components/TextInput"
 import { StepIndicator } from "@/components/StepIndicator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { format, isValid, parse } from "date-fns"
+import { isValid, parse } from "date-fns"
 import { useNavigation } from "@react-navigation/native"
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface PatientDetailsFormProps {
   initialValues?: Partial<RegisterPayload>
   onNext: (values: Partial<RegisterPayload>) => void
   onBack: () => void
+  isEditMode?: boolean
 }
 
 const schema = z.object({
@@ -45,7 +47,7 @@ const schema = z.object({
         throw new Error("Data inválida.")
       }
 
-      return format(parsed, "yyyy-MM-dd")
+      return toZonedDateString(parsed)
     }),
 })
 
@@ -55,15 +57,40 @@ export const PatientDetailsForm = ({
   initialValues,
   onNext,
   onBack,
+  isEditMode = false,
 }: PatientDetailsFormProps): ReactElement => {
   const colors = tailwind.theme.extend.colors
   const navigation = useNavigation()
+
+  const formatBirthdateForDisplay = (birthdate?: string): string => {
+    if (!birthdate) return ""
+
+    try {
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(birthdate)) {
+        return birthdate
+      }
+
+      const parsed = parse(birthdate, "yyyy-MM-dd", new Date())
+      if (isValid(parsed)) {
+        return toZonedDateString(parsed)
+      }
+
+      const date = new Date(birthdate)
+      if (isValid(date)) {
+        return toZonedDateString(date)
+      }
+    } catch (error) {
+      console.warn("Error formatting birthdate:", error)
+    }
+
+    return ""
+  }
 
   const { control, setFocus, handleSubmit } = useForm<FormData>({
     defaultValues: {
       document: initialValues?.document ?? "",
       phone: initialValues?.phone ?? "",
-      birthdate: initialValues?.birthdate ?? "",
+      birthdate: formatBirthdateForDisplay(initialValues?.birthdate),
     },
     resolver: zodResolver(schema),
   })
@@ -84,13 +111,19 @@ export const PatientDetailsForm = ({
     <View className="flex-1">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
         <TouchableOpacity
-          onPress={() => navigation.navigate("Login" as never)}
+          onPress={() =>
+            isEditMode
+              ? navigation.navigate("Profile" as never)
+              : navigation.navigate("Login" as never)
+          }
           className="h-9 w-9 items-center justify-center"
         >
           <ChevronLeft size={24} color={colors.neutral[800]} />
         </TouchableOpacity>
 
-        <Text className="text-neutral-800 text-lg font-semibold">Criar conta</Text>
+        <Text className="text-neutral-800 text-lg font-semibold">
+          {isEditMode ? "Editar perfil" : "Criar conta"}
+        </Text>
       </View>
 
       <View className="flex-1 gap-6 p-4">
@@ -100,7 +133,9 @@ export const PatientDetailsForm = ({
           <View className="flex-row items-center gap-2">
             <User size={24} color={colors.primary[600]} />
 
-            <Text className="text-neutral-800 text-lg font-bold">Informações do paciente</Text>
+            <Text className="text-neutral-800 text-lg font-bold">
+              {isEditMode ? "Informações pessoais" : "Informações do paciente"}
+            </Text>
           </View>
 
           <Text className="text-neutral-600 text-sm">

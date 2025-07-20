@@ -4,6 +4,7 @@ import { TextInputIcon } from "@/components/TextInput/TextInputIcon"
 import { TextInputAction } from "@/components/TextInput/TextInputAction"
 import { TextInputMaskedControl } from "@/components/TextInput/TextInputMaskedControl"
 import { TextInputDateControl } from "@/components/TextInput/TextInputDateControl"
+import { TextInputDropdownControl } from "@/components/TextInput/TextInputDropdownControl"
 
 export const TextInput = {
   Root: TextInputRoot,
@@ -12,4 +13,5 @@ export const TextInput = {
   MaskedControl: TextInputMaskedControl,
   Icon: TextInputIcon,
   Action: TextInputAction,
+  DropdownControl: TextInputDropdownControl,
 }

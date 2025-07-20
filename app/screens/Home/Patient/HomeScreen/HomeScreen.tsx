@@ -18,7 +18,7 @@ import { NavigationBar } from "@/screens/Common/NavigationBar"
 // @ts-ignore
 import tailwind from "./../../../../../tailwind.config"
 import { observer } from "mobx-react-lite"
-import { toZonedDate } from "@/utils/date/convert"
+import { toZonedDate, toZonedDateString } from "@/utils/date/convert"
 import { ptBR } from "date-fns/locale"
 
 interface HomeScreenProps extends PatientAppStackScreenProps<"Home"> {}
@@ -314,9 +314,7 @@ export const HomeScreen: FC<HomeScreenProps> = observer(
                                   <Calendar size={16} color={colors.primary[500]} />
 
                                   <Text className="text-white text-sm ml-2">
-                                    {format(nextUpcomingAppointment.scheduledFor, "dd/MM/yyyy", {
-                                      locale: ptBR,
-                                    })}
+                                    {toZonedDateString(nextUpcomingAppointment.scheduledFor)}
                                   </Text>
                                 </View>
 
@@ -432,9 +430,7 @@ export const HomeScreen: FC<HomeScreenProps> = observer(
                                     <Calendar size={16} color={colors.primary[500]} />
 
                                     <Text className="text-white text-sm ml-2">
-                                      {format(appointment.scheduledFor, "dd/MM/yyyy", {
-                                        locale: ptBR,
-                                      })}
+                                      {toZonedDateString(appointment.scheduledFor)}
                                     </Text>
                                   </View>
 
@@ -539,7 +535,7 @@ export const HomeScreen: FC<HomeScreenProps> = observer(
                               <Calendar size={16} color={colors.primary[500]} />
 
                               <Text className="text-white text-sm ml-2">
-                                {format(appointment.scheduledFor, "dd/MM/yyyy", { locale: ptBR })}
+                                {toZonedDateString(appointment.scheduledFor)}
                               </Text>
                             </View>
 

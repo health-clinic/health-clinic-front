@@ -12,6 +12,7 @@ import { Tabs } from "@/components/Tabs"
 import { isAfter, isWithinInterval, addDays, format } from "date-fns"
 import { Pill, Calendar } from "lucide-react-native"
 import { ptBR } from "date-fns/locale"
+import { toZonedDateString } from "@/utils/date/convert"
 
 type PrescriptionListScreenProps = AppStackScreenProps<"PrescriptionList">
 
@@ -244,7 +245,7 @@ export const PrescriptionListScreen: FC<PrescriptionListScreenProps> = ({
                   <Calendar size={20} color="#8A8A8A" />
 
                   <Text className="text-neutral-900 font-medium">
-                    {format(group.appointment.scheduledFor, "dd MMM yyyy")}
+                    {toZonedDateString(group.appointment.scheduledFor)}
                   </Text>
                 </View>
 

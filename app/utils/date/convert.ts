@@ -1,7 +1,11 @@
-import { toDate } from "date-fns-tz"
+import { formatInTimeZone, toDate } from "date-fns-tz"
 
-const DEFAULT_TZ = "America/Sao_Paulo"
+const DEFAULT_TZ = "UTC"
 
 export function toZonedDate(date: Date | number | string, timeZone = DEFAULT_TZ): Date {
   return toDate(date, { timeZone })
+}
+
+export function toZonedDateString(date: Date | number | string, timeZone = DEFAULT_TZ): string {
+  return formatInTimeZone(date, timeZone, "dd/MM/yyyy")
 }

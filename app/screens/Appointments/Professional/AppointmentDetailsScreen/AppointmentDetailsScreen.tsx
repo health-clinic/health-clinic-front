@@ -17,6 +17,7 @@ import { AppStackScreenProps } from "@/navigators"
 import { Link } from "@/components/Link"
 import { Button } from "@/components/Button"
 import { formatCNS, formatDocument, formatPhone } from "@/utils/formatters"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface AppointmentDetailScreenProps extends AppStackScreenProps<"AppointmentDetails"> {}
 
@@ -96,7 +97,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailScreenProps> = ({
                     <Calendar size={16} color={colors.neutral[600]} />
 
                     <Text className="text-neutral-600 text-sm">
-                      {format(appointment.patient.user.birthdate, "dd/MM/yyyy")}
+                      {toZonedDateString(appointment.patient.user.birthdate)}
                     </Text>
                   </View>
 
@@ -172,7 +173,7 @@ export const AppointmentDetailsScreen: FC<AppointmentDetailScreenProps> = ({
               <View className="flex-row items-center gap-3">
                 <Calendar size={18} color={colors.primary[500]} />
                 <Text className="text-neutral-800">
-                  {format(appointment.scheduledFor, "dd/MM/yyyy")}
+                  {toZonedDateString(appointment.scheduledFor)}
                 </Text>
               </View>
 

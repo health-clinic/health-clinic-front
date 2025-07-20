@@ -1,8 +1,4 @@
-import Constants from "expo-constants"
-
-const { apiUrl } = Constants.expoConfig?.extra ?? {}
-
 export default {
   ADDRESS_API_URL: "https://viacep.com.br",
-  API_URL: apiUrl,
+  API_URL: "https://b14389953441.ngrok-free.app",
 }

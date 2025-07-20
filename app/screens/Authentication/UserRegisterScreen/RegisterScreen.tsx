@@ -5,10 +5,11 @@ import { createAuthenticationApi } from "@/services/authentication/authenticatio
 import { api } from "@/services/api"
 import { useStores } from "@/models"
 import { Register } from "@/screens/Authentication"
-import { showErrorToast } from "@/components/toast"
+import { showErrorToast, showSuccessToast } from "@/components/toast"
 import { RegisterPayload } from "@/screens/Authentication/UserRegisterScreen/RegisterForm"
 import { AuthSession } from "@/services/authentication/authentication.api.types"
 import { GeneralApiProblem } from "@/services/api/apiProblem"
+import { createUserApi, UpdateUserPayload } from "@/services/user"
 
 interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 
@@ -26,7 +27,32 @@ export const RegisterScreen: FC<RegisterScreenProps> = ({
 
     try {
       if (isEditMode) {
-        showErrorToast("Funcionalidade de edição ainda não implementada")
+        const updateData: UpdateUserPayload = {
+          role: formData.role,
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          document: formData.document,
+          phone: formData.phone,
+          birthdate: formData.birthdate,
+          cns: formData.cns,
+          address: formData.address,
+          crm: formData.crm,
+          specialty: formData.specialty,
+        }
+
+        const response = await createUserApi(api).update(user.id, updateData)
+        if (response.kind !== "ok") {
+          showErrorToast(response.data?.error || "Erro ao atualizar perfil")
+
+          return
+        }
+
+        userStore.assign(response.user)
+
+        showSuccessToast("Perfil atualizado com sucesso!")
+
         navigation.goBack()
       } else {
         const response: AuthSession | GeneralApiProblem =

@@ -11,6 +11,7 @@ import { Patient } from "@/models/Patient"
 import tailwind from "./../../../../../tailwind.config"
 import { format } from "date-fns"
 import { PatientResponse } from "@/services/patient/patient.api.types"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface PatientListScreenProps extends AdministratorAppStackScreenProps<"Patients"> {}
 
@@ -154,7 +155,7 @@ export const PatientListScreen: FC<PatientListScreenProps> = ({
                       <View className="flex-row items-center gap-2">
                         <Calendar size={14} color={colors.neutral[500]} />
                         <Text className="text-neutral-600 text-xs font-medium">
-                          {format(patient.lastVisit, "dd/MM/yyyy")}
+                          {toZonedDateString(patient.lastVisit)}
                         </Text>
                       </View>
                     )}

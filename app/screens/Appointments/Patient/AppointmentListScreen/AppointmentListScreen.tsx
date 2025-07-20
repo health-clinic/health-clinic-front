@@ -11,6 +11,7 @@ import { api } from "@/services/api"
 import { showErrorToast, showSuccessToast } from "@/components/toast"
 import tailwind from "./../../../../../tailwind.config"
 import { useStores } from "@/models"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface AppointmentListScreenProps extends AppStackScreenProps<"AppointmentList"> {}
 
@@ -114,7 +115,7 @@ export const AppointmentListScreen: FC<AppointmentListScreenProps> = ({
                                 <Calendar size={16} color={colors.primary[500]} />
 
                                 <Text className="text-white text-sm ml-2">
-                                  {format(appointment.scheduledFor, "dd/MM/yyyy")}
+                                  {toZonedDateString(appointment.scheduledFor)}
                                 </Text>
                               </View>
 
@@ -175,7 +176,7 @@ export const AppointmentListScreen: FC<AppointmentListScreenProps> = ({
                           <Calendar size={16} color={colors.primary[500]} />
 
                           <Text className="text-white text-sm ml-2">
-                            {format(appointment.scheduledFor, "dd/MM/yyyy")}
+                            {toZonedDateString(appointment.scheduledFor)}
                           </Text>
                         </View>
 

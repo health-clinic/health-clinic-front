@@ -24,6 +24,7 @@ import { AppointmentResponse } from "@/services/appointment/appointment.api.type
 import { createAppointmentApi } from "@/services/appointment/appointment.api"
 import { showErrorToast } from "@/components/toast"
 import { api } from "@/services/api"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface MedicalRecordScreenProps extends AppStackScreenProps<"MedicalRecord"> {}
 
@@ -213,7 +214,7 @@ export const MedicalRecordScreen: FC<MedicalRecordScreenProps> = ({
                     <Calendar size={16} color={colors.primary[500]} />
 
                     <Text className="text-neutral-600 text-sm">
-                      {format(patient.user.birthdate!, "dd/MM/yyyy")}
+                      {toZonedDateString(patient.user.birthdate!)}
                     </Text>
                   </View>
 
@@ -292,7 +293,8 @@ export const MedicalRecordScreen: FC<MedicalRecordScreenProps> = ({
                         <Calendar size={12} color={colors.neutral[600]} />
 
                         <Text className="text-neutral-600 text-xs">
-                          Última atualização: {format(patient.updatedAt, "dd/MM/yyyy 'às' HH:mm")}
+                          Última atualização: {toZonedDateString(patient.updatedAt)} às{" "}
+                          {format(patient.updatedAt, "HH:mm")}
                         </Text>
                       </View>
                     </View>
@@ -376,7 +378,7 @@ export const MedicalRecordScreen: FC<MedicalRecordScreenProps> = ({
                             <Calendar size={12} color={colors.primary[500]} />
 
                             <Text className="text-white text-xs">
-                              {format(appointment.scheduledFor, "dd/MM/yyyy")}
+                              {toZonedDateString(appointment.scheduledFor)}
                             </Text>
                           </View>
 

@@ -20,6 +20,7 @@ interface PatientAddressFormProps {
   onNext: (values: Partial<RegisterPayload["address"]>) => void
   onBack: () => void
   role?: string
+  isEditMode?: boolean
 }
 
 const schema = z.object({
@@ -43,6 +44,7 @@ export const PatientAddressForm = ({
   initialValues,
   onNext,
   onBack,
+  isEditMode = false,
 }: PatientAddressFormProps): ReactElement => {
   const colors = tailwind.theme.extend.colors
   const navigation = useNavigation()
@@ -95,7 +97,11 @@ export const PatientAddressForm = ({
     <View className="flex-1">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
         <TouchableOpacity
-          onPress={() => navigation.navigate("Login" as never)}
+          onPress={() =>
+            isEditMode
+              ? navigation.navigate("Profile" as never)
+              : navigation.navigate("Login" as never)
+          }
           className="h-9 w-9 items-center justify-center"
         >
           <ChevronLeft size={24} color={colors.neutral[800]} />

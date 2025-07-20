@@ -11,21 +11,23 @@ import {
 } from "lucide-react-native"
 import { StepIndicator } from "@/components/StepIndicator"
 import { RegisterPayload } from "@/screens/Authentication/UserRegisterScreen/RegisterForm"
-import { format, parseISO } from "date-fns"
 import { useNavigation } from "@react-navigation/native"
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
+import { toZonedDateString } from "@/utils/date/convert"
 
 interface ReviewRegistrationScreenProps {
   formData: RegisterPayload
   onSubmit: (data: RegisterPayload) => void
   onBack: () => void
+  isEditMode?: boolean
 }
 
 export const ReviewScreen = ({
   formData,
   onSubmit,
   onBack,
+  isEditMode = false,
 }: ReviewRegistrationScreenProps): ReactElement => {
   const colors = tailwind.theme.extend.colors
   const navigation = useNavigation()
@@ -41,7 +43,11 @@ export const ReviewScreen = ({
     <View className="flex-1">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
         <TouchableOpacity
-          onPress={() => navigation.navigate("Login" as never)}
+          onPress={() =>
+            isEditMode
+              ? navigation.navigate("Profile" as never)
+              : navigation.navigate("Login" as never)
+          }
           className="h-9 w-9 items-center justify-center"
         >
           <ChevronLeft size={24} color={colors.neutral[800]} />
@@ -127,7 +133,7 @@ export const ReviewScreen = ({
                       <Text className="text-gray-400 text-xs">Data de Nascimento</Text>
 
                       <Text className="text-white text-base">
-                        {format(parseISO(formData.birthdate as string), "dd/MM/yyyy")}
+                        {toZonedDateString(formData.birthdate as string)}
                       </Text>
                     </View>
                   </View>

@@ -12,36 +12,63 @@ import { useNavigation } from "@react-navigation/native"
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
 
-const schema = z
-  .object({
+const createSchema = (isEditMode: boolean) => {
+  const baseSchema = z.object({
     name: z.string().min(1, "Por favor, informe seu nome completo."),
     email: z.string().email("O e-mail digitado não é válido."),
-    password: z
-      .string()
-      .min(8, "A senha deve ter no mínimo 8 caracteres.")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\.\-_\#])/,
-        "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.",
-      ),
-    confirmPassword: z.string().min(8, "Confirme sua senha (mínimo 8 caracteres)."),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não são iguais. Verifique e tente novamente.",
-    path: ["confirmPassword"],
+    password: isEditMode
+      ? z.string().optional()
+      : z.string().min(1, "Por favor, informe uma senha."),
+    confirmPassword: isEditMode
+      ? z.string().optional()
+      : z.string().min(1, "Por favor, confirme sua senha."),
   })
 
-type FormData = z.infer<typeof schema>
+  return baseSchema.refine(
+    (data) => {
+      if (isEditMode && !data.password && !data.confirmPassword) {
+        return true
+      }
+
+      if (data.password) {
+        const hasMinLength = data.password.length >= 8
+        const hasUpperCase = /[A-Z]/.test(data.password)
+        const hasLowerCase = /[a-z]/.test(data.password)
+        const hasNumber = /\d/.test(data.password)
+        const hasSpecialChar = /[@$!%*?&\.\-_\#]/.test(data.password)
+
+        if (!hasMinLength) {
+          return false
+        }
+        if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
+          return false
+        }
+      }
+
+      return data.password === data.confirmPassword
+    },
+    {
+      message:
+        "A senha deve ter no mínimo 8 caracteres com pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial. As senhas devem ser iguais.",
+      path: ["confirmPassword"],
+    },
+  )
+}
+
+type FormData = z.infer<ReturnType<typeof createSchema>>
 
 interface BasicInformationFormProps {
   initialValues?: Partial<RegisterPayload>
   onNext: (values: Partial<RegisterPayload>) => void
   onBack: () => void
+  isEditMode?: boolean
 }
 
 export const BasicInformationForm = ({
   initialValues,
   onNext,
   onBack,
+  isEditMode = false,
 }: BasicInformationFormProps): ReactElement => {
   const colors = tailwind.theme.extend.colors
   const navigation = useNavigation()
@@ -56,7 +83,7 @@ export const BasicInformationForm = ({
       password: initialValues?.password ?? "",
       confirmPassword: initialValues?.confirmPassword ?? "",
     },
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createSchema(isEditMode)),
   })
 
   const { errors } = useFormState({ control })
@@ -69,7 +96,6 @@ export const BasicInformationForm = ({
     (Object.keys(errors) as (keyof FormData)[]).includes(field)
 
   const role = initialValues?.role
-  const isEditMode = !initialValues?.password && !initialValues?.confirmPassword
   const totalSteps =
     role === "administrator" ? 3 : role === "patient" ? 5 : role === "professional" ? 4 : 3
   const currentStep = 2
@@ -78,13 +104,15 @@ export const BasicInformationForm = ({
     <View className="flex-1">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
         <TouchableOpacity
-          onPress={() => navigation.navigate("Login" as never)}
+          onPress={() => (isEditMode ? navigation.goBack() : navigation.navigate("Login" as never))}
           className="h-9 w-9 items-center justify-center"
         >
           <ChevronLeft size={24} color={colors.neutral[800]} />
         </TouchableOpacity>
 
-        <Text className="text-neutral-800 text-lg font-semibold">Criar conta</Text>
+        <Text className="text-neutral-800 text-lg font-semibold">
+          {isEditMode ? "Editar perfil" : "Criar conta"}
+        </Text>
       </View>
 
       <View className="flex-1 gap-6 p-4">
@@ -94,11 +122,15 @@ export const BasicInformationForm = ({
           <View className="flex-row items-center gap-2">
             <UserPlus size={24} color={colors.primary[600]} />
 
-            <Text className="text-neutral-800 text-lg font-bold">Informações básicas</Text>
+            <Text className="text-neutral-800 text-lg font-bold">
+              {isEditMode ? "Informações pessoais" : "Informações básicas"}
+            </Text>
           </View>
 
           <Text className="text-neutral-600 text-sm">
-            Preencha as informações básicas para criar sua conta.
+            {isEditMode
+              ? "Atualize suas informações pessoais. Deixe os campos de senha em branco se não desejar alterá-la."
+              : "Preencha os dados básicos para criar sua conta."}
           </Text>
         </View>
 
@@ -135,7 +167,12 @@ export const BasicInformationForm = ({
             render={({ field: { onChange, onBlur, value, ref } }) => (
               <View>
                 <TextInput.Root hasError={hasError("email")}>
-                  <TextInput.Icon icon={Mail} />
+                  <TextInput.Icon
+                    icon={Mail}
+                    style={{
+                      opacity: isEditMode ? 0.6 : 1,
+                    }}
+                  />
 
                   <TextInput.Control
                     ref={ref}
@@ -145,6 +182,10 @@ export const BasicInformationForm = ({
                     onBlur={onBlur}
                     autoCapitalize="none"
                     keyboardType="email-address"
+                    editable={!isEditMode}
+                    style={{
+                      opacity: isEditMode ? 0.6 : 1,
+                    }}
                   />
                 </TextInput.Root>
 
@@ -164,7 +205,7 @@ export const BasicInformationForm = ({
                   <TextInput.Icon icon={LockKeyhole} />
 
                   <TextInput.Control
-                    placeholder="Senha"
+                    placeholder={isEditMode ? "Nova senha (opcional)" : "Senha"}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -197,7 +238,7 @@ export const BasicInformationForm = ({
                   <TextInput.Icon icon={LockKeyhole} />
 
                   <TextInput.Control
-                    placeholder="Confirmar senha"
+                    placeholder={isEditMode ? "Confirmar nova senha" : "Confirmar senha"}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}

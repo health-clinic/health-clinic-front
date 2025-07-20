@@ -1,6 +1,5 @@
 import { TextInput } from "@/components/TextInput"
 import { BriefcaseMedical, ChevronLeft, Stethoscope } from "lucide-react-native"
-import { Button } from "@/components/Button"
 import { Text, TouchableOpacity, View } from "react-native"
 import { z } from "zod"
 import { Controller, FieldErrors, useForm, useFormState } from "react-hook-form"
@@ -9,6 +8,7 @@ import { ReactElement } from "react"
 import { RegisterPayload } from "@/screens/Authentication/UserRegisterScreen/RegisterForm"
 import { StepIndicator } from "@/components/StepIndicator"
 import { useNavigation } from "@react-navigation/native"
+
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
 
@@ -16,11 +16,12 @@ interface ProfessionalDetailsFormProps {
   initialValues?: Partial<RegisterPayload>
   onNext: (values: Partial<RegisterPayload>) => void
   onBack: () => void
+  isEditMode?: boolean
 }
 
 const schema = z.object({
   crm: z.string().min(1, "Por favor, insira o CRM."),
-  specialty: z.string().min(1, "Por favor, insira a especialidade."),
+  specialty: z.string().min(1, "Por favor, selecione uma especialidade."),
 })
 
 type FormData = z.infer<typeof schema>
@@ -29,11 +30,19 @@ export const ProfessionalDetailsForm = ({
   initialValues,
   onNext,
   onBack,
+  isEditMode = false,
 }: ProfessionalDetailsFormProps): ReactElement => {
   const colors = tailwind.theme.extend.colors
   const navigation = useNavigation()
 
-  const { control, setFocus, handleSubmit } = useForm<FormData>({
+  const specialtyItems = [
+    { label: "Cardiologia", value: "Cardiologia" },
+    { label: "Clínica Geral", value: "Clínica Geral" },
+    { label: "Dermatologia", value: "Dermatologia" },
+    { label: "Pediatria", value: "Pediatria" },
+  ]
+
+  const { control, setFocus, handleSubmit, setValue, reset } = useForm<FormData>({
     defaultValues: {
       crm: initialValues?.crm ?? "",
       specialty: initialValues?.specialty ?? "",
@@ -50,20 +59,26 @@ export const ProfessionalDetailsForm = ({
   const hasError = (field: keyof FormData) => !!errors[field]
 
   const role = initialValues?.role
-  const totalSteps = 4 // professional: role → basic → professional → review
+  const totalSteps = 4
   const currentStep = 3
 
   return (
     <View className="flex-1">
       <View className="bg-neutral-200 p-4 flex-row items-center gap-2">
         <TouchableOpacity
-          onPress={() => navigation.navigate("Login" as never)}
+          onPress={() =>
+            isEditMode
+              ? navigation.navigate("Profile" as never)
+              : navigation.navigate("Login" as never)
+          }
           className="h-9 w-9 items-center justify-center"
         >
           <ChevronLeft size={24} color={colors.neutral[800]} />
         </TouchableOpacity>
 
-        <Text className="text-neutral-800 text-lg font-semibold">Criar conta</Text>
+        <Text className="text-neutral-800 text-lg font-semibold">
+          {isEditMode ? "Editar perfil" : "Criar conta"}
+        </Text>
       </View>
 
       <View className="flex-1 gap-6 p-4">
@@ -110,17 +125,17 @@ export const ProfessionalDetailsForm = ({
           <Controller
             control={control}
             name="specialty"
-            render={({ field: { onChange, onBlur, ref, value } }) => (
+            render={({ field: { onChange, value } }) => (
               <View>
                 <TextInput.Root hasError={hasError("specialty")}>
                   <TextInput.Icon icon={Stethoscope} />
 
-                  <TextInput.Control
-                    ref={ref}
+                  <TextInput.DropdownControl
+                    value={value}
+                    onValueChange={onChange}
+                    items={specialtyItems}
                     placeholder="Especialidade"
-                    value={value ?? ""}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
+                    hasError={hasError("specialty")}
                   />
                 </TextInput.Root>
 
@@ -134,13 +149,19 @@ export const ProfessionalDetailsForm = ({
       </View>
 
       <View className="flex-row gap-2 p-4">
-        <Button onPress={onBack} className="flex-1 bg-transparent border border-primary-600">
+        <TouchableOpacity
+          onPress={onBack}
+          className="flex-1 bg-transparent border border-primary-600 items-center py-4 rounded-xl"
+        >
           <Text className="text-base font-bold text-primary-600">Voltar</Text>
-        </Button>
+        </TouchableOpacity>
 
-        <Button onPress={handleSubmit((data) => onNext(data), onError)} className="flex-1">
+        <TouchableOpacity
+          onPress={handleSubmit((data) => onNext(data), onError)}
+          className="flex-1 bg-primary-600 items-center py-4 rounded-xl"
+        >
           <Text className="text-base font-bold text-neutral-900">Próximo</Text>
-        </Button>
+        </TouchableOpacity>
       </View>
     </View>
   )
