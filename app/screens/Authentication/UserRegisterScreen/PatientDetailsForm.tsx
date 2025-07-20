@@ -8,7 +8,7 @@ import { Button } from "@/components/Button"
 import { TextInput } from "@/components/TextInput"
 import { StepIndicator } from "@/components/StepIndicator"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { isValid, parse } from "date-fns"
+import { format, isValid, parse } from "date-fns"
 import { useNavigation } from "@react-navigation/native"
 // @ts-ignore
 import tailwind from "./../../../../tailwind.config"
@@ -47,7 +47,7 @@ const schema = z.object({
         throw new Error("Data inválida.")
       }
 
-      return toZonedDateString(parsed)
+      return format(parsed, "yyyy-MM-dd")
     }),
 })
 
